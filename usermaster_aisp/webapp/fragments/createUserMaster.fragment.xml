@@ -1,0 +1,34 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:upload="sap.m.upload" xmlns:form="sap.ui.comp.smartform"
+	xmlns:sf="sap.ui.comp.smartfield" xmlns:l="sap.ui.layout.form">
+	<Dialog id="idDailogCreated" title="Create User" titleAlignment="Start" contentWidth="50%">
+		<content>
+			<l:SimpleForm id="_IDGenSimpleForm" editable="true" layout="ColumnLayout" columnsM="2" columnsL="3" columnsXL="4">
+				<Label id="_IDGenLabel1" text="User ID (Email ID)" labelFor="idUserId"/>
+				<Input id="idUserId" editable="true" valueHelpRequest="onValueHelp" showValueHelp="false" suggestionItems="{>/IasUsers}"
+					suggestionItemSelected=".onSuggestionItemSelected" required="true" liveChange=".onLiveChangeEmailValidation" change="onValueChangeUserId"
+					showSuggestion="true" suggest="onSuggest">
+					<suggestionItems>
+						<core:ListItem id="_IDGenListItem" key="{FIRST_NAME}" text="{EMAIL}" additionalText="{EMAIL}"/>
+					</suggestionItems>
+				</Input>
+				<Label id="_IDGenLabel2" text="User Name" labelFor="idUserName"/>
+				<Input id="idUserName" required="true" editable="true" liveChange=".formatter.onValidateAlphabetInput"/>
+				<Label id="_IDGenLabel4" text="Company Code"/>
+				<MultiComboBox id="idCompanyCode" width="100%" showSecondaryValues="true" change="validateAllComboBoxes" items="{path: '/CompanyCode', templateShareable:true}">
+                     <core:ListItem id="_IDGenListItem2a" key="{BUKRS}" text="{BUTXT}" additionalText="{BUKRS}"/>
+                </MultiComboBox>
+				<Label id="_IDGenLabel3" text="Role" labelFor="idUserRole"/>
+				<MultiComboBox id="idUserRole" required="true" showSecondaryValues="true" width="100%" change="validateAllComboBoxes"
+					items="{path: '/UserRole', templateShareable: true}">
+					<items>
+						<core:ListItem id="_IDGenListItem1" text="{CODE}" key="{CODE}" additionalText="{DESCRIPTION}"/>
+					</items>
+				</MultiComboBox>
+			</l:SimpleForm>
+		</content>
+		<buttons>
+			<Button text="Submit" press="onSumbitUserMaster" type="Emphasized" id="idSubCreateBtn"/>
+			<Button id="idCancelCreateBtn" press="onCloseUserFragment" text="Cancel" class="cancelBtn"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

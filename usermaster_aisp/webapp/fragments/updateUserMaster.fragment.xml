@@ -1,0 +1,36 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:upload="sap.m.upload" xmlns:form="sap.ui.comp.smartform"
+	xmlns:sf="sap.ui.comp.smartfield" xmlns:l="sap.ui.layout.form">
+	<Dialog id="dailogforUpdate" title="Edit User" titleAlignment="Start" contentWidth="50%">
+		<content>
+			<l:SimpleForm editable="true" layout="ColumnLayout" columnsM="2" columnsL="3" columnsXL="4">
+				<Label text="User ID" labelFor="idUserIdEdit"/>
+				<Input id="idUserIdEdit" editable="false" valueHelpRequest="onValueHelp" showValueHelp="false" suggestionItems="{/IasUsers}"
+					suggestionItemSelected=".onSuggestionItemSelected">
+					<suggestionItems>
+						<core:ListItem key="{FIRST_NAME}" text="{EMAIL}" additionalText="{EMAIL}"/>
+					</suggestionItems>
+				</Input>		
+				<Label text="User Name"/>
+				<Input id="idUserEditName" required="true" editable="false"/>
+				<Label text="Company Code"/>
+				<MultiComboBox id="idCompanyCodeEdit" width="100%" showSecondaryValues="true" change="validateAllComboBoxes" items="{path: '/CompanyCode'}">
+                     <core:ListItem id="_IDGenListItem2" key="{BUKRS}" text="{BUKRS}" additionalText="{BUTXT}"/>
+                </MultiComboBox>
+				<Label text="Role"/>
+				<MultiComboBox id="idEditUserRole" showSecondaryValues="true" width="100%" items="{path: '/UserRole', templateShareable: true}">
+					<items>
+						<core:ListItem text="{CODE}" key="{CODE}" additionalText="{DESCRIPTION}"/>
+					</items>
+				</MultiComboBox>
+				
+				<!-- <ComboBox id="idCompanyCodeEdit" width="100%" showSecondaryValues="true" items="{path: '/CompanyCode', templateShareable: true}">
+					<core:ListItem key="{BUKRS}" text="{BUKRS}" additionalText="{BUTXT}"/>
+				</ComboBox>	 -->
+			</l:SimpleForm>
+		</content>
+		<buttons>
+			<Button text="Update" press="onSumbitUserMasterEdit" type="Emphasized" id="idSubmitBtns"/>
+			<Button id="idCancelBtn" press="onCloseUserFragmentEdit" text="Cancel"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,15 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog
+		id="selectDialog"
+		title="Products"
+		items="{user-master>/IasUsersF4Help}"
+		search=".onValueHelpDialogSearch"
+		confirm=".onValueHelpDialogClose"
+		cancel=".onValueHelpDialogClose">
+		<StandardListItem
+			iconDensityAware="false"
+			iconInset="false"
+			title="{user-master>FIRST_NAME}"
+			description="{user-master>EMAIL}" />
+	</SelectDialog>
+</core:FragmentDefinition>

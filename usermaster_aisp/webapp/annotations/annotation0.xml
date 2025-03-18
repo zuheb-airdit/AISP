@@ -1,0 +1,121 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/v2/odata/v4/user-master/$metadata">
+        <edmx:Include Namespace="userMasterService" Alias="SAP"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="local1">
+        <Annotations Target="userMasterService.VMUsers">
+            <Annotation Term="UI.LineItem" >
+                <Collection>
+                    <Record Type="UI.DataField">
+                        <PropertyValue Property="Value" Path="USER_ID"/>
+                        <PropertyValue Property="Label" String="{@i18n>userid}"/>
+                    </Record>
+                    <Record Type="UI.DataField">
+                        <PropertyValue Property="Value" Path="USER_NAME"/>
+                        <PropertyValue Property="Label" String="{@i18n>userName}"/>
+                    </Record>
+                     <Record Type="UI.DataField">
+                        <PropertyValue Property="Value" Path="USER_ROLE"/>
+                        <PropertyValue Property="Label" String="{@i18n>userRole}"/>
+                    </Record>
+                     <Record Type="UI.DataField">
+                        <PropertyValue Property="Value" Path="COMPANY_CODE"/>
+                        <PropertyValue Property="Label" String="{@i18n>companyCode}"/>
+                    </Record>            
+                     <Record Type="UI.DataField">
+                        <PropertyValue Property="Value" Path="STATUS"/>
+                        <PropertyValue Property="Label" String="{@i18n>status}"/>
+                    </Record>
+                </Collection>
+            </Annotation>
+        </Annotations>
+
+        <!-- <Annotations Target="userMasterService.VMUsers">
+            <Annotation Term="UI.SelectionFields" >
+                <Collection>
+                    <PropertyPath>USER_NAME</PropertyPath>
+                    <PropertyPath>EMAIL</PropertyPath>
+                    <PropertyPath>COMPANY_CODE</PropertyPath>
+                    <PropertyPath>USER_ROLE</PropertyPath>
+                </Collection>
+            </Annotation>
+        </Annotations> -->
+        	<Annotations Target="userMasterService.VMUsers/USER_NAME">
+				<Annotation Term="Common.ValueList">
+					<Record Type="Common.ValueListType">
+						<PropertyValue Property="CollectionPath" String="EmailAndUsernameF4Help"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="Common.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="USER_NAME"/>
+									<PropertyValue Property="ValueListProperty" String="USER_NAME"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+             <Annotations Target="userMasterService.VMUsers/USER_ID">
+				<Annotation Term="Common.ValueList">
+					<Record Type="Common.ValueListType">
+						<PropertyValue Property="CollectionPath" String="EmailAndUsernameF4Help"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="Common.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="USER_ID"/>
+									<PropertyValue Property="ValueListProperty" String="EMAIL"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+              <Annotations Target="userMasterService.VMUsers/COMPANY_CODE">
+				<Annotation Term="Common.ValueList">
+					<Record Type="Common.ValueListType">
+						<PropertyValue Property="CollectionPath" String="CompanyCode"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="Common.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="COMPANY_CODE"/>
+									<PropertyValue Property="ValueListProperty" String="BUKRS"/>
+								</Record>
+								 <Record Type="Common.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="BUTXT"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+            <Annotations Target="userMasterService.VMUsers/USER_ROLE">
+				<Annotation Term="Common.ValueList">
+					<Record Type="Common.ValueListType">
+						<PropertyValue Property="CollectionPath" String="UserRole"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="Common.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="USER_ROLE"/>
+									<PropertyValue Property="ValueListProperty" String="CODE"/>
+								</Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="DESCRIPTION"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,41 @@
+/* Enter your custom styles here *//* Enter your custom styles here */
+
+.sapUiSizeCompact .sapMMultiInput.sapMMultiInputHasTokens.sapMInputBaseReadonly .sapMInputBaseContentWrapper {
+    background: transparent !important;
+}
+
+.sapUiSizeCompact .sapMTokenizer.sapMTokenizerReadonly .sapMToken.sapMTokenReadOnly {
+    color: #1d2d3e !important;
+}
+
+.roleBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 2px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.moreRolesLink {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.moreRolesButton {
+    background: none !important;
+    border: none !important;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+
+
+
+
+

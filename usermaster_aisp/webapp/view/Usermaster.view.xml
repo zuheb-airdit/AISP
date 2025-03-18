@@ -1,0 +1,236 @@
+<mvc:View
+    controllerName="com.usermasteraisp.usermasteraisp.controller.Usermaster"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:f="sap.f"
+>
+    <f:DynamicPage
+        id="dynamicPageId"
+        class="sapUiSizeCompact"
+    >
+        <f:title>
+            <f:DynamicPageTitle id="_IDGenDynamicPageTitle">
+                <f:heading>
+                    <Title
+                        id="_IDGenTitle"
+                        text="User Master"
+                    />
+                </f:heading>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader
+                id="_IDGenDynamicPageHeader1"
+                pinnable="true"
+            >
+                <smartFilterBar:SmartFilterBar
+                    id="smartFilterBar"
+                    entitySet="VMUsers"
+                    persistencyKey="SmartFilter_Explored"
+                    considerAnalyticalParameters="true"
+                    search="onGoPress"
+                    initialized="initialized"
+                >
+                    <smartFilterBar:controlConfiguration>
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration1"
+                            key="USER_NAME"
+                            label="User Name"
+                            visibleInAdvancedArea="true"
+                        />
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration2"
+                            key="USER_ID"
+                            label="Email"
+                            visibleInAdvancedArea="true"
+                        />
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration3"
+                            key="COMPANY_CODE"
+                            label="Company Code"
+                            visibleInAdvancedArea="true"
+                        />
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration4"
+                            key="USER_ROLE"
+                            label="User Role"
+                            visibleInAdvancedArea="true"
+                        />
+                    </smartFilterBar:controlConfiguration>
+                </smartFilterBar:SmartFilterBar>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <smartTable:SmartTable
+                id="UserMasterSmartTable"
+                entitySet="VMUsers"
+                smartFilterId="smartFilterBar"
+                tableType="ResponsiveTable"
+                placeToolbarInTable="true"
+                beforeExport="onBeforeExport"
+                useVariantManagement="true"
+                useTablePersonalisation="true"
+                header="Users"
+                showRowCount="true"
+                demandPopin="true"
+                enableAutoColumnWidth="true"
+                enableAutoBinding="true"
+            >
+                <smartTable:customToolbar>
+                    <OverflowToolbar
+                        id="_IDGenOverflowToolbar1"
+                        design="Transparent"
+                    >
+                        <ToolbarSpacer id="_IDGenToolbarSpacer" />
+                        <Button
+                            id="idCreateUser"
+                            text="Create"
+                            press="onCreateUser"
+                        />
+                        <Button
+                            id="idEditUserMaster"
+                            text="Edit"
+                            press="onEditUserMaster"
+                            enabled="false"
+                        />
+                        <Button
+                            id="idDeleteUserMaster"
+                            text="Delete"
+                            press="onDeleteUserMaster"
+                            enabled="false"
+                        />
+                    </OverflowToolbar>
+                </smartTable:customToolbar>
+                <Table
+                    id="usertableID"
+                    mode="SingleSelectLeft"
+                    growing="true"
+                    selectionChange="onSelectionChange"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    updateFinished="onTableUpdateFinished"
+                >
+                    <columns>
+                        <Column
+                            id="_IDGenColumn1"
+                            width="12rem"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "USER_ID","leadingProperty": "USER_ID", "sortProperty": "USER_ID", "filterProperty": "USER_ID", "columnIndex": "0"}'
+                                />
+                            </customData>
+                            <Text
+                                id="_IDGenText"
+                                text="User ID"
+                            />
+                        </Column>
+                        <Column
+                            id="_IDGenColumn2"
+                            width="6rem"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "USER_NAME","leadingProperty": "USER_NAME", "sortProperty": "USER_NAME", "filterProperty": "USER_NAME", "columnIndex": "1"}'
+                                />
+                            </customData>
+                            <Text
+                                id="_IDGenText1"
+                                text="User Name"
+                            />
+                        </Column>
+                        <Column
+                            id="_IDGenColumn3"
+                            width="30rem"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "USER_ROLE","leadingProperty": "USER_ROLE", "sortProperty": "USER_ROLE", "filterProperty": "USER_ROLE", "columnIndex": "2"}'
+                                />
+                            </customData>
+                            <Text
+                                id="_IDGenText2"
+                                text="User Role"
+                            />
+                        </Column>
+                        <Column id="_IDGenColumn">
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "COMPANY_CODE","leadingProperty": "COMPANY_CODE", "sortProperty": "COMPANY_CODE", "filterProperty": "COMPANY_CODE", "columnIndex": "3"}'
+                                />
+                            </customData>
+                            <Text
+                                id="_IDGenText7"
+                                text="Company Code"
+                            />
+                        </Column>
+                        <Column
+                            id="_IDGenColumn4"
+                            width="8rem"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "STATUS","leadingProperty": "STATUS", "sortProperty": "STATUS", "filterProperty": "STATUS", "columnIndex": "4"}'
+                                />
+                            </customData>
+                            <Text
+                                id="_IDGenText8"
+                                text="Status"
+                            />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem
+                            id="_IDGenColumnListItem"
+                            press="onColumnListItemPress"
+                        >
+                            <cells>
+                                <Text
+                                    id="_IDGenText3"
+                                    text="{USER_ID}"
+                                />
+                                <Text
+                                    id="_IDGenText4"
+                                    text="{USER_NAME}"
+                                />
+                                <HBox
+                                    id="_IDGenHBox"
+                                    wrap="Wrap"
+                                >
+                                    <MultiInput
+                                        id="iduserRoleInput"
+                                        editable="false"
+                                        width="100%"
+                                        maxSuggestionWidth="1200px"
+                                    />
+                                </HBox>
+
+                                <HBox id="_IDGenHBox1">
+                                    <MultiInput
+                                        id="idcompanyCodeInput"
+                                        editable="false"
+                                        width="80%"
+                                    />
+                                </HBox>
+                                <ObjectStatus
+                                    id="_IDGenObjectStatus"
+                                    text="{= ${STATUS} ? ('●' + (${STATUS} === 'ACTIVE' ? 'Active' : ${STATUS} === 'INACTIVE' ? 'Inactive' : ${STATUS})) : '' }"
+                                    state="{path: 'STATUS', formatter:'.formatter.getStatusState'}"
+                                    inverted="true"
+                                />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </smartTable:SmartTable>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>
