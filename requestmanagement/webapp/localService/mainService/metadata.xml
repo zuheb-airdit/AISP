@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="requestProcessService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="RequestInfo" EntityType="requestProcessService.RequestInfo"/>
+                <EntitySet Name="CompanyCode" EntityType="requestProcessService.CompanyCode"/>
+                <EntitySet Name="Vendor_Type" EntityType="requestProcessService.Vendor_Type"/>
+                <EntitySet Name="Vendor_Sub_Type" EntityType="requestProcessService.Vendor_Sub_Type"/>
+                <EntitySet Name="RequestType" EntityType="requestProcessService.RequestType"/>
+                <EntitySet Name="ReqApprovalNo" EntityType="requestProcessService.ReqApprovalNo"/>
+                <EntitySet Name="APPROVAL_HIERARCHY_FE" EntityType="requestProcessService.APPROVAL_HIERARCHY_FE"/>
+                <FunctionImport Name="RequestProcess" ReturnType="Edm.String" m:HttpMethod="POST">
+                    <Parameter Name="action" Type="Edm.String" Mode="In" Nullable="true"/>
+                    <Parameter Name="inputData" Type="Collection(requestProcessService.RequestInfo)" Nullable="false" Mode="In"/>
+                    <Parameter Name="userDetails" Type="requestProcessService.User_Details" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <AssociationSet Name="RequestInfo_TO_REQUEST_TYPE" Association="requestProcessService.RequestInfo_TO_REQUEST_TYPE">
+                    <End Role="RequestInfo" EntitySet="RequestInfo"/>
+                    <End Role="RequestType" EntitySet="RequestType"/>
+                </AssociationSet>
+                <AssociationSet Name="RequestInfo_TO_COMPANY_CODE" Association="requestProcessService.RequestInfo_TO_COMPANY_CODE">
+                    <End Role="RequestInfo" EntitySet="RequestInfo"/>
+                    <End Role="CompanyCode" EntitySet="CompanyCode"/>
+                </AssociationSet>
+                <AssociationSet Name="RequestInfo_TO_HIERARCHY" Association="requestProcessService.RequestInfo_TO_HIERARCHY">
+                    <End Role="RequestInfo" EntitySet="RequestInfo"/>
+                    <End Role="APPROVAL_HIERARCHY_FE" EntitySet="APPROVAL_HIERARCHY_FE"/>
+                </AssociationSet>
+                <AssociationSet Name="APPROVAL_HIERARCHY_FE_TO_COMPANY_CODE" Association="requestProcessService.APPROVAL_HIERARCHY_FE_TO_COMPANY_CODE">
+                    <End Role="APPROVAL_HIERARCHY_FE" EntitySet="APPROVAL_HIERARCHY_FE"/>
+                    <End Role="CompanyCode" EntitySet="CompanyCode"/>
+                </AssociationSet>
+            </EntityContainer>
+            <EntityType Name="RequestInfo">
+                <Key>
+                    <PropertyRef Name="REQUEST_NO"/>
+                </Key>
+                <Property Name="REQUEST_NO" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="CONTACT_PERSON" Type="Edm.String"/>
+                <Property Name="PRIORITY" Type="Edm.String"/>
+                <Property Name="INSTRUCTIONS" Type="Edm.String"/>
+                <Property Name="SAP_VENDOR_CODE" Type="Edm.String" MaxLength="15"/>
+                <Property Name="VM_VENDOR_CODE" Type="Edm.Int64"/>
+                <Property Name="STATUS" Type="Edm.Int32"/>
+                <Property Name="REGISTERED_ID" Type="Edm.String" MaxLength="100"/>
+                <Property Name="COMPANY_CODE" Type="Edm.String" MaxLength="20"/>
+                <Property Name="TYPE_OF_INDUSTRY" Type="Edm.String"/>
+                <Property Name="REQUEST_TYPE" Type="Edm.String"/>
+                <Property Name="CREATION_TYPE" Type="Edm.Int32"/>
+                <Property Name="VENDOR_NAME1" Type="Edm.String" MaxLength="100"/>
+                <Property Name="VENDOR_NAME2" Type="Edm.String" MaxLength="100"/>
+                <Property Name="VENDOR_REPORT_PROGRSS" Type="Edm.String"/>
+                <Property Name="VENDOR_CODE" Type="Edm.String" MaxLength="50"/>
+                <Property Name="APPROVER_LEVEL" Type="Edm.Int32"/>
+                <Property Name="APPROVER_ROLE" Type="Edm.String" MaxLength="50"/>
+                <Property Name="NEXT_APPROVER" Type="Edm.String" MaxLength="100"/>
+                <Property Name="REQUESTER_ID" Type="Edm.String" MaxLength="100"/>
+                <Property Name="SUPPL_TYPE" Type="Edm.String" MaxLength="50"/>
+                <Property Name="SUPPL_TYPE_DESC" Type="Edm.String" MaxLength="50"/>
+                <Property Name="BP_TYPE_CODE" Type="Edm.String" MaxLength="4"/>
+                <Property Name="BP_TYPE_DESC" Type="Edm.String" MaxLength="100"/>
+                <Property Name="REQUEST_RESENT" Type="Edm.String" MaxLength="5"/>
+                <Property Name="MDG_CR_NO" Type="Edm.String" MaxLength="15"/>
+                <Property Name="LAST_ACTIVE_REQ_NO" Type="Edm.Int64"/>
+                <Property Name="SECONDARY_EMAILS_ID" Type="Edm.String" MaxLength="500"/>
+                <Property Name="WEBSITE" Type="Edm.String" MaxLength="100"/>
+                <Property Name="LEGAL_STRUCTURE" Type="Edm.String" MaxLength="50"/>
+                <Property Name="LEGAL_STRUCTURE_OTHER" Type="Edm.String" MaxLength="100"/>
+                <Property Name="ESTAB_YEAR" Type="Edm.String" MaxLength="4"/>
+                <Property Name="CERT_EXP_DATE" Type="Edm.String"/>
+                <Property Name="CERT_OF_INCORPORATION" Type="Edm.String"/>
+                <Property Name="VENDOR_CATEGORY" Type="Edm.String"/>
+                <Property Name="NO_OF_EMP" Type="Edm.Int32"/>
+                <Property Name="NO_OF_ENGG" Type="Edm.Int32"/>
+                <Property Name="NO_OF_QUALITY" Type="Edm.Int32"/>
+                <Property Name="NO_OF_PROD" Type="Edm.Int32"/>
+                <Property Name="NO_OF_ADMIN" Type="Edm.Int32"/>
+                <Property Name="NO_OF_OTHERS" Type="Edm.Int32"/>
+                <Property Name="BUSINESS_TYPE" Type="Edm.String" MaxLength="50"/>
+                <Property Name="TRADE_LIC_NO" Type="Edm.String" MaxLength="50"/>
+                <Property Name="TRADE_LIC_NO_DATE" Type="Edm.DateTime" sap:display-format="Date"/>
+                <Property Name="VAT_REG_NUMBER" Type="Edm.String" MaxLength="25"/>
+                <Property Name="VAT_REG_DATE" Type="Edm.DateTime" sap:display-format="Date"/>
+                <Property Name="SUPPL_CATEGORY" Type="Edm.String" MaxLength="5000"/>
+                <Property Name="SUPPL_CATEGORY_DESC" Type="Edm.String" MaxLength="5000"/>
+                <Property Name="ACTIVITY_TYPE" Type="Edm.String" MaxLength="30"/>
+                <Property Name="ORDER_SIZE_MIN" Type="Edm.String" MaxLength="50"/>
+                <Property Name="ORDER_SIZE_MAX" Type="Edm.String" MaxLength="50"/>
+                <Property Name="TOTAL_PROD_CAPACITY" Type="Edm.String" MaxLength="20"/>
+                <Property Name="LAST_SAVED_STEP" Type="Edm.Int32"/>
+                <Property Name="COMPLETED_BY_POSITION" Type="Edm.String" MaxLength="50"/>
+                <Property Name="ACK_VALIDATION" Type="Edm.String" MaxLength="5"/>
+                <Property Name="SUBMISSION_DATE" Type="Edm.String"/>
+                <Property Name="DESIGNATION" Type="Edm.String"/>
+                <Property Name="COMPLETED_BY" Type="Edm.String" MaxLength="100"/>
+                <Property Name="DUE_DELI_NUM" Type="Edm.String"/>
+                <Property Name="PAN_NO" Type="Edm.String"/>
+                <Property Name="GST_NO" Type="Edm.String"/>
+                <Property Name="LST_NO" Type="Edm.String"/>
+                <Property Name="CST_NO" Type="Edm.String"/>
+                <Property Name="MSME_CATEGORY" Type="Edm.String"/>
+                <Property Name="VENDOR_ACCOUNT_GROUP" Type="Edm.String"/>
+                <Property Name="DUE_DILIGANCE" Type="Edm.Boolean"/>
+                <Property Name="DUE_DILIGANCE_REQ_NO" Type="Edm.String"/>
+                <Property Name="APPROVER" Type="Edm.String"/>
+                <Property Name="LAST_UPDATED_ON" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="CURRENT_ASSIGNEE" Type="Edm.String"/>
+                <Property Name="REASSIGNED_ASSIGNEE" Type="Edm.String" MaxLength="100"/>
+                <Property Name="REASSIGN_FLAG" Type="Edm.Boolean"/>
+                <Property Name="REASSIGNED_USER_ID" Type="Edm.String" MaxLength="100"/>
+                <Property Name="OT_PARENT_ID" Type="Edm.String" MaxLength="10"/>
+                <Property Name="OT_FOLDER1_ID" Type="Edm.String" MaxLength="25"/>
+                <Property Name="OT_FOLDER2_ID" Type="Edm.String" MaxLength="25"/>
+                <Property Name="OT_FOLDER3_ID" Type="Edm.String" MaxLength="25"/>
+                <Property Name="OT_FOLDER4_ID" Type="Edm.String" MaxLength="25"/>
+                <Property Name="VAT_CHECK" Type="Edm.String" MaxLength="1"/>
+                <Property Name="ICV_SCORE" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="ICV_DATE" Type="Edm.DateTime" sap:display-format="Date"/>
+                <Property Name="ICV_CHECK" Type="Edm.String" MaxLength="1"/>
+                <Property Name="NDA_TYPE" Type="Edm.String" MaxLength="50"/>
+                <Property Name="REMINDER_COUNT" Type="Edm.Int32"/>
+                <Property Name="BUYER_ASSIGN_CHECK" Type="Edm.String" MaxLength="1"/>
+                <Property Name="CREATED_ON" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="COMMENT" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="PROCESS_LEVEL" Type="Edm.String" MaxLength="10"/>
+                <NavigationProperty Name="TO_REQUEST_TYPE" Relationship="requestProcessService.RequestInfo_TO_REQUEST_TYPE" FromRole="RequestInfo" ToRole="RequestType"/>
+                <NavigationProperty Name="TO_COMPANY_CODE" Relationship="requestProcessService.RequestInfo_TO_COMPANY_CODE" FromRole="RequestInfo" ToRole="CompanyCode"/>
+                <NavigationProperty Name="TO_HIERARCHY" Relationship="requestProcessService.RequestInfo_TO_HIERARCHY" FromRole="RequestInfo" ToRole="APPROVAL_HIERARCHY_FE"/>
+            </EntityType>
+            <EntityType Name="CompanyCode">
+                <Key>
+                    <PropertyRef Name="BUKRS"/>
+                </Key>
+                <Property Name="BUKRS" Type="Edm.String" MaxLength="4" Nullable="false"/>
+                <Property Name="BUTXT" Type="Edm.String" MaxLength="50"/>
+                <Property Name="ORT01" Type="Edm.String" MaxLength="25"/>
+                <Property Name="WAERS" Type="Edm.String" MaxLength="5"/>
+            </EntityType>
+            <EntityType Name="Vendor_Type">
+                <Key>
+                    <PropertyRef Name="KTOKK"/>
+                </Key>
+                <Property Name="MANDT" Type="Edm.String" MaxLength="10"/>
+                <Property Name="KTOKK" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="SPRAS" Type="Edm.String" MaxLength="10"/>
+                <Property Name="TXT30" Type="Edm.String" MaxLength="30"/>
+            </EntityType>
+            <EntityType Name="Vendor_Sub_Type">
+                <Key>
+                    <PropertyRef Name="BPKIND"/>
+                </Key>
+                <Property Name="CLIENT" Type="Edm.String" MaxLength="10"/>
+                <Property Name="BPKIND" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="SPRAS" Type="Edm.String" MaxLength="10"/>
+                <Property Name="TEXT40" Type="Edm.String" MaxLength="40"/>
+            </EntityType>
+            <EntityType Name="RequestType">
+                <Key>
+                    <PropertyRef Name="CODE"/>
+                </Key>
+                <Property Name="CODE" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="DESCRIPTION" Type="Edm.String" MaxLength="50"/>
+                <Property Name="SUPPLIER_TYPE" Type="Edm.String" MaxLength="50"/>
+            </EntityType>
+            <EntityType Name="ReqApprovalNo">
+                <Property Name="REQUEST_NO" Type="Edm.Int32"/>
+                <Property Name="ApprovalLevel" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="APPROVAL_HIERARCHY_FE">
+                <Key>
+                    <PropertyRef Name="APPR_TYPE"/>
+                    <PropertyRef Name="COMPANY_CODE"/>
+                    <PropertyRef Name="USER_ID"/>
+                </Key>
+                <Property Name="APPR_TYPE" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="COMPANY_CODE" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="USER_ID" Type="Edm.String" MaxLength="1000" Nullable="false"/>
+                <Property Name="APPROVER_LEVEL" Type="Edm.Int32"/>
+                <Property Name="USER_ROLE" Type="Edm.String" MaxLength="10"/>
+                <Property Name="ACCESS_EDIT" Type="Edm.Boolean"/>
+                <Property Name="ACCESS_APPROVE" Type="Edm.Boolean"/>
+                <Property Name="ACCESS_SENDBACK" Type="Edm.Boolean"/>
+                <Property Name="ACCESS_REJECT" Type="Edm.Boolean"/>
+                <NavigationProperty Name="TO_COMPANY_CODE" Relationship="requestProcessService.APPROVAL_HIERARCHY_FE_TO_COMPANY_CODE" FromRole="APPROVAL_HIERARCHY_FE" ToRole="CompanyCode"/>
+            </EntityType>
+            <ComplexType Name="User_Details">
+                <Property Name="USER_ROLE" Type="Edm.String" MaxLength="50"/>
+                <Property Name="USER_ID" Type="Edm.String" MaxLength="50"/>
+            </ComplexType>
+            <Association Name="RequestInfo_TO_REQUEST_TYPE">
+                <End Role="RequestInfo" Type="requestProcessService.RequestInfo" Multiplicity="*"/>
+                <End Role="RequestType" Type="requestProcessService.RequestType" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="RequestType">
+                        <PropertyRef Name="CODE"/>
+                    </Principal>
+                    <Dependent Role="RequestInfo">
+                        <PropertyRef Name="REQUEST_TYPE"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="RequestInfo_TO_COMPANY_CODE">
+                <End Role="RequestInfo" Type="requestProcessService.RequestInfo" Multiplicity="*"/>
+                <End Role="CompanyCode" Type="requestProcessService.CompanyCode" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="CompanyCode">
+                        <PropertyRef Name="BUKRS"/>
+                    </Principal>
+                    <Dependent Role="RequestInfo">
+                        <PropertyRef Name="COMPANY_CODE"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="RequestInfo_TO_HIERARCHY">
+                <End Role="RequestInfo" Type="requestProcessService.RequestInfo" Multiplicity="*"/>
+                <End Role="APPROVAL_HIERARCHY_FE" Type="requestProcessService.APPROVAL_HIERARCHY_FE" Multiplicity="0..1"/>
+            </Association>
+            <Association Name="APPROVAL_HIERARCHY_FE_TO_COMPANY_CODE">
+                <End Role="APPROVAL_HIERARCHY_FE" Type="requestProcessService.APPROVAL_HIERARCHY_FE" Multiplicity="*"/>
+                <End Role="CompanyCode" Type="requestProcessService.CompanyCode" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="CompanyCode">
+                        <PropertyRef Name="BUKRS"/>
+                    </Principal>
+                    <Dependent Role="APPROVAL_HIERARCHY_FE">
+                        <PropertyRef Name="COMPANY_CODE"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Annotations Target="requestProcessService.APPROVAL_HIERARCHY_FE/APPROVER_LEVEL" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Validation.Minimum" Int="1"/>
+                <Annotation Term="Validation.Maximum" Int="10000"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

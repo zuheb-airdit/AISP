@@ -1,0 +1,136 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:upload="sap.m.upload"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:sf="sap.ui.comp.smartfield"
+    xmlns:l="sap.ui.layout"
+>
+    <Dialog
+        title="Request Form"
+        contentWidth="60%"
+        titleAlignment="Start"
+    >
+        <content>
+            <f:SimpleForm
+                id="SimpleFormDisplayColumn_threeGroups346"
+                editable="false"
+                layout="ColumnLayout"
+                columnsM="2"
+                columnsL="2"
+                columnsXL="6"
+                emptySpanL="2"
+                emptySpanM="2"
+            >
+                <f:content>
+                    <Label text="Request Type" />
+                    <ComboBox
+                        id="idReqType"
+                        width="100%"
+                        showSecondaryValues="true"
+                    >
+                        <core:ListItem
+                            key="Create Normal"
+                            text="Create Normal"
+                        />
+                    </ComboBox>
+                    <Label text="Company" />
+                    <MultiComboBox
+                        id="idVendorEntity"
+                        width="100%"
+                        showSecondaryValues="true"
+                        items="{ path: '/CompanyCode', templateShareable: true }"
+                    >
+                        <core:ListItem
+                            key="{BUKRS}"
+                            text="{BUKRS}"
+                            additionalText="{BUTXT}"
+                        />
+                    </MultiComboBox>
+
+                    <!-- Second Row -->
+                    <Label text="Vendor Name" />
+                    <Input
+                        id="idVendorName"
+                        required="true"
+                    />
+
+                    <!-- <Label text="Comment" />
+                    <TextArea
+                        id="idTextArea"
+                        width="150%"
+                    /> -->
+
+                    <!-- Third Row -->
+                    <Label text="Vendor Email" />
+                    <Input
+                        id="idVendorEmail"
+                        required="true"
+                        editable="true"
+                    />
+
+                    <Label text="Vendor Sub-Type" />
+                    <Input
+                        id="idSubVendorTypes"
+                        editable="true"
+                        valueHelpRequest="onValueHelpSubVendorFrag"
+                        showValueHelp="true"
+                        suggestionItems="{request-process>/Vendor_Sub_Type}"
+                        suggestionItemSelected=".onSuggestionItemSelected"
+                    >
+                        <suggestionItems>
+                            <core:ListItem
+                                key="{request-process>SPRAS}"
+                                text="{request-process>SPRAS}"
+                                additionalText="{request-process>TXT40}"
+                            />
+                        </suggestionItems>
+                    </Input>
+                    <Label text="Vendor Type" />
+                    <Input
+                        id="idVendorTypes"
+                        editable="true"
+                        valueHelpRequest="onValueHelpVendorFrag"
+                        showValueHelp="true"
+                        suggestionItems="{request-process>/Vendor_Type}"
+                        suggestionItemSelected=".onSuggestionItemSelected"
+                    >
+                        <suggestionItems>
+                            <core:ListItem
+                                key="{request-process>SPRAS}"
+                                text="{request-process>SPRAS}"
+                                additionalText="{request-process>TXT30}"
+                            />
+                        </suggestionItems>
+                    </Input>
+                    <!-- Full-Width Row for Comment -->
+                </f:content>
+            </f:SimpleForm>
+            <VBox class="commetCss">
+                <Label text="Comment:" />
+                <TextArea
+                    id="idTextArea"
+                    width="100%"
+                />
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="Submit"
+                press="onSubmitReqManagement"
+                icon="sap-icon://accept"
+                type="Emphasized"
+                id="idSubCreateBtnja"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                id="idCancelCreateBtnAa"
+                press="onCloseReqManagement"
+                text="Cancel"
+                type="Transparent"
+                icon="sap-icon://decline"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

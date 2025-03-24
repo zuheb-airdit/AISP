@@ -1,0 +1,61 @@
+/* Enter your custom styles here *//* Enter your custom styles here */
+
+#__header0{
+    margin: -44px;
+}
+
+#__data46{
+    width: 100vw;
+}
+
+/* Highlight the selected tab */
+.sapMITH.sapMITBSelected {
+    background-color: #0070f3 !important; /* Change to any color */
+    color: white !important;
+    border-radius: 8px; /* Optional for rounded corners */
+}
+
+/* Custom hover effect for tab filters */
+.sapMITBFilter:hover {
+    background-color: #f0f0f0 !important;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Change the icon color when selected */
+.sapMITBSelected .sapUiIcon {
+    color: yellow !important; /* Change icon color */
+}
+
+/* Increase the font size of selected tab text */
+.sapMITBSelected .sapMITBText {
+    font-weight: bold;
+    font-size: 0.7rem !important;
+}
+
+/* Add bottom border for active tab */
+.sapMITBSelected::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: rgb(51, 14, 136) !important;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.noWrapText {
+    white-space: nowrap;
+    margin: auto;
+}
+
+.commetCss {
+    margin-top: 10px; /* Adds some spacing from previous fields */
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 13px;
+}
+
+
+
+
