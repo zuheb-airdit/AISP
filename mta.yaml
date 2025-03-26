@@ -54,6 +54,10 @@ modules:
       - comrequestmanagementrequestmanagement.zip
       name: comrequestmanagementrequestmanagement
       target-path: resources/
+    - artifacts:
+      - comrequestapprovalrequestprocess.zip
+      name: comrequestapprovalrequestprocess
+      target-path: resources/
 - name: comusermasteraispusermasteraisp
   type: html5
   path: usermaster_aisp
@@ -77,6 +81,16 @@ modules:
 - name: comrequestmanagementrequestmanagement
   type: html5
   path: requestmanagement
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: comrequestapprovalrequestprocess
+  type: html5
+  path: requestprocess
   build-parameters:
     build-result: dist
     builder: custom

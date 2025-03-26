@@ -69,11 +69,11 @@
                         editable="true"
                     />
 
-                    <Label text="Vendor Sub-Type" />
+                    <Label text="Vendor Type" />
                     <Input
-                        id="idSubVendorTypes"
+                        id="idVendorTypes"
                         editable="true"
-                        valueHelpRequest="onValueHelpSubVendorFrag"
+                        valueHelpRequest="onValueHelpVendorFrag"
                         showValueHelp="true"
                         suggestionItems="{request-process>/Vendor_Sub_Type}"
                         suggestionItemSelected=".onSuggestionItemSelected"
@@ -86,11 +86,11 @@
                             />
                         </suggestionItems>
                     </Input>
-                    <Label text="Vendor Type" />
+                    <Label text="Vendor Sub-Type" />
                     <Input
-                        id="idVendorTypes"
+                        id="idSubVendorTypes"
                         editable="true"
-                        valueHelpRequest="onValueHelpVendorFrag"
+                        valueHelpRequest="onValueHelpSubVendorFrag"
                         showValueHelp="true"
                         suggestionItems="{request-process>/Vendor_Type}"
                         suggestionItemSelected=".onSuggestionItemSelected"

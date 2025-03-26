@@ -1,6 +1,126 @@
-<mvc:View controllerName="com.approvalmatrix.approvalmatrixaisp.controller.ApprovalMatrix"
+<mvc:View
+    controllerName="com.approvalmatrix.approvalmatrixaisp.controller.ApprovalMatrix"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
-    </Page>
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns="sap.m"
+>
+    <f:DynamicPage
+        id="dynamicPageId"
+        class="sapUiSizeCompact"
+    >
+        <f:title>
+            <f:DynamicPageTitle id="_IDGenDynamicPageTitle">
+                <f:heading>
+                    <Title
+                        id="_IDGenTitle"
+                        text="Approval Hierarchy Matrix"
+                    />
+                </f:heading>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader
+                id="_IDGenDynamicPageHeader1"
+                pinnable="true"
+            >
+                <smartFilterBar:SmartFilterBar
+                    id="smartFilterBar"
+                    entitySet="CompanyCodeType"
+                    persistencyKey="SmartFilter_Explored"
+                    considerAnalyticalParameters="true"
+                    search="onGoPress"
+                    initialized="initialized"
+                    showRestoreButton="true"
+                >
+                    <smartFilterBar:controlConfiguration>
+                        <!-- Approval Type Dropdown -->
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration2"
+                            key="APPR_TYPE"
+                            label="Approval Type"
+                            visibleInAdvancedArea="true"
+                            controlType="dropDownList"
+                        />
+
+                        <!-- Entity Field -->
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration1"
+                            key="COMPANY_CODE"
+                            label="Entity"
+                            visibleInAdvancedArea="true"
+                        />
+
+                        <!-- Basic Search Moved Below -->
+                        <smartFilterBar:ControlConfiguration
+                            key="$BASIC_SEARCH"
+                            label="Search"
+                            groupId="BasicSearchGroup"
+                            visibleInAdvancedArea="true"
+                        />
+                    </smartFilterBar:controlConfiguration>
+                </smartFilterBar:SmartFilterBar>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <smartTable:SmartTable
+                id="approvalMatrixTable"
+                entitySet="CompanyCodeType"
+                smartFilterId="smartFilterBar"
+                tableType="ResponsiveTable"
+                placeToolbarInTable="true"
+                beforeExport="onBeforeExport"
+                useVariantManagement="true"
+                useTablePersonalisation="true"
+                header="Entity"
+                showRowCount="true"
+                demandPopin="true"
+                enableAutoColumnWidth="true"
+                beforeRebindTable="onBeforeRebindTable"
+                enableAutoBinding="true"
+            >
+                <smartTable:customToolbar>
+                    <OverflowToolbar
+                        id="_IDGenOverflowToolbar1"
+                        design="Transparent"
+                    >
+                        <ToolbarSpacer id="_IDGenToolbarSpacer" />
+                        <Button
+                            id="idCreateUser"
+                            text="Create"
+                            press="onCreateUser"
+                        />
+                        <Button
+                            id="idDeleteApprovalMatrix"
+                            text="Delete"
+                            press="onDeleteApprovalMatrix"
+                            enabled="false"
+                        />
+                    </OverflowToolbar>
+                </smartTable:customToolbar>
+
+                <Table
+                    id="idApprovalTable"
+                    mode="SingleSelectLeft"
+                    growing="true"
+                    selectionChange="selectionChange"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    updateFinished="onTableUpdateFinished"
+                >
+                    <columns />
+                    <items>
+                        <ColumnListItem
+                            id="_IDGenColumnListItem"
+                            press="onColumnListItemPress"
+                            type="Navigation"
+                        >
+                            <cells />
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </smartTable:SmartTable>
+        </f:content>
+    </f:DynamicPage>
 </mvc:View>

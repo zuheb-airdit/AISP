@@ -1,7 +1,9 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/ui/core/Fragment"
-], (Controller,Fragment) => {
+    "sap/ui/core/Fragment",
+    "sap/m/MessageBox",
+    "sap/m/BusyDialog"
+], (Controller,Fragment,MessageBox,BusyDialog) => {
     "use strict";
 
     return Controller.extend("com.requestmanagement.requestmanagement.controller.RequestManagement", {
@@ -178,6 +180,67 @@ sap.ui.define([
             };
         },
 
+        onValueHelpVendorFrag: function () {
+            debugger;
+            let oView = this.getView();
+        
+            // Check if the dialog already exists
+            if (!this._oValueHelpDialog1) {
+                Fragment.load({
+                    id: oView.getId(),
+                    name: "com.requestmanagement.requestmanagement.fragments.vendorType", // Replace with actual path
+                    controller: this
+                }).then(function (oDialog) {
+                    this._oValueHelpDialog1 = oDialog;
+                    oView.addDependent(this._oValueHelpDialog1);
+        
+                    // Bind data after dialog is loaded
+                    this._bindVendorTypeData1(oDialog);
+        
+                    oDialog.open();
+                }.bind(this));
+            } else {
+                this._bindVendorTypeData(this._oValueHelpDialog1);
+                this._oValueHelpDialog1.open();
+            }
+        },
+
+        _bindVendorTypeData1: function (oDialog) {
+            debugger;
+            let oModel = this.getView().getModel("request-process"); // Get the model
+            oDialog.setModel(oModel); // Set model to the dialog
+        
+            oDialog.getTableAsync().then(function (oTable) {
+                oTable.setModel(oModel); // Set model to the table
+        
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", {
+                        path: "/Vendor_Sub_Type",
+                        events: {
+                            dataReceived: function () {
+                                oDialog.update();
+                            }
+                        }
+                    });
+        
+                    // Add columns dynamically if they don't already exist
+                    if (oTable.getColumns().length === 0) {
+                        oTable.addColumn(new sap.ui.table.Column({
+                            label: new sap.m.Label({ text: "Language (SPRAS)" }),
+                            template: new sap.m.Text({ text: "{SPRAS}" })
+                        }));
+        
+                        oTable.addColumn(new sap.ui.table.Column({
+                            label: new sap.m.Label({ text: "Description (TEXT40)" }),
+                            template: new sap.m.Text({ text: "{TEXT40}" })
+                        }));
+                    }
+                }
+        
+                oDialog.update();
+            }.bind(this));
+        },
+
         onValueHelpSubVendorFrag: function () {
             debugger;
             let oView = this.getView();
@@ -186,7 +249,7 @@ sap.ui.define([
             if (!this._oValueHelpDialog) {
                 Fragment.load({
                     id: oView.getId(),
-                    name: "com.requestmanagement.requestmanagement.fragments.vendorType", // Replace with actual path
+                    name: "com.requestmanagement.requestmanagement.fragments.SubvendorType", // Replace with actual path
                     controller: this
                 }).then(function (oDialog) {
                     this._oValueHelpDialog = oDialog;
@@ -238,6 +301,20 @@ sap.ui.define([
                 oDialog.update();
             }.bind(this));
         },
+ 
+        onValueHelpOkPressRolesVendor: function (oEvent) {
+            debugger;
+            let aSelectedContexts = oEvent.getParameter("tokens");
+            if (aSelectedContexts.length) {
+                let oSelectedItem = aSelectedContexts[0].data(); // Assuming single selection
+                let sSelectedKey = oSelectedItem.row.SPRAS;
+                let sSelectedText = oSelectedItem.row.TEXT40;
+        
+                // Set the selected value to the respective input field
+                sap.ui.getCore().byId("idVendorTypes").setValue(`${sSelectedKey} - ${sSelectedText}`);
+            }
+            this._oValueHelpDialog1.close();
+        },
         
         
         onValueHelpOkPressRoles: function (oEvent) {
@@ -245,11 +322,11 @@ sap.ui.define([
             let aSelectedContexts = oEvent.getParameter("tokens");
             if (aSelectedContexts.length) {
                 let oSelectedItem = aSelectedContexts[0].data(); // Assuming single selection
-                let sSelectedKey = oSelectedItem.key;
-                let sSelectedText = oSelectedItem.text;
+                let sSelectedKey = oSelectedItem.row.SPRAS;
+                let sSelectedText = oSelectedItem.row.TXT30;
         
                 // Set the selected value to the respective input field
-                this.getView().byId("idSubVendorTypes").setValue(sSelectedText);
+                sap.ui.getCore().byId("idSubVendorTypes").setValue(`${sSelectedKey} - ${sSelectedText}`);
             }
             this._oValueHelpDialog.close();
         },
@@ -257,6 +334,11 @@ sap.ui.define([
         onValueHelpCancelPress: function () {
             debugger;
             this._oValueHelpDialog.close();
+        },
+
+        onValueHelpCancelPressVendor: function () {
+            debugger;
+            this._oValueHelpDialog1.close();
         },
         
         onValueHelpAfterClose: function () {
@@ -271,7 +353,161 @@ sap.ui.define([
             console.log("Filter Data:", oFilterData);
             
             // Implement filter logic as needed
-        }
+        },
+
+        onSubmitReqManagement: function (oEvent) {
+            debugger;
+            
+            // Create busy dialog
+            const oBusyDialog = new BusyDialog({
+                text: "Submitting request...",
+                title: "Processing"
+            });
+            
+            const sRequestType = sap.ui.getCore().byId("idReqType").getSelectedKey();
+            const aCompanyCodes = sap.ui.getCore().byId("idVendorEntity").getSelectedKeys();
+            const sVendorName = sap.ui.getCore().byId("idVendorName").getValue();
+            const sVendorEmail = sap.ui.getCore().byId("idVendorEmail").getValue();
+            const sVendorType = sap.ui.getCore().byId("idVendorTypes").getValue().split("-")[0].trim();
+            const sVendorTypeDesc = sap.ui.getCore().byId("idVendorTypes").getValue().split("-")[1].trim();
+            const sVendorSubType = sap.ui.getCore().byId("idSubVendorTypes").getValue().split("-")[0].trim();
+            const sVendorSubTypeDesc = sap.ui.getCore().byId("idSubVendorTypes").getValue().split("-")[1].trim();
+            const sComment = sap.ui.getCore().byId("idTextArea").getValue();
+        
+            if (!sVendorName || !sVendorEmail || !aCompanyCodes.length) {
+                MessageToast.show("Please fill all required fields");
+                return;
+            }
+        
+            // Join company codes into a single comma-separated string
+            const sCompanyCodesString = aCompanyCodes.join(",");
+        
+            // Prepare payload
+            const oPayload = {
+                action: "CREATE",
+                inputData: [{
+                    REGISTERED_ID: sVendorEmail,
+                    VENDOR_NAME1: sVendorName,
+                    COMPANY_CODE: sCompanyCodesString,
+                    SUPPL_TYPE_DESC: sVendorTypeDesc,
+                    SUPPL_TYPE: sVendorType,
+                    BP_TYPE_CODE: sVendorSubType,
+                    BP_TYPE_DESC: sVendorSubTypeDesc,
+                    REQUEST_TYPE: sRequestType,
+                    COMMENT: sComment,
+                    REQUESTER_ID: "vai@gmail.com"
+                }]
+            };
+        
+            // Get the OData model
+            const oModel = this.getView().getModel();
+            
+            // Show busy dialog before request
+            oBusyDialog.open();
+            
+            // Make the POST request
+            oModel.create("/RequestProcess", oPayload, {
+                success: function(oData, oResponse) {
+                    // Close busy dialog first
+                    oBusyDialog.close();
+                    MessageBox.success("Request created successfully");
+                    this.vhFragmentReqManagement.close();
+                }.bind(this),  // Bind this to maintain controller context
+                error: function(oError) {
+                    // Close busy dialog on error too
+                    oBusyDialog.close();
+                    this.vhFragmentReqManagement.close();
+                    let sMessage = "Error submitting request";
+                    try {
+                        const oResponse = JSON.parse(oError.responseText);
+                        sMessage = oResponse.error?.message || sMessage;
+                    } catch (e) {
+                        // Handle parsing error
+                    }
+                    MessageBox.error(sMessage);
+                }.bind(this)  // Bind this to maintain controller context
+            });
+        },
+
+        onIconTabBarSelect: function (oEvent) {
+            const oIconTabBar = oEvent.getSource();
+            const sSelectedKey = oEvent.getParameter("key");
+            let oSmartTable;
+
+            // Get the appropriate SmartTable based on selected key
+            switch (sSelectedKey) {
+                case "NotInvited":
+                    oSmartTable = this.byId("idSmartTableReqManagementInvidted");
+                    // this.onNotInvitedFilter(oEvent, oSmartTable);
+                    oSmartTable.rebindTable();
+                    break;
+                case "Invited":
+                    oSmartTable = this.byId("idSmartTableReqManagementInvited");
+                    oSmartTable.rebindTable();
+                    break;
+                case "Rejected":
+                    oSmartTable = this.byId("idSmartTableReqManagementReject");
+                    oSmartTable.rebindTable();
+                    break;
+                case "SendBack":
+                    oSmartTable = this.byId("idSmartTableSendback");
+                    oSmartTable.rebindTable();
+                    break;
+                case "Registered":
+                    oSmartTable = this.byId("idSmartTableReqManagementRegisterd");
+                    oSmartTable.rebindTable();
+                    break;
+                default:
+                    return;
+            }
+
+            // Ensure the table rebinds
+            if (oSmartTable) {
+                oSmartTable.rebindTable();
+            }
+        },
+
+        // Example implementations of the rebind handlers
+        // Adjust these according to your filtering needs
+        // onNotInvitedFilter: function (oEvent, oSmartTable) {
+        //     const aFilters = [
+        //         new Filter("STATUS", FilterOperator.EQ, "Not Invited")
+        //     ];
+        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
+        //     oBindingParams.filters = aFilters;
+        // },
+
+        // onInvitedFiltertest: function (oEvent, oSmartTable) {
+        //     const aFilters = [
+        //         new Filter("STATUS", FilterOperator.EQ, "Invited")
+        //     ];
+        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
+        //     oBindingParams.filters = aFilters;
+        // },
+
+        // onRebindSmartTableReject: function (oEvent, oSmartTable) {
+        //     const aFilters = [
+        //         new Filter("STATUS", FilterOperator.EQ, "Rejected")
+        //     ];
+        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
+        //     oBindingParams.filters = aFilters;
+        // },
+
+        // onRebindSmartTableSendBack: function (oEvent, oSmartTable) {
+        //     const aFilters = [
+        //         new Filter("STATUS", FilterOperator.EQ, "Send Back")
+        //     ];
+        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
+        //     oBindingParams.filters = aFilters;
+        // },
+
+        // onRegisterFilter: function (oEvent, oSmartTable) {
+        //     const aFilters = [
+        //         new Filter("STATUS", FilterOperator.EQ, "Registered")
+        //     ];
+        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
+        //     oBindingParams.filters = aFilters;
+        // },
         
     
     });

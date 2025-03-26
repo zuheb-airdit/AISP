@@ -1,0 +1,53 @@
+/* Enter your custom styles here */
+
+.noWrapText {
+    white-space: nowrap;
+    margin: auto;
+}
+
+/* Ensure proper padding for the table */
+.sapUiResponsiveContentPadding {
+    padding: 1rem !important;
+}
+
+/* Adjust table cell padding */
+.sapMListTblCell {
+    padding: 0.5rem !important;
+}
+
+/* Ensure text wraps properly */
+.sapMListTblCell .sapMText {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+}
+
+/* Adjust pop-in layout for better readability */
+.sapMListTblPopin .sapMText {
+    max-width: 100% !important;
+}
+
+/* Style the table header */
+.sapMListTblHeader .sapMText {
+    font-weight: bold !important;
+}
+
+/* Adjust button spacing in the Action column */
+.sapMListTblCell .sapMHBox .sapMBtn {
+    margin: 0 0.25rem !important;
+}
+
+/* Ensure the table takes full width */
+.sapUiTable {
+    width: 100% !important;
+}
+
+/* Style the filter bar */
+.sapUiCompSmartFilterBar {
+    margin-bottom: 1rem !important;
+}
+
+/* Adjust the row count and pagination */
+.sapMListItems .sapMListShowMore {
+    margin-top: 0.5rem !important;
+    text-align: center !important;
+}

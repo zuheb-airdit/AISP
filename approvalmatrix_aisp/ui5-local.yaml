@@ -28,18 +28,28 @@ server:
     - name: fiori-tools-proxy
       afterMiddleware: compression
       configuration:
-        ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
+        ignoreCertError: false
         backend:
-          - path: /v2
-            url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
-            destination: VendorManagement-Airdit
+          - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
+            authenticationType: OAuth2JWTBearer
+            path: /v2
+          - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
+            authenticationType: OAuth2JWTBearer
+            path: /v2
+          - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
+            authenticationType: OAuth2JWTBearer
+            path: /v2
     - name: sap-fe-mockserver
       beforeMiddleware: csp
       configuration:
         mountPath: /
         services:
-          - urlPath: /v2/odata/v4/approval-matrix
+          - urlPath: v2/odata/v4/approval-matrix
             metadataPath: ./webapp/localService/mainService/metadata.xml
             mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+          - urlPath: v2/odata/v4/user-master
+            metadataPath: ./webapp/localService/user-master/metadata.xml
+            mockdataPath: ./webapp/localService/user-master/data
             generateMockData: true
         annotations: []

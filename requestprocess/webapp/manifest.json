@@ -1,0 +1,127 @@
+{
+    "_version": "1.65.0",
+    "sap.app": {
+        "id": "com.requestapproval.requestprocess",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.17.0",
+            "toolsId": "2087e93a-f114-4f75-9ad5-aa71bb265db5"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/v2/odata/v4/request-process/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "annotation0"
+                    ],
+                    "localUri": "localService/mainService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "annotation0": {
+                "type": "ODataAnnotation",
+                "uri": "annotations/annotation0.xml",
+                "settings": {
+                    "localUri": "annotations/annotation0.xml"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "dependencies": {
+            "minUI5Version": "1.134.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "com.requestapproval.requestprocess.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {}
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "transition": "slide",
+                "type": "View",
+                "viewType": "XML",
+                "path": "com.requestapproval.requestprocess.view",
+                "async": true,
+                "viewPath": "com.requestapproval.requestprocess.view"
+            },
+            "routes": [
+                {
+                    "name": "RouteRequestProcess",
+                    "pattern": ":?query:",
+                    "target": [
+                        "TargetRequestProcess"
+                    ]
+                }
+            ],
+            "targets": {
+                "TargetRequestProcess": {
+                    "id": "RequestProcess",
+                    "name": "RequestProcess"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "com.requestapproval.requestprocess.view.App",
+            "type": "XML",
+            "id": "App",
+            "async": true
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "aisp_vp_airdit"
+    }
+}

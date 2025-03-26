@@ -1,0 +1,264 @@
+<mvc:View
+    controllerName="com.approvalmatrix.approvalmatrixaisp.controller.ApprovalHierarchy"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:m="sap.m"
+    xmlns="sap.uxap"
+    xmlns:l="sap.ui.layout"
+    xmlns:smartfield="sap.ui.comp.smartfield"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+>
+    <ObjectPageLayout
+        id="ObjectPageLayout"
+        showAnchorBarPopover="false"
+        upperCaseAnchorBar="false"
+        showFooter="true"
+    >
+        <headerTitle>
+            <ObjectPageDynamicHeaderTitle>
+                <heading>
+                    <m:Title text="New Company" id="idTitle" class="testclass" />
+                </heading>
+
+                <snappedTitleOnMobile>
+                    <m:Title text="New Company" />
+                </snappedTitleOnMobile>
+
+                <actions>
+                 <m:Button
+                        id="idEditBtn"
+                        icon="sap-icon://edit"
+                        type="Emphasized"
+                        press="onEditApproval"
+                    />
+                    <m:Button
+                        icon="sap-icon://decline"
+                        type="Emphasized"
+                        press="onCloseApprovalSplit"
+                    />
+                </actions>
+            </ObjectPageDynamicHeaderTitle>
+        </headerTitle>
+
+        <sections>
+            <ObjectPageSection
+                titleUppercase="false"
+                title="Entity"
+            >
+                <subSections>
+                    <ObjectPageSubSection
+                        title="Entity"
+                        titleUppercase="false"
+                    >
+                        <blocks>
+                            <m:HBox>
+                                <m:VBox class="sapUiMediumMarginEnd">
+                                    <m:Label text="Entity (Company Code)" />
+                                    <smartfield:SmartField
+                                        id="entityFilter"
+                                        value="{path: 'COMPANY_CODE'}"
+                                        entitySet="CompanyCodeType"
+                                        change="onEntityChange"
+                                    />
+                                </m:VBox>
+
+                                <m:VBox>
+                                    <m:Label text="Approval Type" />
+                                    <m:ComboBox
+                                        id="idCompoBoxReq"
+                                        selectedKey="{ApprovalType}"
+                                        selectionChange="onSelectofApproval"
+                                    >
+                                        <core:Item
+                                            key="All"
+                                            text="All"
+                                        />
+                                        <core:Item
+                                            key="R0"
+                                            text="Request"
+                                        />
+                                        <core:Item
+                                            key="R1"
+                                            text="Register"
+                                        />
+                                    </m:ComboBox>
+                                </m:VBox>
+                            </m:HBox>
+                        </blocks>
+                    </ObjectPageSubSection>
+                </subSections>
+            </ObjectPageSection>
+
+            <ObjectPageSection
+                titleUppercase="false"
+                title="Hierarchy Approval"
+            >
+                <subSections>
+                    <ObjectPageSubSection
+                        titleUppercase="false"
+                        showTitle="false"
+                    >
+                        <blocks>
+                            <m:Table
+                                id="idProductsTable"
+                                inset="false"
+                                items="{path: 'hierarchydata>/jsonObjects'}"
+                                mode="SingleSelectLeft"
+                                selectionChange="onSelectionChange"
+                            >
+                                <m:headerToolbar>
+                                    <m:OverflowToolbar>
+                                        <m:content>
+                                            <!-- <m:Title
+                                                text="Hierarchy Approval"
+                                                level="H2"
+                                            /> -->
+                                            <m:ToolbarSpacer />
+                                            <m:Button
+                                                id="idCreateMassRequest"
+                                                text="Create"
+                                                press="onPressCreateMassApprovalInputs"
+                                                icon="sap-icon://create"
+                                                enabled="true"
+                                            />
+                                            <m:Button
+                                                id="idDeleteBtmApprovalRow"
+                                                text="Delete"
+                                                icon="sap-icon://delete"
+                                                press="onPressDeleteSelectedRows"
+                                                enabled="true"
+                                            />
+                                        </m:content>
+                                    </m:OverflowToolbar>
+                                </m:headerToolbar>
+
+                                <m:columns>
+                                    <m:Column hAlign="Begin" width="5rem">
+                                        <m:Text text="Approval Level" />
+                                    </m:Column>
+                                    <m:Column hAlign="Begin">
+                                        <m:Text text="Role" />
+                                    </m:Column>
+                                    <m:Column hAlign="Begin">
+                                        <m:Text text="User" />
+                                    </m:Column>
+                                    <m:Column hAlign="Center" width="5rem">
+                                        <m:Text text="Approve" />
+                                    </m:Column>
+                                    <m:Column hAlign="Center" width="5rem">
+                                        <m:Text text="Reject" />
+                                    </m:Column>
+                                    <m:Column hAlign="Center" width="5rem">
+                                        <m:Text text="SendBack" />
+                                    </m:Column>
+                                    <m:Column hAlign="Center" width="5rem">
+                                        <m:Text text="Edit" />
+                                    </m:Column>
+                                </m:columns>
+
+                                <m:items>
+                                    <m:ColumnListItem vAlign="Middle">
+                                        <m:cells>
+                                            <m:Text
+                                                text="{hierarchydata>approvalLevel}"
+                                            />
+
+                                            <!-- <m:Input
+                                                editable="{hierarchydata>editable}"
+                                                valueHelpRequest="onValueHelpRoleApproval"
+                                                showValueHelp="true"
+                                                suggestionItems="{/UserRole}"
+                                                suggestionItemSelected="onSuggestionItemSelected"
+                                                value="{hierarchydata>role}"
+                                            >
+                                                <m:suggestionItems>
+                                                    <core:ListItem
+                                                        key="{hierarchydata>role}"
+                                                        text="{hierarchydata>role}"
+                                                    />
+                                                </m:suggestionItems>
+                                            </m:Input> -->
+                                            <m:Input
+                                                id="idRoleInput"
+                                                editable="{hierarchydata>editablechk}"
+                                                valueHelpRequest="onValueHelpRole"
+                                                showValueHelp="true"
+                                                suggestionItems="{/UserRole}"
+                                                suggestionItemSelected="onSuggestionItemSelected"
+                                                value="{hierarchydata>role}"
+                                            >
+                                                <m:suggestionItems>
+                                                    <core:ListItem
+                                                        key="{hierarchydata>role}"
+                                                        text="{hierarchydata>role}"
+                                                    />
+                                                </m:suggestionItems>
+                                            </m:Input>
+
+                                            <m:Input
+                                                editable="{hierarchydata>editablechk}"
+                                                valueHelpRequest="onValueHelpRequested"
+                                                showValueHelp="true"
+                                                suggestionItems="{FilteredUser>/results}"
+                                                suggestionItemSelected="onSuggestionItemSelected"
+                                                value="{hierarchydata>user}"
+                                            >
+                                                <m:suggestionItems>
+                                                    <core:ListItem
+                                                        key="{hierarchydata>user}"
+                                                        text="{hierarchydata>user}"
+                                                    />
+                                                </m:suggestionItems>
+                                            </m:Input>
+
+                                            <m:CheckBox
+                                                visible="{hierarchydata>checkboxVisible}"
+                                                selected="{hierarchydata>approveCheckboxVisible}"
+                                                editable="{hierarchydata>editablechk}"
+                                            />
+                                            <m:CheckBox
+                                                visible="{hierarchydata>checkboxVisible}"
+                                                selected="{hierarchydata>rejectCheckboxVisible}"
+                                                editable="{hierarchydata>editablechk}"
+                                            />
+                                            <m:CheckBox
+                                                visible="{hierarchydata>checkboxVisible}"
+                                                selected="{hierarchydata>sendBackCheckboxVisible}"
+                                                editable="{hierarchydata>editablechk}"
+                                            />
+                                            <m:CheckBox
+                                                visible="{hierarchydata>checkboxVisible}"
+                                                selected="{hierarchydata>editCheckboxVisible}"
+                                                editable="{hierarchydata>editablechk}"
+                                            />
+                                        </m:cells>
+                                    </m:ColumnListItem>
+                                </m:items>
+                            </m:Table>
+                        </blocks>
+                    </ObjectPageSubSection>
+                </subSections>
+            </ObjectPageSection>
+        </sections>
+        <footer>
+    <m:Toolbar>
+        <m:ToolbarSpacer />
+        <m:Text text="Draft Updated" class="sapUiTinyMarginEnd" />
+                <m:Button
+            id="idCreateFooterButton"
+            text="Create"
+            type="Emphasized"
+            press="onFooterCreatePress"
+        />
+
+        <m:Button
+            id="idDiscardDraftButton"
+            text="Discard Draft"
+            type="Transparent"
+            press="onFooterDiscardPress"
+        />
+    </m:Toolbar>
+</footer>
+ 
+    </ObjectPageLayout>
+</mvc:View>
