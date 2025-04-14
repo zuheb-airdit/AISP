@@ -34,14 +34,9 @@
                     "odataVersion": "2.0"
                 }
             },
-            "user-master": {
-                "uri": "v2/odata/v4/user-master/",
-                "type": "OData",
-                "settings": {
-                    "annotations": [],
-                    "localUri": "localService/user-master/metadata.xml",
-                    "odataVersion": "2.0"
-                }
+            "hierarchysource":{
+                "uri": "model/hierarchyModel",
+                "type": "JSON"
             }
         }
     },
@@ -86,10 +81,10 @@
                 "preload": true,
                 "settings": {}
             },
-            "user-master": {
-                "dataSource": "user-master",
-                "preload": true,
-                "settings": {}
+            "hierarchydata":{
+                "dataSource": "hierarchysource",
+                "type": "sap.ui.model.json.JSONModel"
+
             }
         },
         "resources": {

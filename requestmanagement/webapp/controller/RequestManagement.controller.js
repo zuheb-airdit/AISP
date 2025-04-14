@@ -467,47 +467,9 @@ sap.ui.define([
             }
         },
 
-        // Example implementations of the rebind handlers
-        // Adjust these according to your filtering needs
-        // onNotInvitedFilter: function (oEvent, oSmartTable) {
-        //     const aFilters = [
-        //         new Filter("STATUS", FilterOperator.EQ, "Not Invited")
-        //     ];
-        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
-        //     oBindingParams.filters = aFilters;
-        // },
-
-        // onInvitedFiltertest: function (oEvent, oSmartTable) {
-        //     const aFilters = [
-        //         new Filter("STATUS", FilterOperator.EQ, "Invited")
-        //     ];
-        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
-        //     oBindingParams.filters = aFilters;
-        // },
-
-        // onRebindSmartTableReject: function (oEvent, oSmartTable) {
-        //     const aFilters = [
-        //         new Filter("STATUS", FilterOperator.EQ, "Rejected")
-        //     ];
-        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
-        //     oBindingParams.filters = aFilters;
-        // },
-
-        // onRebindSmartTableSendBack: function (oEvent, oSmartTable) {
-        //     const aFilters = [
-        //         new Filter("STATUS", FilterOperator.EQ, "Send Back")
-        //     ];
-        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
-        //     oBindingParams.filters = aFilters;
-        // },
-
-        // onRegisterFilter: function (oEvent, oSmartTable) {
-        //     const aFilters = [
-        //         new Filter("STATUS", FilterOperator.EQ, "Registered")
-        //     ];
-        //     const oBindingParams = oEvent.getParameter("bindingParams") || {};
-        //     oBindingParams.filters = aFilters;
-        // },
+        onInviteRquestManagement : function(){
+            this.getOwnerComponent().getRouter().navTo("Registrationform")
+        }
         
     
     });

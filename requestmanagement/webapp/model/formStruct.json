@@ -1,0 +1,106 @@
+{
+    "GENERAL_INFORMATION": {
+        "VENDOR_INFORMATION": {
+            "VENDOR_NAME": "This is For Testing",
+            "VENDOR_WEBSITE": "www.TestingForm.com",
+            "VENDOR_E_MAIL": "testing@gmail.com",
+            "COMPANY_CODE": "1000"
+        },
+        "VENDOR_ADDRESS": {
+            "STREET_NO": "",
+            "STREET_01": "",
+            "STREET_02": "",
+            "STREET_03": "",
+            "STREET_04": "",
+            "COUNTRY": "",
+            "REGION": "",
+            "CITY": "",
+            "POSTAL_CODE": "",
+            "E_MAIL": "",
+            "CONTACT": ""
+        }
+    },
+    "FINANCIAL_INFORMATION": {
+        "PRIMARY_BANK_DETAILS": {
+            "BANK_NAME": "",
+            "BRANCH_NAME": "",
+            "SWIFT_CODE": "",
+            "BANK_COUNTRY": "",
+            "BENEFICIARY_NAME": "",
+            "ACCOUNT_NUMBER": "",
+            "IBAN_NUMBER": "",
+            "ROUTING_CODE": "",
+            "BANK_CURRENCY": ""
+        },
+        "TAX_VAT_GST": {
+            "GST_NO": "",
+            "TAX_VAT_GST": ""
+        }
+    },
+    "OPERATIONAL_INFORMATION": {
+        "PRODUCT_SERVICE_DESCRIPTION": {
+            "PRODUCT_NAME": "",
+            "PRODUCT_DESCRIPTION": "",
+            "PRODUCT_TYPE": "",
+            "PRODUCT_CATEGORY": ""
+        },
+        "OPERATIONAL_CAPACITY": {
+            "PRODUCTION_CAPACITY": "",
+            "PRODUCTION_LOCATION": "",
+            "MINIMUM_ORDER_SIZE": "",
+            "MAXIMUM_ORDER_SIZE": ""
+        }
+    },
+    "DISCLOSURES": {
+        "CONFLICT_OF_INTEREST": {
+            "CONFLICT_OF_INTEREST": ""
+        },
+        "LEGAL_CASE_DISCLOSURE": {
+            "LEGAL_CASE_DISCLOSURE": ""
+        },
+        "ANTI_CORRUPTION_REGULATION": {
+            "ANTI_CORRUPTION": ""
+        },
+        "EXPORT_CONTROL": {
+            "INDIAN_EXPORT_CONTROL": ""
+        }
+    },
+    "QUALITY_CERTIFICATES": {
+        "STANDARD_CERTIFICATIONS": {
+            "ISO_9001_2015_DONE_BY": "",
+            "ISO_14001_DONE_BY": "",
+            "ISO_45001_DONE_BY": "",
+            "ISO_13485_DONE_BY": "",
+            "UNE_EN_ISO_13485_DONE_BY": "",
+            "AEO_2012_2130_DONE_BY": "",
+            "ISO_14001_2015_DONE_BY": "",
+            "OHSAS_18001_2007_DONE_BY": ""
+        }
+    },
+    "ATTACHMENTS": {
+        "COMPANY_PROFILE": {
+            "COMPANY_PROFILE": ""
+        },
+        "COMPANY_REGISTRATION_CERTIFICATE": {
+            "COMPANY_REGISTRATION_CERTIFICATE": ""
+        },
+        "BANK_ACCOUNT_LETTER_ISSUED_BY_BANK": {
+            "BANK_ACCOUNT_LETTER_ISSUED_BY_BANK": ""
+        },
+        "TAX_REGISTRATION_CERTIFICATE": {
+            "TAX_REGISTRATION_CERTIFICATE": ""
+        },
+        "ISO_CERTIFICATION": {
+            "ISO_CERTIFICATION": ""
+        },
+        "OTHER_CERTIFICATES": {
+            "OTHER_CERTIFICATES": ""
+        }
+    },
+    "SUBMISSION_INFORMATION": {
+        "COMPLETED_BY": "",
+        "DESIGNATION": "",
+        "SUBMISSION_DATE": "",
+        "DECLARATION_CONFIRMATION": ""
+    }
+}

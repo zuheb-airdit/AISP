@@ -9,7 +9,7 @@ server:
     - name: fiori-tools-proxy
       afterMiddleware: compression
       configuration:
-        ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
+        ignoreCertError: false
         ui5:
           path:
             - /resources
@@ -42,8 +42,12 @@ server:
             metadataPath: ./webapp/localService/mainService/metadata.xml
             mockdataPath: ./webapp/localService/mainService/data
             generateMockData: true
-          - urlPath: v2/odata/v4/approval-matrix
-            metadataPath: ./webapp/localService/approval-matrix/metadata.xml
-            mockdataPath: ./webapp/localService/approval-matrix/data
+          - urlPath: v2/odata/v4/admin
+            metadataPath: ./webapp/localService/admin/metadata.xml
+            mockdataPath: ./webapp/localService/admin/data
+            generateMockData: true
+          - urlPath: v2/odata/v4/registration-manage
+            metadataPath: ./webapp/localService/registration-manage/metadata.xml
+            mockdataPath: ./webapp/localService/registration-manage/data
             generateMockData: true
         annotations: []

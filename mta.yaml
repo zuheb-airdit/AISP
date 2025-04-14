@@ -58,6 +58,10 @@ modules:
       - comrequestapprovalrequestprocess.zip
       name: comrequestapprovalrequestprocess
       target-path: resources/
+    - artifacts:
+      - comregistrationregistrationapprovalaisp.zip
+      name: comregistrationregistrationapprovalaisp
+      target-path: resources/
 - name: comusermasteraispusermasteraisp
   type: html5
   path: usermaster_aisp
@@ -91,6 +95,16 @@ modules:
 - name: comrequestapprovalrequestprocess
   type: html5
   path: requestprocess
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: comregistrationregistrationapprovalaisp
+  type: html5
+  path: registrationapproval_aisp
   build-parameters:
     build-result: dist
     builder: custom

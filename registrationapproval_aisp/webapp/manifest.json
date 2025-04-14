@@ -1,0 +1,140 @@
+{
+    "_version": "1.65.0",
+    "sap.app": {
+        "id": "com.registration.registrationapprovalaisp",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.17.0",
+            "toolsId": "d147aecf-ab7e-4534-8144-010dd3ecdd0a"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/v2/odata/v4/registration-manage/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "annotation0"
+                    ],
+                    "localUri": "localService/mainService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "annotation0": {
+                "type": "ODataAnnotation",
+                "uri": "annotations/annotation0.xml",
+                "settings": {
+                    "localUri": "annotations/annotation0.xml"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "dependencies": {
+            "minUI5Version": "1.134.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "com.registration.registrationapprovalaisp.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {}
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "transition": "slide",
+                "type": "View",
+                "viewType": "XML",
+                "path": "com.registration.registrationapprovalaisp.view",
+                "async": true,
+                "viewPath": "com.registration.registrationapprovalaisp.view"
+            },
+            "routes": [
+                {
+                    "name": "RouteRegistrationApproval",
+                    "pattern": ":?query:",
+                    "target": [
+                        "TargetRegistrationApproval"
+                    ]
+                },
+                 {
+                    "pattern": "Register/{id}",
+                    "name": "RegisterObjPage",
+                    "target": "RegisterObjPage"
+                }
+            ],
+            "targets": {
+                "TargetRegistrationApproval": {
+                    "id": "RegistrationApproval",
+                    "name": "RegistrationApproval"
+                },
+                "RegisterObjPage": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewLevel": 1,
+                    "viewId": "RegistrationApprovalObj",
+                    "viewName": "RegistrationApprovalObj"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "com.registration.registrationapprovalaisp.view.App",
+            "type": "XML",
+            "id": "App",
+            "async": true
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "aisp_vp_airdit"
+    }
+}

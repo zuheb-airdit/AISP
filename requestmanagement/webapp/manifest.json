@@ -34,12 +34,25 @@
           "localUri": "annotations/annotation0.xml"
         }
       },
-      "approval-matrix": {
-        "uri": "v2/odata/v4/approval-matrix/",
+      "admin": {
+        "uri": "v2/odata/v4/admin/",
         "type": "OData",
         "settings": {
           "annotations": [],
-          "localUri": "localService/approval-matrix/metadata.xml",
+          "localUri": "localService/admin/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "formData": {
+        "uri": "model/formStruct.json",
+        "type": "JSON"
+      },
+      "registration-manage": {
+        "uri": "v2/odata/v4/registration-manage/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/registration-manage/metadata.xml",
           "odataVersion": "2.0"
         }
       }
@@ -86,8 +99,17 @@
         "preload": true,
         "settings": {}
       },
-      "approval-matrix": {
-        "dataSource": "approval-matrix",
+      "admin": {
+        "dataSource": "admin",
+        "preload": true,
+        "settings": {}
+      },
+      "formDataModel": {
+        "type": "sap.ui.model.json.JSONModel",
+        "dataSource": "formData"
+      },
+      "registration-manage": {
+        "dataSource": "registration-manage",
         "preload": true,
         "settings": {}
       }
@@ -118,12 +140,23 @@
           "target": [
             "TargetRequestManagement"
           ]
+        },
+        {
+          "name": "Registrationform",
+          "pattern": "Registrationform",
+          "target": [
+            "TargetRegistrationform"
+          ]
         }
       ],
       "targets": {
         "TargetRequestManagement": {
           "id": "RequestManagement",
           "name": "RequestManagement"
+        },
+        "TargetRegistrationform": {
+          "id": "Registrationform",
+          "name": "Registrationform"
         }
       }
     },

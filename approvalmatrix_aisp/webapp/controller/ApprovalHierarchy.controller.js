@@ -114,7 +114,7 @@ sap.ui.define([
             this.ApprovalType = true;
             var sKey = oEvent.getSource().getSelectedKey();
             let oModel = this.getOwnerComponent().getModel("hierarchydata");
-            let data = oModel.getData();
+            let data = oModel?.getData();
             if (this.companyCode) {
                 this.byId("idCreateMassRequest").setEnabled(true)
 
@@ -152,7 +152,7 @@ sap.ui.define([
             ];
             if (!this._oValueHelpDialog) {
                 this.loadFragment({
-                    name: "com.approvalmatrix.approvalmatrix.fragments.Roles"
+                    name: "com.approvalmatrix.approvalmatrixaisp.fragments.Roles"
                 }).then(function (oDialog) {
                     this._oValueHelpDialog = oDialog;
                     oView.addDependent(oDialog);
@@ -264,7 +264,7 @@ sap.ui.define([
             // Load the ValueHelpDialog Fragment
             if (!this._oValueHelpDialog) {
                 this.loadFragment({
-                    name: "com.approvalmatrix.approvalmatrix.fragments.UserRole"
+                    name: "com.approvalmatrix.approvalmatrixaisp.fragments.UserRole"
                 }).then(function (oDialog) {
                     this._oValueHelpDialog = oDialog;
                     oView.addDependent(oDialog);

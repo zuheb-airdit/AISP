@@ -17,14 +17,8 @@ server:
           url: https://ui5.sap.com
         backend:
           - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
-            authenticationType: OAuth2JWTBearer
             path: /v2
-          - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
-            authenticationType: OAuth2JWTBearer
-            path: /v2
-          - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
-            authenticationType: OAuth2JWTBearer
-            path: /v2
+            destination: VendorManagement-Airdit
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

@@ -1,0 +1,32 @@
+/* Enter your custom styles here */
+.smallerFontTable .sapMText,
+.smallerFontTable .sapUiTableCell,
+.smallerFontTable .sapMObjectStatusText {
+    font-size: 0.700rem !important; /* 14px base size */
+}
+
+.smallerFont {
+    font-size: 0.700rem !important;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+    .smallerFontTable .sapMText,
+    .smallerFontTable .sapUiTableCell,
+    .smallerFontTable .sapMObjectStatusText {
+        font-size: 0.75rem !important; /* 12px for smaller screens */
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .smallerFontTable .sapMText,
+    .smallerFontTable .sapUiTableCell,
+    .smallerFontTable .sapMObjectStatusText {
+        font-size: 0.6875rem !important; /* 11px for very small screens */
+    }
+}
+
+.noWrapText {
+    white-space: nowrap;
+    margin: auto;
+}

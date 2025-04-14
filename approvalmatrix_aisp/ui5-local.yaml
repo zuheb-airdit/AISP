@@ -31,14 +31,9 @@ server:
         ignoreCertError: false
         backend:
           - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
-            authenticationType: OAuth2JWTBearer
             path: /v2
-          - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
-            authenticationType: OAuth2JWTBearer
-            path: /v2
-          - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
-            authenticationType: OAuth2JWTBearer
-            path: /v2
+            destination: VendorManagement-Airdit
+
     - name: sap-fe-mockserver
       beforeMiddleware: csp
       configuration:
@@ -47,9 +42,5 @@ server:
           - urlPath: v2/odata/v4/approval-matrix
             metadataPath: ./webapp/localService/mainService/metadata.xml
             mockdataPath: ./webapp/localService/mainService/data
-            generateMockData: true
-          - urlPath: v2/odata/v4/user-master
-            metadataPath: ./webapp/localService/user-master/metadata.xml
-            mockdataPath: ./webapp/localService/user-master/data
             generateMockData: true
         annotations: []

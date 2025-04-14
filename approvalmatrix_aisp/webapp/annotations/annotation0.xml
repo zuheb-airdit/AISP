@@ -13,7 +13,7 @@
     </edmx:Reference>
     <edmx:DataServices>
         <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="local1">
-        <!-- <Annotations Target="SAP.CompanyCodeType">
+        <Annotations Target="SAP.CompanyCodeType">
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataField">
@@ -72,7 +72,7 @@
                         </PropertyValue>
                     </Record>
                 </Annotation>
-            </Annotations> -->
+            </Annotations>
         </Schema>
     </edmx:DataServices>
 </edmx:Edmx>
