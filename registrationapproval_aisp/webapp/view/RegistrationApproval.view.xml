@@ -11,7 +11,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Request Approval" />
+                    <Title text="Registration Approval" />
                 </f:heading>
             </f:DynamicPageTitle>
         </f:title>

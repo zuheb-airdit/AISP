@@ -6,7 +6,10 @@ sap.ui.define([
     "sap/m/List",
     "sap/m/StandardListItem",
     "sap/m/MessageBox",
-], (Controller,formatter,JSONModel,Popover,List,StandardListItem,MessageBox) => {
+    "sap/ui/core/Fragment",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], (Controller,formatter,JSONModel,Popover,List,StandardListItem,MessageBox , Fragment, Filter, FilterOperator) => {
     "use strict";
 
     return Controller.extend("com.usermasteraisp.usermasteraisp.controller.Usermaster", {
@@ -519,6 +522,24 @@ sap.ui.define([
                 oText.setText(fullText);
                 oButton.setVisible(false);
             }
-        }
+        },
+             // Create Value help request 
+            onValueHelpRequest: function () {
+                if (!this.createValueHelpRequestFrag) {  
+                    this.createValueHelpRequestFrag = sap.ui.xmlfragment("com.usermasteraisp.usermasteraisp.fragments.createValueHelpRequest", this); 
+                    this.getView().addDependent(this.createValueHelpRequestFrag);  
+                }
+                this.createValueHelpRequestFrag.open();  
+            },
+            onDialogClose:function(){
+                this.createValueHelpRequestFrag.close();
+            },
+
+            // live search in value help
+
+            onUserLiveSearch: function (oEvent) {
+                
+            }
+                        
     });
 });

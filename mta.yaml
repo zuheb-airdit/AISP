@@ -29,7 +29,7 @@ modules:
           ServiceInstanceName: AISP_VP_AIRDIT-xsuaa-service
           ServiceKeyName: uaa_AISP_VP_AIRDIT-key
           sap.cloud.service: aisp_vp_airdit
-        existing_destinations_policy: ignore
+        existing_destinations_policy: update
   build-parameters:
     no-source: true
 - name: AISP_VP_AIRDIT-app-content
@@ -42,26 +42,30 @@ modules:
   build-parameters:
     build-result: resources
     requires:
-    - artifacts:
-      - comusermasteraispusermasteraisp.zip
-      name: comusermasteraispusermasteraisp
-      target-path: resources/
+    # - artifacts:
+    #   - comusermasteraispusermasteraisp.zip
+    #   name: comusermasteraispusermasteraisp
+    #   target-path: resources/
     - artifacts:
       - comapprovalmatrixapprovalmatrixaisp.zip
       name: comapprovalmatrixapprovalmatrixaisp
       target-path: resources/
-    - artifacts:
-      - comrequestmanagementrequestmanagement.zip
-      name: comrequestmanagementrequestmanagement
-      target-path: resources/
-    - artifacts:
-      - comrequestapprovalrequestprocess.zip
-      name: comrequestapprovalrequestprocess
-      target-path: resources/
-    - artifacts:
-      - comregistrationregistrationapprovalaisp.zip
-      name: comregistrationregistrationapprovalaisp
-      target-path: resources/
+    # - artifacts:
+    #   - comrequestmanagementrequestmanagement.zip
+    #   name: comrequestmanagementrequestmanagement
+    #   target-path: resources/
+    # - artifacts:
+    #   - comrequestapprovalrequestprocess.zip
+    #   name: comrequestapprovalrequestprocess
+    #   target-path: resources/
+    # - artifacts:
+    #   - comregistrationregistrationapprovalaisp.zip
+    #   name: comregistrationregistrationapprovalaisp
+    #   target-path: resources/
+    # - artifacts:
+    #   - comsystemconfigurationsystemconfigurationaisp.zip
+    #   name: comsystemconfigurationsystemconfigurationaisp
+    #   target-path: resources/
 - name: comusermasteraispusermasteraisp
   type: html5
   path: usermaster_aisp
@@ -105,6 +109,16 @@ modules:
 - name: comregistrationregistrationapprovalaisp
   type: html5
   path: registrationapproval_aisp
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: comsystemconfigurationsystemconfigurationaisp
+  type: html5
+  path: systemconfiguration_aisp
   build-parameters:
     build-result: dist
     builder: custom

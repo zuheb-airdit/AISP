@@ -15,6 +15,19 @@
             "version": "1.16.5",
             "toolsId": "16faca0b-35bc-4426-b808-74793ba2a147"
         },
+        "crossNavigation": {
+            "inbounds": {
+              "invoice-actionextract": {
+                "semanticObject": "vendorempanelment",
+                "action": "Display",
+                "title": "Approval Matrix",
+                "signature": {
+                  "parameters": {},
+                  "additionalParameters": "allowed"
+                }
+              }
+            }
+          },
         "dataSources": {
             "annotation0": {
                 "type": "ODataAnnotation",

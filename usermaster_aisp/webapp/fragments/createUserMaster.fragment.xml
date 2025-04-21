@@ -4,7 +4,7 @@
 		<content>
 			<l:SimpleForm id="_IDGenSimpleForm" editable="true" layout="ColumnLayout" columnsM="2" columnsL="3" columnsXL="4">
 				<Label id="_IDGenLabel1" text="User ID (Email ID)" labelFor="idUserId"/>
-				<Input id="idUserId" editable="true" valueHelpRequest="onValueHelp" showValueHelp="false" suggestionItems="{>/IasUsers}"
+				<Input id="idUserId" editable="true" valueHelpRequest="onValueHelpRequest" showValueHelp="true"  suggestionItems="{>/IasUsers}"
 					suggestionItemSelected=".onSuggestionItemSelected" required="true" liveChange=".onLiveChangeEmailValidation" change="onValueChangeUserId"
 					showSuggestion="true" suggest="onSuggest">
 					<suggestionItems>

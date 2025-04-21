@@ -78,7 +78,7 @@
             >
                 <items>
                     <IconTabFilter
-                        icon="/Images/NotInvited.png"
+                        icon="Images/NotInvited.png"
                         key="NotInvited"
                         iconColor="NonInteractive"
                         text="Not Invited"

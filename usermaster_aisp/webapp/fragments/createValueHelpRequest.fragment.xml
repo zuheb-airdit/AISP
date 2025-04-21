@@ -1,0 +1,43 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <Dialog
+        title="Select User"
+        type="Standard"
+        afterClose="onDialogClose"
+        contentWidth="40rem"
+        contentHeight="30rem">
+        
+        <content>
+            <VBox>
+                <SearchField
+                    id="userSearchField"
+                    width="100%"
+                    placeholder="Search by Email or Name"
+                    liveChange="onUserLiveSearch" />
+                <Table
+                    id="idUserTable"
+                    items="{/IasUsersF4Help}"
+                    growing="true"
+                    growingScrollToLoad="true">
+                    
+                    <columns>
+                        <Column><Text text="Email" /></Column>
+                        <Column><Text text="User Name" /></Column>
+                    </columns>
+                    
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{EMAIL}" />
+                                <Text text="{FIRST_NAME}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+
+        <endButton>
+            <Button text="Close" press="onDialogClose" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
