@@ -78,7 +78,7 @@
             >
                 <items>
                     <IconTabFilter
-                        icon="Images/NotInvited.png"
+                        icon="./Images/NotInvited.png"
                         key="NotInvited"
                         iconColor="NonInteractive"
                         text="Not Invited"
@@ -292,7 +292,7 @@
                     </IconTabFilter>
 
                     <IconTabFilter
-                        icon="/Images/Invited.png"
+                        icon="./Images/Invited.png"
                         key="Invited"
                         iconColor="Positive"
                         text="Invited"
@@ -500,7 +500,7 @@
                         </smartTable:SmartTable>
                     </IconTabFilter>
                     <IconTabFilter
-                        icon="/Images/Rejected.png"
+                        icon="./Images/Rejected.png"
                         key="Rejected"
                         iconColor="Negative"
                         text="Rejected"
@@ -708,7 +708,7 @@
                         </smartTable:SmartTable>
                     </IconTabFilter>
                     <IconTabFilter
-                        icon="/Images/SendBack.png"
+                        icon="./Images/SendBack.png"
                         key="SendBack"
                         iconColor="Critical"
                         text="Send Back"
@@ -916,7 +916,7 @@
                         </smartTable:SmartTable>
                     </IconTabFilter>
                     <IconTabFilter
-                        icon="/Images/Registered.png"
+                        icon="./Images/Registered.png"
                         key="Registered"
                         iconColor="Positive"
                         text="Registered"

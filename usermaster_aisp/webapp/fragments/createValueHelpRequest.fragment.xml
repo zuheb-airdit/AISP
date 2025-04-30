@@ -1,43 +1,45 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-    <Dialog
-        title="Select User"
-        type="Standard"
-        afterClose="onDialogClose"
-        contentWidth="40rem"
-        contentHeight="30rem">
+<core:FragmentDefinition
+	xmlns="sap.ui.comp.valuehelpdialog"
+	xmlns:m="sap.m"
+	xmlns:fb="sap.ui.comp.filterbar"
+	xmlns:core="sap.ui.core">
+	<ValueHelpDialog
+		id="valueHelpDialogsas"
+		title="Select Supplier"
+		ok=".onValueHelpOkPress"
+		cancel=".onValueHelpCancelPress"
+		afterClose=".onValueHelpAfterClose"
+		supportRanges="false"
+		supportRangesOnly="false"
+		key="EMAIL"
+		descriptionKey="FIRST_NAME"
+	>
+		<filterBar>
+			<fb:FilterBar
+				advancedMode="true"
+				search=".onFilterBarSearch"
+				isRunningInValueHelpDialog="true">
+				<fb:filterGroupItems>
+					<fb:FilterGroupItem
+						groupName="__$INTERNAL$"
+						name="Partner"
+						label="Search"
+						
+						visibleInFilterBar="true">
+						<fb:control>
+							<m:Input />
+						</fb:control>
+					</fb:FilterGroupItem>
+					
+				</fb:filterGroupItems>
+			</fb:FilterBar>
+		</filterBar>
         
-        <content>
-            <VBox>
-                <SearchField
-                    id="userSearchField"
-                    width="100%"
-                    placeholder="Search by Email or Name"
-                    liveChange="onUserLiveSearch" />
-                <Table
-                    id="idUserTable"
-                    items="{/IasUsersF4Help}"
-                    growing="true"
-                    growingScrollToLoad="true">
-                    
-                    <columns>
-                        <Column><Text text="Email" /></Column>
-                        <Column><Text text="User Name" /></Column>
-                    </columns>
-                    
-                    <items>
-                        <ColumnListItem>
-                            <cells>
-                                <Text text="{EMAIL}" />
-                                <Text text="{FIRST_NAME}" />
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                </Table>
-            </VBox>
-        </content>
-
-        <endButton>
-            <Button text="Close" press="onDialogClose" />
-        </endButton>
-    </Dialog>
+        
+	</ValueHelpDialog>
 </core:FragmentDefinition>
+
+                
+                
+
+           

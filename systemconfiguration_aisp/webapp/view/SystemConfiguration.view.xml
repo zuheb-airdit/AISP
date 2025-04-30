@@ -211,13 +211,14 @@
                         text="Masters"
                         class="sapUiTinyMarginBegin"
                     >
-                        <VBox>
+                        <VBox class="customCard">
                             <Table
                                 id="idProductsTable"
                                 inset="false"
                                 items="{ path: 'mastJsonModel>/results' }"
                                 growing="true"
                                 growingThreshold="10"
+                                growingScrollToLoad="true"
                             >
                                 <headerToolbar>
                                     <OverflowToolbar>
@@ -254,6 +255,10 @@
                                             <core:Item
                                                 key="companyCode"
                                                 text="Company Code"
+                                            />
+                                            <core:Item
+                                                key="userRole"
+                                                text="User Role"
                                             />
                                         </Select>
                                         <Button
@@ -316,55 +321,56 @@
                         text="Form Fields"
                         class="sapUiTinyMarginBegin"
                     >
-                        <VBox>
+                        <VBox class="customCard">
                             <HBox class="sapUiSmallMarginBottom">
                                 <Title
                                     text="Registration Form Fields"
                                     level="H3"
-                                    class="sapUiSmallMarginBegin"
                                 />
                                 <ToolbarSpacer />
-                                <HBox>
-                                    <Label
-                                        text="Request Type:"
-                                        class="sapUiTinyMarginEnd"
+                            </HBox>
+                            <HBox class="sapUiSmallMarginBottom">
+                                <Label
+                                    text="Request Type:"
+                                    class="sapUiTinyMarginEnd"
+                                />
+                                <ComboBox
+                                    id="requestTypeCombo"
+                                    selectedKey="Create Normal"
+                                    class="sapUiTinyMarginEnd"
+                                >
+                                    <core:Item
+                                        key="Create Supplier"
+                                        text="Create Supplier"
                                     />
-                                    <ComboBox
-                                        id="requestTypeCombo"
-                                        selectedKey="Create Normal"
-                                        class="sapUiTinyMarginEnd"
-                                    >
-                                        <core:Item
-                                            key="Create Normal"
-                                            text="Create Normal"
-                                        />
-                                        <core:Item
-                                            key="Update Normal"
-                                            text="Update Normal"
-                                        />
-                                    </ComboBox>
-                                    <Label
-                                        text="Entity Code:"
-                                        class="sapUiTinyMarginEnd"
+                                    <core:Item
+                                        key="Create User"
+                                        text="Create User"
                                     />
-                                    <ComboBox
-                                        id="companyCodeCombo"
-                                        selectedKey="1000"
-                                        class="sapUiTinyMarginEnd"
-                                    >
-                                        <core:Item
-                                            key="1000"
-                                            text="1000 - ABC Company Limited"
-                                        />
-                                    </ComboBox>
-                                    <Button
-                                        text="Submit/Refresh"
-                                        type="Emphasized"
-                                        icon="sap-icon://refresh"
-                                        press="onSubmitRefreshPress"
-                                        class="customButton"
+                                </ComboBox>
+                                <Label
+                                    text="Entity Code:"
+                                    class="sapUiTinyMarginEnd"
+                                />
+                                <ComboBox
+                                    id="idSourceCC"
+                                    selectedKey="{CompanyCode>BUKRS}"
+                                    items="{
+        path: '/CompanyCode'
+    }"
+                                >
+                                    <core:Item
+                                        key="{BUKRS}"
+                                        text="{BUKRS} - {BUTXT}"
                                     />
-                                </HBox>
+                                </ComboBox>
+                                <Button
+                                    text="Submit/Refresh"
+                                    type="Emphasized"
+                                    icon="sap-icon://refresh"
+                                    press="onSubmitRefreshPress"
+                                    class="sapUiTinyMarginBegin"
+                                />
                             </HBox>
                             <Table
                                 id="fieldConfigTable"

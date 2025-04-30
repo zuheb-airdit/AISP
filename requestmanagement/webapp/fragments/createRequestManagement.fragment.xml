@@ -30,8 +30,8 @@
                         showSecondaryValues="true"
                     >
                         <core:ListItem
-                            key="Create Normal"
-                            text="Create Normal"
+                            key="Create Supplier"
+                            text="Create Supplier"
                         />
                     </ComboBox>
                     <Label text="Company" />

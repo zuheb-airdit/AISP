@@ -20,42 +20,58 @@
                 <headerTitle>
                     <ObjectPageDynamicHeaderTitle>
                         <expandedHeading>
-                            <m:HBox>
+                            <m:HBox
+                                justifyContent="Start"
+                                alignItems="Center"
+                            >
                                 <m:Button
                                     icon="sap-icon://nav-back"
                                     press="onNavBack"
-                                    class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                                    class="sapUiTinyMarginEnd"
                                 />
                                 <m:Title
                                     text="{requestInfo>/REQUEST_NO}"
                                     wrapping="true"
                                     id="idReqTitle"
+                                    class="sapUiSmallMarginStart sapUiTinyMarginBottom"
                                 />
                             </m:HBox>
                         </expandedHeading>
+
                         <expandedContent>
-                            <m:HBox>
+                            <m:HBox
+                                alignItems="Center"
+                                class="sapUiTinyMarginTop"
+                            >
                                 <m:Label
-                                    text="Request Type :"
-                                    class="sapUiTinyMarginEnd"
+                                    text="Request Type:"
+                                    class="sapUiSmallMarginEnd"
                                 />
-                                <m:Text text="{requestInfo>/REQUEST_TYPE}" />
+                                <m:ObjectStatus
+                                    text="{requestInfo>/REQUEST_TYPE}"
+                                    state="Information"
+                                />
                             </m:HBox>
                         </expandedContent>
+
                         <snappedHeading>
-                            <m:HBox>
-                                <m:VBox>
-                                    <m:Title
-                                        text="{requestInfo>/REQUEST_NO}"
-                                        wrapping="true"
+                            <m:VBox>
+                                <m:Title
+                                    text="{requestInfo>/REQUEST_NO}"
+                                    wrapping="true"
+                                />
+                                <m:HBox alignItems="Center">
+                                    <m:Label
+                                        text="Request Type:"
+                                        class="sapUiSmallMarginEnd"
                                     />
-                                    <m:Label text="Request Type:" />
                                     <m:Text
                                         text="{requestInfo>/REQUEST_TYPE}"
                                     />
-                                </m:VBox>
-                            </m:HBox>
+                                </m:HBox>
+                            </m:VBox>
                         </snappedHeading>
+
                         <actions>
                             <m:Button
                                 text="Edit"
@@ -65,17 +81,19 @@
                             />
                             <m:Button
                                 text="Log"
-                                type="Emphasized"
+                                type="Transparent"
+                                icon="sap-icon://history"
                             />
                             <m:Button
                                 text="Messenger"
-                                type="Emphasized"
+                                type="Transparent"
+                                icon="sap-icon://discussion-2"
                             />
                             <m:OverflowToolbarButton
                                 icon="sap-icon://action"
                                 type="Transparent"
                                 text="Share"
-                                tooltip="action"
+                                tooltip="Share this request"
                             />
                         </actions>
                     </ObjectPageDynamicHeaderTitle>
@@ -85,11 +103,16 @@
                     <m:FlexBox
                         wrap="Wrap"
                         fitContainer="true"
+                        renderType="Div"
                     >
                         <m:VBox
                             class="sapUiLargeMarginEnd sapUiSmallMarginBottom"
+                            width="20rem"
                         >
-                            <m:HBox class="sapUiTinyMarginBottom">
+                            <m:HBox
+                                class="sapUiTinyMarginBottom"
+                                alignItems="Center"
+                            >
                                 <m:Label
                                     text="Company:"
                                     class="sapUiSmallMarginEnd"
@@ -99,8 +122,12 @@
                         </m:VBox>
                         <m:VBox
                             class="sapUiLargeMarginEnd sapUiSmallMarginBottom"
+                            width="20rem"
                         >
-                            <m:HBox class="sapUiTinyMarginBottom">
+                            <m:HBox
+                                class="sapUiTinyMarginBottom"
+                                alignItems="Center"
+                            >
                                 <m:Label
                                     text="Created By:"
                                     class="sapUiSmallMarginEnd"
@@ -110,8 +137,12 @@
                         </m:VBox>
                         <m:VBox
                             class="sapUiLargeMarginEnd sapUiSmallMarginBottom"
+                            width="20rem"
                         >
-                            <m:HBox class="sapUiTinyMarginBottom">
+                            <m:HBox
+                                class="sapUiTinyMarginBottom"
+                                alignItems="Center"
+                            >
                                 <m:Label
                                     text="Created On:"
                                     class="sapUiSmallMarginEnd"

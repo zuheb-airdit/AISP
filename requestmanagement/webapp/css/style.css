@@ -228,6 +228,55 @@
     word-wrap: break-word; /* Break long words if needed */
 }
 
+.customDialog .sapMDialogTitle {
+    color: #1a73e8;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+.customDialog {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(145deg, #ffffff, #f0f4f8);
+}
+.customInput {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background-color: #f9fafb;
+    font-size: 0.9rem;
+}
+.customSelect {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    background-color: #ffffff;
+}
+.customButton {
+    border-radius: 4px;
+    font-weight: 500;
+}
+.customButton.sapMBtnEmphasized {
+    background-color: #1a73e8;
+    color: #ffffff;
+}
+.customButton.sapMBtnEmphasized:hover {
+    background-color: #1557b0;
+}
+.customButton:not(.sapMBtnEmphasized) {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+.customButton:not(.sapMBtnEmphasized):hover {
+    background-color: #d1d5db;
+}
+
+/* /* Add to your CSS file or style tag */
+.sapUiForm .sapMLabel {
+    font-weight: bold;
+}
+.sapMTitle {
+    color: #0a6ed1;
+}
+
 
 
 

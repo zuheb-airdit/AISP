@@ -42,30 +42,30 @@ modules:
   build-parameters:
     build-result: resources
     requires:
-    # - artifacts:
-    #   - comusermasteraispusermasteraisp.zip
-    #   name: comusermasteraispusermasteraisp
-    #   target-path: resources/
+    - artifacts:
+      - comusermasteraispusermasteraisp.zip
+      name: comusermasteraispusermasteraisp
+      target-path: resources/
     - artifacts:
       - comapprovalmatrixapprovalmatrixaisp.zip
       name: comapprovalmatrixapprovalmatrixaisp
       target-path: resources/
-    # - artifacts:
-    #   - comrequestmanagementrequestmanagement.zip
-    #   name: comrequestmanagementrequestmanagement
-    #   target-path: resources/
-    # - artifacts:
-    #   - comrequestapprovalrequestprocess.zip
-    #   name: comrequestapprovalrequestprocess
-    #   target-path: resources/
-    # - artifacts:
-    #   - comregistrationregistrationapprovalaisp.zip
-    #   name: comregistrationregistrationapprovalaisp
-    #   target-path: resources/
-    # - artifacts:
-    #   - comsystemconfigurationsystemconfigurationaisp.zip
-    #   name: comsystemconfigurationsystemconfigurationaisp
-    #   target-path: resources/
+    - artifacts:
+      - comrequestmanagementrequestmanagement.zip
+      name: comrequestmanagementrequestmanagement
+      target-path: resources/
+    - artifacts:
+      - comrequestapprovalrequestprocess.zip
+      name: comrequestapprovalrequestprocess
+      target-path: resources/
+    - artifacts:
+      - comregistrationregistrationapprovalaisp.zip
+      name: comregistrationregistrationapprovalaisp
+      target-path: resources/
+    - artifacts:
+      - comsystemconfigurationsystemconfigurationaisp.zip
+      name: comsystemconfigurationsystemconfigurationaisp
+      target-path: resources/
 - name: comusermasteraispusermasteraisp
   type: html5
   path: usermaster_aisp

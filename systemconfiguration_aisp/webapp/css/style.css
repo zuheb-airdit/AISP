@@ -97,3 +97,45 @@
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+
+
+
+/* styling for edit form fragment */
+.customFormFieldDialogModernVBox {
+    background: linear-gradient(180deg, #fff 90%, #f7fafd 100%);
+    border-radius: 18px;
+}
+.dividerBar {
+    height: 1px;
+    background: #e5ebf3;
+    margin: 16px 0 8px 0;
+    min-width: 100%;
+    display: block;
+}
+.fieldIdInputModern input {
+    color: #223355 !important;
+    font-weight: bold !important;
+    background: #f7fafd !important;
+    border: 1.5px solid #d0d4db !important;
+    border-radius: 8px !important;
+}
+.uniqueSwitchModern .sapMSwtCont {
+    box-shadow: 0 0 6px 0 #abd6ef21;
+    border-radius: 22px;
+    border: 1.2px solid #c8e7fa;
+    background: linear-gradient(90deg,#e9f6fc 60%,#f6eaff 100%) !important;
+}
+.uniqueTextAreaModern textarea {
+    border-radius: 8px !important;
+    border: 1.5px solid #d0d4db !important;
+    background: #fafcff !important;
+    font-size: 1.06rem !important;
+}
+.labelBold {
+    font-weight: 500;
+    min-width: 72px;
+}
+
+
+
+

@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/Fragment",
     "sap/m/MessageBox",
-    "sap/m/BusyDialog"
-], (Controller,Fragment,MessageBox,BusyDialog) => {
+    "sap/m/BusyDialog",
+    "sap/ui/model/json/JSONModel"
+], (Controller, Fragment, MessageBox, BusyDialog, JSONModel) => {
     "use strict";
 
     return Controller.extend("com.requestmanagement.requestmanagement.controller.RequestManagement", {
@@ -52,7 +53,7 @@ sap.ui.define([
             this.vhFragmentReqManagement.open();
         },
 
-        onCloseReqManagement: function(){
+        onCloseReqManagement: function () {
             this.vhFragmentReqManagement.close();
         },
 
@@ -183,7 +184,7 @@ sap.ui.define([
         onValueHelpVendorFrag: function () {
             debugger;
             let oView = this.getView();
-        
+
             // Check if the dialog already exists
             if (!this._oValueHelpDialog1) {
                 Fragment.load({
@@ -193,10 +194,10 @@ sap.ui.define([
                 }).then(function (oDialog) {
                     this._oValueHelpDialog1 = oDialog;
                     oView.addDependent(this._oValueHelpDialog1);
-        
+
                     // Bind data after dialog is loaded
                     this._bindVendorTypeData1(oDialog);
-        
+
                     oDialog.open();
                 }.bind(this));
             } else {
@@ -209,10 +210,10 @@ sap.ui.define([
             debugger;
             let oModel = this.getView().getModel("request-process"); // Get the model
             oDialog.setModel(oModel); // Set model to the dialog
-        
+
             oDialog.getTableAsync().then(function (oTable) {
                 oTable.setModel(oModel); // Set model to the table
-        
+
                 if (oTable.bindRows) {
                     oTable.bindAggregation("rows", {
                         path: "/Vendor_Sub_Type",
@@ -222,21 +223,21 @@ sap.ui.define([
                             }
                         }
                     });
-        
+
                     // Add columns dynamically if they don't already exist
                     if (oTable.getColumns().length === 0) {
                         oTable.addColumn(new sap.ui.table.Column({
                             label: new sap.m.Label({ text: "Language (SPRAS)" }),
                             template: new sap.m.Text({ text: "{SPRAS}" })
                         }));
-        
+
                         oTable.addColumn(new sap.ui.table.Column({
                             label: new sap.m.Label({ text: "Description (TEXT40)" }),
                             template: new sap.m.Text({ text: "{TEXT40}" })
                         }));
                     }
                 }
-        
+
                 oDialog.update();
             }.bind(this));
         },
@@ -244,7 +245,7 @@ sap.ui.define([
         onValueHelpSubVendorFrag: function () {
             debugger;
             let oView = this.getView();
-        
+
             // Check if the dialog already exists
             if (!this._oValueHelpDialog) {
                 Fragment.load({
@@ -254,10 +255,10 @@ sap.ui.define([
                 }).then(function (oDialog) {
                     this._oValueHelpDialog = oDialog;
                     oView.addDependent(this._oValueHelpDialog);
-        
+
                     // Bind data after dialog is loaded
                     this._bindVendorTypeData(oDialog);
-        
+
                     oDialog.open();
                 }.bind(this));
             } else {
@@ -265,15 +266,15 @@ sap.ui.define([
                 this._oValueHelpDialog.open();
             }
         },
-        
+
         _bindVendorTypeData: function (oDialog) {
             debugger;
             let oModel = this.getView().getModel("request-process"); // Get the model
             oDialog.setModel(oModel); // Set model to the dialog
-        
+
             oDialog.getTableAsync().then(function (oTable) {
                 oTable.setModel(oModel); // Set model to the table
-        
+
                 if (oTable.bindRows) {
                     oTable.bindAggregation("rows", {
                         path: "/Vendor_Type",
@@ -283,25 +284,25 @@ sap.ui.define([
                             }
                         }
                     });
-        
+
                     // Add columns dynamically if they don't already exist
                     if (oTable.getColumns().length === 0) {
                         oTable.addColumn(new sap.ui.table.Column({
                             label: new sap.m.Label({ text: "Language (SPRAS)" }),
                             template: new sap.m.Text({ text: "{SPRAS}" })
                         }));
-        
+
                         oTable.addColumn(new sap.ui.table.Column({
                             label: new sap.m.Label({ text: "Description (TXT30)" }),
                             template: new sap.m.Text({ text: "{TXT30}" })
                         }));
                     }
                 }
-        
+
                 oDialog.update();
             }.bind(this));
         },
- 
+
         onValueHelpOkPressRolesVendor: function (oEvent) {
             debugger;
             let aSelectedContexts = oEvent.getParameter("tokens");
@@ -309,14 +310,14 @@ sap.ui.define([
                 let oSelectedItem = aSelectedContexts[0].data(); // Assuming single selection
                 let sSelectedKey = oSelectedItem.row.SPRAS;
                 let sSelectedText = oSelectedItem.row.TEXT40;
-        
+
                 // Set the selected value to the respective input field
                 sap.ui.getCore().byId("idVendorTypes").setValue(`${sSelectedKey} - ${sSelectedText}`);
             }
             this._oValueHelpDialog1.close();
         },
-        
-        
+
+
         onValueHelpOkPressRoles: function (oEvent) {
             debugger;
             let aSelectedContexts = oEvent.getParameter("tokens");
@@ -324,13 +325,13 @@ sap.ui.define([
                 let oSelectedItem = aSelectedContexts[0].data(); // Assuming single selection
                 let sSelectedKey = oSelectedItem.row.SPRAS;
                 let sSelectedText = oSelectedItem.row.TXT30;
-        
+
                 // Set the selected value to the respective input field
                 sap.ui.getCore().byId("idSubVendorTypes").setValue(`${sSelectedKey} - ${sSelectedText}`);
             }
             this._oValueHelpDialog.close();
         },
-        
+
         onValueHelpCancelPress: function () {
             debugger;
             this._oValueHelpDialog.close();
@@ -340,30 +341,30 @@ sap.ui.define([
             debugger;
             this._oValueHelpDialog1.close();
         },
-        
+
         onValueHelpAfterClose: function () {
             debugger;
             this._oValueHelpDialog.destroy();
             this._oValueHelpDialog = null;
         },
-        
+
         onFilterBarSearch: function (oEvent) {
             debugger;
             let oFilterData = oEvent.getSource().getFilterData();
             console.log("Filter Data:", oFilterData);
-            
+
             // Implement filter logic as needed
         },
 
         onSubmitReqManagement: function (oEvent) {
             debugger;
-            
+
             // Create busy dialog
             const oBusyDialog = new BusyDialog({
                 text: "Submitting request...",
                 title: "Processing"
             });
-            
+
             const sRequestType = sap.ui.getCore().byId("idReqType").getSelectedKey();
             const aCompanyCodes = sap.ui.getCore().byId("idVendorEntity").getSelectedKeys();
             const sVendorName = sap.ui.getCore().byId("idVendorName").getValue();
@@ -373,15 +374,15 @@ sap.ui.define([
             const sVendorSubType = sap.ui.getCore().byId("idSubVendorTypes").getValue().split("-")[0].trim();
             const sVendorSubTypeDesc = sap.ui.getCore().byId("idSubVendorTypes").getValue().split("-")[1].trim();
             const sComment = sap.ui.getCore().byId("idTextArea").getValue();
-        
+
             if (!sVendorName || !sVendorEmail || !aCompanyCodes.length) {
                 MessageToast.show("Please fill all required fields");
                 return;
             }
-        
+
             // Join company codes into a single comma-separated string
             const sCompanyCodesString = aCompanyCodes.join(",");
-        
+
             // Prepare payload
             const oPayload = {
                 action: "CREATE",
@@ -398,22 +399,29 @@ sap.ui.define([
                     REQUESTER_ID: "vai@gmail.com"
                 }]
             };
-        
+
             // Get the OData model
             const oModel = this.getView().getModel();
-            
+
             // Show busy dialog before request
             oBusyDialog.open();
-            
+
             // Make the POST request
             oModel.create("/RequestProcess", oPayload, {
-                success: function(oData, oResponse) {
+                success: function (oData, oResponse) {
                     // Close busy dialog first
                     oBusyDialog.close();
+                    sap.ui.getCore().byId("idReqType").setSelectedKey("");
+                    sap.ui.getCore().byId("idVendorEntity").setSelectedKeys([]);
+                    sap.ui.getCore().byId("idVendorName").setValue("");
+                    sap.ui.getCore().byId("idVendorEmail").setValue("");
+                    sap.ui.getCore().byId("idVendorTypes").setValue("");
+                    sap.ui.getCore().byId("idSubVendorTypes").setValue("");
+                    sap.ui.getCore().byId("idTextArea").setValue("");
                     MessageBox.success("Request created successfully");
                     this.vhFragmentReqManagement.close();
                 }.bind(this),  // Bind this to maintain controller context
-                error: function(oError) {
+                error: function (oError) {
                     // Close busy dialog on error too
                     oBusyDialog.close();
                     this.vhFragmentReqManagement.close();
@@ -467,10 +475,72 @@ sap.ui.define([
             }
         },
 
-        onInviteRquestManagement : function(){
-            this.getOwnerComponent().getRouter().navTo("Registrationform")
-        }
-        
-    
+        onInviteRquestManagement: function () {
+            var oModel = this.getOwnerComponent().getModel(); // OData model
+
+            // Fetch CompanyCode data
+            oModel.read("/CompanyCode", {
+                success: function (oData) {
+                    var oCompanyModel = new JSONModel(oData.results);
+                    this.getView().setModel(oCompanyModel, "companyModel");
+
+                    // Load the fragment
+                    if (!this._oDialog) {
+                        Fragment.load({
+                            id: this.getView().getId(),
+                            name: "com.requestmanagement.requestmanagement.fragments.CompanyCodeRequestTypeDialog",
+                            controller: this
+                        }).then(function (oDialog) {
+                            this._oDialog = oDialog;
+                            this.getView().addDependent(this._oDialog);
+                            this._oDialog.bindElement({
+                                path: "/CompanyCode"
+                            });
+                            this._oDialog.open();
+                        }.bind(this));
+                    } else {
+                        this._oDialog.open();
+                    }
+                }.bind(this),
+                error: function (oError) {
+                    console.error("Error fetching CompanyCode data:", oError);
+                    MessageBox.error("Failed to load company codes. Please try again.");
+                }
+            });
+
+        },
+
+        onProceedWithRequest: function () {
+            debugger;
+            var oCompanyCodeSelect = this.byId("companyCodeSelect");
+            var sCompanyCode = oCompanyCodeSelect.getSelectedKey();
+            var sRequestType = "Create User"; // Fixed as per requirement
+
+            if (!sCompanyCode) {
+                MessageBox.error("Please select a company code.");
+                return;
+            }
+
+            // Navigate to the Registrationform route with parameters
+            this.getOwnerComponent().getRouter().navTo("Registrationform", {
+                companyCode: sCompanyCode,
+                requestType: sRequestType
+            });
+
+            this._oDialog.close();
+        },
+
+        onCancelDialog: function () {
+            this._oDialog.close();
+        },
+
+        onAfterCloseDialog: function () {
+            if (this._oDialog) {
+                this._oDialog.destroy();
+                this._oDialog = null;
+            }
+        },
+
+
     });
 });

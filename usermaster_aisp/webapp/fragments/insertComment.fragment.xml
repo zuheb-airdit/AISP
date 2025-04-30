@@ -1,17 +1,17 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:upload="sap.m.upload" xmlns:form="sap.ui.comp.smartform"
 	xmlns:sf="sap.ui.comp.smartfield" xmlns:l="sap.ui.layout">
-	<Dialog id="idDeleteCommentDialog" title="Please write comment" type="Message" afterClose="onDialogClose">
+	<Dialog id="idDeleteCommentDialog" title="📝 Please write comment" type="Message" afterClose="onDialogClose">
 		<content>
 			<VBox class="sapUiSmallMargin" width="30rem">
-				<Label text="Comment" labelFor="instructionInput"/>
-				<TextArea id="idcomment" width="100%" height="" placeholder="Max Characters 500" maxLength="500"/>
+				<Label text="📢 Comment" labelFor="instructionInput"/>
+				<TextArea id="idcomment" width="100%" height="" cols="20" rows="5" placeholder="💬 Max Characters 500" maxLength="500"/>
 			</VBox>
 		</content>
 		<beginButton>
-			<Button text="Submit" press="onDeleteConfirm"/>
+			<Button text="Submit" press="onDeleteConfirm" icon="sap-icon://save"/>
 		</beginButton>
 		<endButton>
-			<Button text="Cancel" press="onDialogCancel"/>
+			<Button text="Cancel" press="onDialogCancel" icon="sap-icon://cancel"/>
 		</endButton>
 	</Dialog>
 </core:FragmentDefinition>

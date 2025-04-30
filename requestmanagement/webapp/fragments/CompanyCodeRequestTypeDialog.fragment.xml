@@ -1,0 +1,22 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <Dialog id="companyCodeRequestTypeDialog" title="Select Request Details" contentWidth="400px" class="customDialog">
+        <VBox class="sapUiSmallMargin">
+            <!-- Request Type (Read-only) -->
+            <Label text="Request Type" design="Bold" class="sapUiTinyMarginBottom"/>
+            <Input value="Create User" enabled="false" class="customInput"/>
+
+            <!-- Company Code Selection with Direct OData Binding -->
+            <Label text="Company Code" design="Bold" class="sapUiTinyMarginBottom sapUiTinyMarginTop"/>
+            <ComboBox id="companyCodeSelect" width="100%" class="customSelect" 
+                      items="{path: '/CompanyCode'}" selectionChange=".onCompanyCodeChange">
+                <core:ListItem key="{BUKRS}" text="{= ${BUKRS} + ' - ' + ${BUTXT} || 'Unnamed Company' }"/>
+            </ComboBox>
+        </VBox>
+        <beginButton>
+            <Button text="Proceed" type="Emphasized" press=".onProceedWithRequest" class="customButton"/>
+        </beginButton>
+        <endButton>
+            <Button text="Cancel" press=".onCancelDialog" class="customButton"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

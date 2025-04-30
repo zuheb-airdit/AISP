@@ -15,6 +15,19 @@
             "version": "1.17.0",
             "toolsId": "d147aecf-ab7e-4534-8144-010dd3ecdd0a"
         },
+        "crossNavigation": {
+            "inbounds": {
+                "invoice-actionextract": {
+                    "semanticObject": "vendorempanelment",
+                    "action": "Approve",
+                    "title": "Registration Approval",
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    }
+                }
+            }
+        },
         "dataSources": {
             "mainService": {
                 "uri": "/v2/odata/v4/registration-manage/",
@@ -105,7 +118,7 @@
                         "TargetRegistrationApproval"
                     ]
                 },
-                 {
+                {
                     "pattern": "Register/{id}",
                     "name": "RegisterObjPage",
                     "target": "RegisterObjPage"

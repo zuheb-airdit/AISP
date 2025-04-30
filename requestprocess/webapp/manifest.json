@@ -15,6 +15,19 @@
             "version": "1.17.0",
             "toolsId": "2087e93a-f114-4f75-9ad5-aa71bb265db5"
         },
+        "crossNavigation": {
+            "inbounds": {
+              "invoice-actionextract": {
+                "semanticObject": "vendorempanelment",
+                "action": "Approval",
+                "title": "Request Process",
+                "signature": {
+                  "parameters": {},
+                  "additionalParameters": "allowed"
+                }
+              }
+            }
+          },
         "dataSources": {
             "mainService": {
                 "uri": "/v2/odata/v4/request-process/",

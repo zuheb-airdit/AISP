@@ -9,7 +9,7 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator"
-], (Controller,formatter,JSONModel,Popover,List,StandardListItem,MessageBox , Fragment, Filter, FilterOperator) => {
+], (Controller, formatter, JSONModel, Popover, List, StandardListItem, MessageBox, Fragment, Filter, FilterOperator) => {
     "use strict";
 
     return Controller.extend("com.usermasteraisp.usermasteraisp.controller.Usermaster", {
@@ -17,6 +17,20 @@ sap.ui.define([
         onInit() {
             this.oModel = this.getOwnerComponent().getModel();
             this.getView().setModel(this.oModel)
+            this.getIasUsers();
+        },
+
+        getIasUsers: function () {
+            const oModel1 = this.getView().getModel();
+            oModel1.read("/IasUsersF4Help", {
+                success: function (response) {
+                    debugger;
+                    const valueModel = new JSONModel(response);
+                    this.getView().setModel(valueModel, "valueModel")
+                }.bind(this),
+                error: function (error) {
+                }
+            })
         },
 
 
@@ -334,12 +348,12 @@ sap.ui.define([
         onSumbitUserMasterEdit: function () {
             this.getView().setBusy(true);
             this.updateFragment.close();
-        
+
             // Get required input values
             let userId = sap.ui.getCore().byId("idUserIdEdit").getValue();
             let userRoles = sap.ui.getCore().byId("idEditUserRole").getSelectedKeys();
             let selectedCompanyCodes = sap.ui.getCore().byId("idCompanyCodeEdit").getSelectedKeys(); // Array
-        
+
             // Company Code Data (Manually Mapped)
             let companyData = [
                 { BUKRS: "1000", BUTXT: "Airdit" },
@@ -348,25 +362,25 @@ sap.ui.define([
                 { BUKRS: "4000", BUTXT: "TCS" },
                 { BUKRS: "5000", BUTXT: "Google" }
             ];
-        
+
             // Map Company Codes to Descriptions
             let companyDescArray = selectedCompanyCodes.map(code => {
                 let company = companyData.find(item => item.BUKRS === code);
                 return company ? company.BUTXT : "";
             }).filter(desc => desc !== ""); // Remove any empty descriptions
-        
+
             // Construct payload
             let oPayload = {
                 USER_ROLE: userRoles.join(","), // Convert array to comma-separated string
                 COMPANY_CODE: selectedCompanyCodes.join(","), // Convert array to comma-separated string
                 COMPANY_DESC: companyDescArray.join(",") // Convert mapped descriptions to string
             };
-        
+
             console.log("Final Payload:", oPayload); // Debugging
-        
+
             // Get model
             let oModel = this.getView().getModel();
-        
+
             // Update user details
             oModel.update(`/VMUsers(EMAIL='${userId}')`, oPayload, {
                 success: function (oData) {
@@ -380,7 +394,7 @@ sap.ui.define([
                 }.bind(this)
             });
         },
-        
+
 
 
         //for delete and revoke users
@@ -523,23 +537,155 @@ sap.ui.define([
                 oButton.setVisible(false);
             }
         },
-             // Create Value help request 
-            onValueHelpRequest: function () {
-                if (!this.createValueHelpRequestFrag) {  
-                    this.createValueHelpRequestFrag = sap.ui.xmlfragment("com.usermasteraisp.usermasteraisp.fragments.createValueHelpRequest", this); 
-                    this.getView().addDependent(this.createValueHelpRequestFrag);  
-                }
-                this.createValueHelpRequestFrag.open();  
-            },
-            onDialogClose:function(){
-                this.createValueHelpRequestFrag.close();
-            },
 
-            // live search in value help
+        // Create Value help request 
+        onValueHelpRequest: function () {
+            const oView = this.getView();
 
-            onUserLiveSearch: function (oEvent) {
-                
+            if (!this._oValueHelpDialog) {
+                sap.ui.core.Fragment.load({
+                    id: oView.getId(),
+                    name: "com.usermasteraisp.usermasteraisp.fragments.createValueHelpRequest",    // namesapce
+                    controller: this,
+                }).then(
+                    function (oDialog) {
+                        this._oValueHelpDialog = oDialog;
+                        oView.addDependent(this._oValueHelpDialog);
+
+                        // ✅ Now it's safe to use getFilterBar after dialog is ready
+                        const oFilterBar = this._oValueHelpDialog.getFilterBar();
+                        const oInput = oFilterBar?.determineControlByName("Partner");
+                        if (oInput) {
+                            oInput.attachLiveChange(this.onSearchLiveChange, this);
+                        }
+
+                        this._oValueHelpDialog.getTableAsync().then(
+                            function (oTable) {
+                                const tModel = oView.getModel("valueModel");
+                                oTable.setModel(tModel);
+                                oTable.bindRows("/results");
+
+                                // Add Columns
+                                oTable.addColumn(
+                                    new sap.ui.table.Column({
+                                        label: new sap.m.Label({ text: "Email" }),
+                                        template: new sap.m.Text({ text: "{EMAIL} " }),
+                                        sortProperty: "EMAIL",
+                                        // customData:"{FIRST_NAME}",
+                                        filterProperty: "EMAIL",
+                                    })
+                                );
+
+                                oTable.addColumn(
+                                    new sap.ui.table.Column({
+                                        label: new sap.m.Label({ text: "User Name" }),
+                                        template: new sap.m.Text({ text: "{FIRST_NAME}" }),
+                                        sortProperty: "FIRST_NAME",
+                                        filterProperty: "FIRST_NAME",
+                                    })
+                                );
+
+                                // oTable.addColumn(
+                                //     new sap.ui.table.Column({
+                                //         label: new sap.m.Label({ text: "Account Group" }),
+                                //         template: new sap.m.Text({
+                                //             text: "{SupplierAccountGroup}",
+                                //         }),
+                                //         sortProperty: "SupplierAccountGroup",
+                                //         filterProperty: "SupplierAccountGroup",
+                                //     })
+                                // );
+
+                                this._oValueHelpDialog.update();
+                            }.bind(this)
+                        );
+
+                        this._oValueHelpDialog.open();
+                    }.bind(this)
+                );
+            } else {
+                this._oValueHelpDialog.open();
             }
-                        
+        },
+
+        onValueHelpOkPress: function (oEvent) {
+            const aTokens = oEvent.getParameter("tokens");
+
+            if (aTokens && aTokens.length > 0) {
+                const sSelectedKey = aTokens[0].getKey(); // Partner
+                const sDescriptionFull = aTokens[0].getText(); // FIRST_NAME (EMAIL)
+
+                const sDescription = sDescriptionFull.split(" (")[0]; // Extract FIRST_NAME  
+
+                sap.ui.getCore().byId("idUserId").setValue(sSelectedKey);
+                sap.ui.getCore().byId("idUserName").setValue(sDescription);
+
+                const oUserIdField = sap.ui.getCore().byId("idUserId");
+                const oUserNameField = sap.ui.getCore().byId("idUserName");
+
+                // if (oUserIdField !== 0  && oUserNameField !== 0) {
+                //     oUserIdField.setValue(sSelectedKey);
+                //     oUserIdField.setEditable(false);
+
+                //     oUserNameField.setValue(sDescription);
+                //     oUserNameField.setEditable(false);
+                // } else {
+                //     console.warn("Input fields not found by ID.");
+                // }
+            }
+
+            this._oValueHelpDialog.close();
+        },
+
+        onCustomGo: function () {
+            var oSmartTable = this.byId("idReportLists");
+            oSmartTable.rebindTable(); // Triggers 'onBeforeSuppList'
+        },
+
+        onValueHelpCancelPress: function () {
+            this._oValueHelpDialog.close();
+        },
+
+        onValueHelpAfterClose: function () {
+            this._oValueHelpDialog.destroy();
+            this._oValueHelpDialog = null;
+        },
+
+        onSearchLiveChange: function (oEvent) {
+            debugger;
+            const sSearchValue = oEvent.getParameter("newValue");
+            const oTable = this._oValueHelpDialog.getTable();
+            const oBinding = oTable.getBinding("rows");
+
+            const aFilters = [];
+
+            if (sSearchValue) {
+                aFilters.push(
+                    new sap.ui.model.Filter({
+                        filters: [
+                            new sap.ui.model.Filter(
+                                "EMAIL",
+                                sap.ui.model.FilterOperator.Contains,
+                                sSearchValue
+                            ),
+                            new sap.ui.model.Filter(
+                                "FIRST_NAME",
+                                sap.ui.model.FilterOperator.Contains,
+                                sSearchValue
+                            ),
+                            // new sap.ui.model.Filter(
+                            //     "SupplierAccountGroup",
+                            //     sap.ui.model.FilterOperator.Contains,
+                            //     sSearchValue
+                            // ),
+                        ],
+                        and: false,
+                    })
+                );
+            }
+
+            oBinding.filter(aFilters);
+        },
+
     });
 });
