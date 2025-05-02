@@ -4,7 +4,7 @@
     xmlns="sap.m"
     xmlns:layout="sap.ui.layout"
 >
-    <Page title="Create Vendor">
+    <Page title="Create Supplier" >
         <content>
             <Wizard
                 id="vendorWizard"

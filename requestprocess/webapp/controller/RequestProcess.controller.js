@@ -26,8 +26,13 @@ sap.ui.define([
         onBeforeBindTableReqApproval: function (oEvent) {
             debugger;
             let oBindingParams = oEvent.getParameter("bindingParams");
-            var filter = new sap.ui.model.Filter("STATUS", "EQ", "15")
-            oBindingParams.filters.push(filter);
+            var oFilter1 = new sap.ui.model.Filter("STATUS", "EQ", "15")
+            var oFilter2 = new sap.ui.model.Filter("STATUS", "EQ", 2);
+            var oFilter = new sap.ui.model.Filter({
+                filters: [oFilter1, oFilter2],
+                and: false // Use 'and: false' for OR condition
+            });
+            oBindingParams.filters.push(oFilter);
         },
 
         createdOnAndByFormatter: function (createdOn) {

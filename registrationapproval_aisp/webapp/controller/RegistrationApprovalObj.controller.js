@@ -15,21 +15,16 @@ sap.ui.define([
                 this.getView().setModel(oModel);                
                 this.getOwnerComponent().getRouter().getRoute("RegisterObjPage").attachPatternMatched(this.onObjectMatched, this);
             },
-            createdOnAndByFormatter: function (createdOn) {
-                debugger;
-                if (!createdOn) {
-                    return "";
-                }
-
-                var oDateFormat = DateFormat.getDateInstance({
-                    pattern: "dd-MM-yyyy"
-                });
-                var formattedDate = oDateFormat.format(new Date(createdOn));
-
-                return formattedDate;
-            },
+            
 
             onObjectMatched: function (oEvent) {
+                const oView = this.getView();
+                // const oModel = oView.getModel("requestInfo");
+                // oModel.setProperty("/editable", false);
+                oView.byId("idSendBackBtn").setEnabled(true);
+                oView.byId("idRejectBtn").setEnabled(true);
+                oView.byId("idAcceptBtn").setEnabled(true);
+                oView.byId("idSubmitBtn").setVisible(false);
                 this.getView().setBusy(true)
                 var sObjectId = oEvent.getParameter("arguments").id;
                 // let oModel = this.getOwnerComponent().getModel("registration-manage");
@@ -52,63 +47,6 @@ sap.ui.define([
                                     "IMAGE_FILE_NAME": item.IMAGE_FILE_NAME
                             }
                         })
-
-                        this.payLoad =
-                        {
-                            "action": "APPROVE",
-                            "REQUEST_NO": res.REQUEST_NO,
-                            "stepNo": 1,
-                            "reqHeader": [
-                                {
-                                    "REGISTERED_ID": res.REGISTERED_ID,
-                                    "VENDOR_ORGANISATION_NAME": res.VENDOR_ORGANISATION_NAME,
-                                    "CONTACT_PERSON": res.CONTACT_PERSON,
-                                    "PRIORITY": res.PRIORITY,
-                                    "PAN_NO": res.PAN_NO,
-                                    "GST_NO": res.GST_NO,
-                                    "DUE_DELI_NUM": res.DUE_DELI_NUM,
-                                    "LST_NO": res.LST_NO,
-                                    "CST_NO": res.CST_NO,
-                                    "MSME_CATEGORY": res.MSME_CATEGORY,
-                                    "VENDOR_ACCOUNT_GROUP": res.VENDOR_ACCOUNT_GROUP,
-                                    "DUE_DILIGANCE": res.DUE_DILIGANCE,
-                                    "DUE_DILIGANCE_REQ_NO": res.DUE_DELI_NUM,
-                                    "APPROVER": res.APPROVER
-                                }
-                            ],
-                            "addressData": [
-                                {
-                                    "STREET1": res.TO_ADDRESS.results[0].STREET1,
-                                    "STREET2": res.TO_ADDRESS.results[0].STREET2,
-                                    "STREET3": res.TO_ADDRESS.results[0].STREET3,
-                                    "CITY": res.TO_ADDRESS.results[0].CITY,
-                                    "COUNTRY": res.TO_ADDRESS.results[0].COUNTRY,
-                                    "DISTRICT": res.TO_ADDRESS.results[0].DISTRICT,
-                                    "PINCODE": res.TO_ADDRESS.results[0].POSTAL_CODE,
-                                    "STATE": res.TO_ADDRESS.results[0].STATE,
-                                    "POSTAL_CODE": res.TO_ADDRESS.results[0].POSTAL_CODE,
-                                    "EMAIL": res.TO_ADDRESS.results[0].EMAIL,
-                                    "EMAIL_ADDRESS_FOR_PAYMENT": res.TO_ADDRESS.results[0].EMAIL_PAYMENT,
-                                    "CONTACT_NO": res.TO_ADDRESS.results[0].CONTACT_NO,
-                                    "CONTACT_TELECODE": res.TO_ADDRESS.results[0].TELEPHONE
-                                }
-                            ],
-                            "bankData": [
-                                {
-                                    "BRANCH_NAME": res.TO_BANKS.results[0].BRANCH_NAME,
-                                    "IFSC": res.TO_BANKS.results[0].IFSC_CODE,
-                                    "BANK_NAME": res.TO_BANKS.results[0].BANK_NAME,
-                                    "ACCOUNT_NO": res.TO_BANKS.results[0].ACCOUNT_NO,
-                                    "ACCOUNT_TYPE": res.TO_BANKS.results[0].ACCOUNT_TYPE
-                                }
-                            ],
-                            "CompanyProfile": arrAttachemnts,
-
-
-                        }
-
-
-
                     }.bind(this),
                     error: function (err) {
                         debugger;
@@ -142,213 +80,284 @@ sap.ui.define([
                 window.open(base64URL);
             },
 
-
-            // onSubmitRequestForm:function(){
-            //     debugger;
-            //     let data = this.payLoad;
-            //     let model=this.getView().getModel();
-
-            //      model.create("/PostRegData",data,{
-            //         success: function(res,data){
-            //             console.log("res",res)
-            //             debugger;
-            //             MessageBox.show("Approved Successfully");
-            //         },
-            //         error: function(err){
-            //             debugger;
-            //             MessageBox.show("Unable to Approve");
-            //         }
-            //      })
-
-            // }
-            onSubmitRequestForm: function () {
-                debugger;
-                this.getView().setBusy(true)
-                var sFunctionImportPath = "/PostRegData";
-                let oModel = this.getView().getModel();
-                let pData = this.payLoad;
-                oModel.create(sFunctionImportPath, pData, {
-                    success: function (oData, response) {
-                        debugger;
-                        this.getView().setBusy(false)
-                        sap.m.MessageBox.success('Request Approved', {
-                            emphasizedAction: sap.m.MessageBox.Action.CLOSE,
-                            onClose: function (sAction) {
-                                this.getOwnerComponent().getRouter().navTo("RegisterApproval")
-
-                            }.bind(this)
-                        })
-                    }.bind(this),
-                    error: function (oError) {
-                        debugger;
-                        this.getView().setBusy(false)
-                        sap.m.MessageBox.error("Something went Wrong");
-                       
-                    }.bind(this)
-                });
-            },
-
-            formatDueDeliNum: function (sDueDeliNum) {
-                return sDueDeliNum ? sDueDeliNum : "N/A";
-            },
-
-            onRejectRegistration: function () {
-                this.getView().setBusy(true)
-                var sFunctionImportPath = "/PostRegData";
-                let oModel = this.getView().getModel();
-                let pData = this.payLoad;
-                pData.action = "REJECT"
-
-                oModel.create(sFunctionImportPath, pData, {
-                    success: function (oData, response) {
-                        debugger;
-                        this.getView().setBusy(false)
-                        sap.m.MessageBox.success('Request Rejected', {
-                            emphasizedAction: sap.m.MessageBox.Action.CLOSE,
-                            onClose: function (sAction) {
-                                this.getOwnerComponent().getRouter().navTo("RegisterApproval")
-
-                            }.bind(this)
-                        })
-                    }.bind(this),
-                    error: function (oError) {
-                        debugger;
-                        this.getView().setBusy(false)
-                        sap.m.MessageBox.error("Something went Wrong");
-                        console.error("Error:", oError);
-                    }.bind(this)
-                });
-            },
-            onSendBackRegistration: function () {
-                var oView = this.getView();
-                if (!this.sendBackFragment) {
-                    this.sendBackFragment = sap.ui.xmlfragment("com.air.vp.lnchpage.fragments.RequestManagement.SendBackDialog", this);
-                    this.getView().addDependent(this.sendBackFragment);
-                }
-                this.sendBackFragment.open();
-            },
-
             onDialogCancel: function () {
                 this.sendBackFragment.close();
             },
 
-            onSendBackConfirm: function () {
-                var sInstructions = sap.ui.getCore().byId("instructionInput").getValue();
-                this.getView().setBusy(true);
-
-                var sFunctionImportPath = "/PostRegData";
-                let oModel = this.getView().getModel();
-                let pData = this.payLoad;
-                pData.action = "SEND_BACK";
-                pData.reqHeader.INSTRUCTIONS = sInstructions; // Add instructions to payload
-                
-
-                oModel.create(sFunctionImportPath, pData, {
-                    success: function (oData, response) {
-                        this.getView().setBusy(false);
-                        sap.m.MessageBox.success('Request Sent Back', {
-                            emphasizedAction: sap.m.MessageBox.Action.CLOSE,
-                            onClose: function (sAction) {
-                                this.getOwnerComponent().getRouter().navTo("RegisterApproval");
-                            }.bind(this)
-                        });
-                    }.bind(this),
-                    error: function (oError) {
-                        this.getView().setBusy(false);
-                        sap.m.MessageBox.error("Something went wrong");
-                        console.error("Error:", oError);
-                    }.bind(this)
-                });
-                debugger;
-                this.sendBackFragment.close(); // Close the dialog
-            },
-
-            onEditPress: function(){
-                let oModel = this.getView().getModel("requestInfo");
-                let bEditable = oModel.getProperty("/editable");
+           
+            onEditPress: function () {
+                const oView = this.getView();
+                const oModel = oView.getModel("requestInfo");
+                const bEditable = oModel.getProperty("/editable");
+            
+                // Flip edit mode
                 oModel.setProperty("/editable", !bEditable);
+            
+                // Enable/Disable buttons
+                oView.byId("idSendBackBtn").setEnabled(bEditable); // disable when entering edit mode
+                oView.byId("idRejectBtn").setEnabled(bEditable);
+                oView.byId("idAcceptBtn").setEnabled(bEditable);
+            
+                // Show Submit button only in edit mode
+                oView.byId("idSubmitBtn").setVisible(!bEditable);
+            },
+            
+            formatDate: function (sDate) {
+                if (!sDate) {
+                    return "";
+                }
+                // Assuming sDate is in a format like "2025-04-30T00:00:00Z"
+                var oDate = new Date(sDate);
+                var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                    pattern: "dd MMMM yyyy"
+                });
+                return oDateFormat.format(oDate); // Returns date like "30 April 2025"
             },
 
-            onSubmitEditRegistration: function(){
-                this.getView().setBusy(true)
-                var sFunctionImportPath = "/PostRegData";
-                let dataModel = this.getView().getModel("requestInfo")
-                let oModel = this.getView().getModel();
-                let pData = dataModel.getData();
-                const payload = this.convertModelToPayload(pData);
-                debugger;
-                oModel.create(sFunctionImportPath, payload, {
-                    success: function (oData, response) {
-                        debugger;
-                        this.getView().setBusy(false)
-                        sap.m.MessageBox.success('Request Edited Succesfully!', {
-                            emphasizedAction: sap.m.MessageBox.Action.CLOSE,
-                            onClose: function (sAction) {
-                                this.getOwnerComponent().getRouter().navTo("RegisterApproval")
-
-                            }.bind(this)
-                        })
-                    }.bind(this),
-                    error: function (oError) {
-                        debugger;
-                        this.getView().setBusy(false)
-                        sap.m.MessageBox.error("Something went Wrong");
-                        console.error("Error:", oError);
-                    }.bind(this)
+            onActionConfirm: async function (sAction) {
+                const that = this;
+                const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                const sText = `Are you sure you want to ${sAction.toLowerCase().replace("_", " ")} this request?`;
+            
+                MessageBox.confirm(sText, {
+                    title: "Confirmation",
+                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                    onClose: async function (oAction) {
+                        if (oAction === MessageBox.Action.OK) {
+                            await that._submitPostRegAction(sAction);
+                        }
+                    }
                 });
             },
-
-            convertModelToPayload: function(modelData) {
-                return {
-                    "action": "EDIT",
-                    "stepNo": 1,
-                    "REQUEST_NO":modelData.REQUEST_NO,
-                    "reqHeader": [
-                        {
-                            "REGISTERED_ID": modelData.REGISTERED_ID,
-                            "VENDOR_ORGANISATION_NAME": modelData.VENDOR_ORGANISATION_NAME,
-                            "CONTACT_PERSON": modelData.CONTACT_PERSON,
-                            "PRIORITY": modelData.PRIORITY,
-                            "PAN_NO": modelData.PAN_NO,
-                            "GST_NO": modelData.GST_NO,
-                            "DUE_DELI_NUM": modelData.DUE_DELI_NUM,
-                            "LST_NO": modelData.LST_NO,
-                            "CST_NO": modelData.CST_NO,
-                            "MSME_CATEGORY": modelData.MSME_CATEGORY,
-                            "VENDOR_ACCOUNT_GROUP": modelData.VENDOR_ACCOUNT_GROUP,
-                            "DUE_DILIGANCE": modelData.DUE_DILIGANCE,
-                            "DUE_DILIGANCE_REQ_NO": modelData.DUE_DILIGANCE_REQ_NO,
-                            "APPROVER": modelData.APPROVER  
-                        }
-                    ],
-                    "addressData": modelData.TO_ADDRESS.results.map(address => ({
-                        "STREET1": address.STREET1,
-                        "CITY": address.CITY,
-                        "COUNTRY": address.COUNTRY,
-                        "DISTRICT": address.DISTRICT,
-                        "PINCODE": address.PINCODE,
-                        "STATE": address.STATE,
-                        "POSTAL_CODE": address.POSTAL_CODE,
-                        "EMAIL": address.EMAIL,
-                        "EMAIL_ADDRESS_FOR_PAYMENT": address.EMAIL_ADDRESS_FOR_PAYMENT,
-                        "CONTACT_NO": address.CONTACT_NO,
-                        "CONTACT_TELECODE": address.CONTACT_TELECODE
+            
+            _submitPostRegAction: function (actionType,sComment) {
+                const oModel = this.getView().getModel(); // OData V2 model
+                const oRouter = this.getOwnerComponent().getRouter();
+                const oData = this.getView().getModel("requestInfo").getData();
+                const oView = this.getView();
+            
+                const payload = {
+                    action: actionType,
+                    stepNo: oData.APPROVER_LEVEL || 1,
+                    REQUEST_NO: oData.REQUEST_NO,
+            
+                    reqHeader: [{
+                        REGISTERED_ID: oData.REGISTERED_ID,
+                        WEBSITE: oData.WEBSITE,
+                        VENDOR_NAME1: oData.VENDOR_NAME1,
+                        COMPLETED_BY: oData.COMPLETED_BY,
+                        DESIGNATION: oData.DESIGNATION,
+                        SUBMISSION_DATE: oData.SUBMISSION_DATE,
+                        COMPANY_CODE: oData.COMPANY_CODE,
+                        REQUEST_TYPE: oData.REQUEST_TYPE
+                    }],
+            
+                    addressData: (oData.TO_ADDRESS?.results || []).map(addr => ({
+                        STREET: addr.STREET,
+                        STREET1: addr.STREET1,
+                        STREET2: addr.STREET2,
+                        STREET3: addr.STREET3,
+                        STREET4: addr.STREET4,
+                        COUNTRY: addr.COUNTRY,
+                        STATE: addr.STATE,
+                        CITY: addr.CITY,
+                        POSTAL_CODE: addr.POSTAL_CODE,
+                        EMAIL: addr.EMAIL,
+                        CONTACT_NO: addr.CONTACT_NO,
+                        ADDRESS_TYPE: addr.ADDRESS_TYPE
                     })),
-                    "bankData": modelData.TO_BANKS.results.map(bank => ({
-                        "BRANCH_NAME": bank.BRANCH_NAME,
-                        "IFSC": bank.IFSC,
-                        "BANK_NAME": bank.BANK_NAME,
-                        "ACCOUNT_NO": bank.ACCOUNT_NO,
-                        "ACCOUNT_TYPE": bank.ACCOUNT_TYPE
+            
+                    contactsData: (oData.TO_CONTACTS?.results || []).map(c => ({
+                        FIRST_NAME: c.FIRST_NAME,
+                        LAST_NAME: c.LAST_NAME,
+                        CITY: c.CITY,
+                        STATE: c.STATE,
+                        COUNTRY: c.COUNTRY,
+                        POSTAL_CODE: c.POSTAL_CODE,
+                        DESIGNATION: c.DESIGNATION,
+                        EMAIL: c.EMAIL,
+                        CONTACT_NO: c.CONTACT_NO,
+                        MOBILE_NO: c.MOBILE_NO
                     })),
-                    "CompanyProfile": modelData.TO_ATTACHMENTS.results.map(attachment => ({
-                        "REGESTERED_MAIL": attachment.REGESTERED_MAIL,
-                        "DESCRIPTION": attachment.DESCRIPTION,
-                        "IMAGEURL": attachment.IMAGEURL,
-                        "IMAGE_FILE_NAME": attachment.IMAGE_FILE_NAME
+            
+                    bankData: (oData.TO_BANKS?.results || []).map(bank => ({
+                        BANK_SECTION: bank.BANK_SECTION,
+                        SWIFT_CODE: bank.SWIFT_CODE,
+                        BRANCH_NAME: bank.BRANCH_NAME,
+                        IFSC: bank.IFSC || bank.ROUTING_CODE,
+                        BANK_COUNTRY: bank.BANK_COUNTRY,
+                        BANK_NAME: bank.BANK_NAME,
+                        BENEFICIARY: bank.BENEFICIARY,
+                        ACCOUNT_NO: bank.ACCOUNT_NO,
+                        ACCOUNT_NAME: bank.ACCOUNT_NAME,
+                        IBAN_NUMBER: bank.IBAN_NUMBER,
+                        ROUTING_CODE: bank.ROUTING_CODE,
+                        OTHER_CODE_NAME: "IFSC CODE",
+                        OTHER_CODE_VAL: bank.IFSC || bank.ROUTING_CODE,
+                        BANK_CURRENCY: bank.BANK_CURRENCY,
+                        GST: bank.GST,
+                        GSTYES_NO: bank.GSTYES_NO
+                    })),
+            
+                    Operational_Prod_Desc: (oData.TO_REG_PRODUCT_SERVICE?.results || []).map(p => ({
+                        PROD_NAME: p.PROD_NAME,
+                        PROD_DESCRIPTION: p.PROD_DESCRIPTION,
+                        PROD_TYPE: p.PROD_TYPE,
+                        PROD_CATEGORY: p.PROD_CATEGORY
+                    })),
+            
+                    Operational_Capacity: (oData.TO_REG_CAPACITY?.results || []).map(cap => ({
+                        TOTAL_PROD_CAPACITY: cap.TOTAL_PROD_CAPACITY,
+                        MINIMUM_ORDER_SIZE: cap.MINIMUM_ORDER_SIZE,
+                        MAXMIMUM_ORDER_SIZE: cap.MAXMIMUM_ORDER_SIZE,
+                        CITY: cap.CITY
+                    })),
+            
+                    Disclosure_Fields: (oData.TO_DISCLOSURE_FIELDS?.results || []).map(d => ({
+                        INTEREST_CONFLICT: d.INTEREST_CONFLICT,
+                        ANY_LEGAL_CASES: d.ANY_LEGAL_CASES,
+                        ABAC_REG: d.ABAC_REG,
+                        CONTROL_REGULATION: d.CONTROL_REGULATION
+                    })),
+            
+                    Quality_Certificates: (oData.TO_QA_CERTIFICATES?.results || []).map(q => ({
+                        CERTI_NAME: q.CERTI_NAME,
+                        CERTI_TYPE: q.CERTI_TYPE,
+                        AVAILABLE: q.AVAILABLE,
+                        DONE_BY: q.DONE_BY
+                    })),
+            
+                    Attachments: (oData.TO_ATTACHMENTS?.results || []).map(file => ({
+                        REGESTERED_MAIL: file.REGESTERED_MAIL,
+                        DESCRIPTION: file.DESCRIPTION,
+                        ATTACH_SHORT_DEC: file.ATTACH_SHORT_DEC,
+                        IMAGEURL: file.IMAGEURL,
+                        IMAGE_FILE_NAME: file.IMAGE_FILE_NAME
                     }))
                 };
+                if(actionType == 'SEND_BACK'){
+                    payload.reqHeader[0].INSTRUCTIONS= sComment;
+                }
+                if(actionType == 'REJECT'){
+                    payload.REJECTION_COMMENT= sComment;
+                }
+                // Show busy
+                sap.ui.core.BusyIndicator.show(0);
+            
+                oModel.create("/PostRegData", payload, {
+                    success: function (oResponseData) {
+                        sap.ui.core.BusyIndicator.hide();
+            
+                        MessageBox.success(
+                            oResponseData?.PostRegData || `${actionType} successful`,
+                            {
+                                title: "Success",
+                                onClose: function () {
+                                    oRouter.navTo("RouteRegistrationApproval");
+                                }
+                            }
+                        );
+                    },
+                    error: function (oError) {
+                        sap.ui.core.BusyIndicator.hide();
+            
+                        const errorMsg = oError?.responseText || "Unexpected error occurred";
+                        MessageBox.error(`Failed to ${actionType.toLowerCase()}: ${errorMsg}`);
+                    }
+                });
+            },
+            
+            onSubmitRequestForm: function () {
+                this.onActionConfirm("APPROVE");
+            },
+            
+            onRejectRegistration: function () {
+                if (!this._pRejectCommentDialog) {
+                    this._pRejectCommentDialog = Fragment.load({
+                        id: this.getView().getId(), // ensure uniqueness
+                        name: "com.registration.registrationapprovalaisp.fragments.RejectionComment",
+                        controller: this
+                    }).then(function (oDialog) {
+                        this.getView().addDependent(oDialog);
+                        return oDialog;
+                    }.bind(this));
+                }
+            
+                this._pRejectCommentDialog.then(function (oDialog) {
+                    this.byId("rejectCommentTextArea")?.setValue(""); // clear old comment
+                    oDialog.open();
+                }.bind(this));
+            },
+
+            onRejectCommentLiveChange: function (oEvent) {
+                const sValue = oEvent.getParameter("value") || "";
+                this.byId("rejectCharCounter").setText(`${sValue.length} / 500`);
+            },
+            
+            onSendBackCommentLiveChange: function (oEvent) {
+                const sValue = oEvent.getParameter("value") || "";
+                this.byId("sendBackCharCounter").setText(`${sValue.length} / 500`);
+            },            
+            
+            onRejectCommentConfirm: function () {
+                const sComment = this.byId("rejectCommentTextArea").getValue();
+            
+                if (!sComment?.trim()) {
+                    MessageBox.warning("Please enter a rejection comment.");
+                    return;
+                }
+            
+                this.byId("rejectCommentDialog").close();
+                this._submitPostRegAction("REJECT", sComment);
+            },
+            
+            onRejectCommentCancel: function () {
+                this.byId("rejectCommentDialog").close();
+            },
+            
+
+            onSubmitEditRegistration: function () {
+                this._submitPostRegAction("EDIT");
+            },
+            
+            
+            onSendBackRegistration: function () {
+                if (!this._pSendBackDialog) {
+                    this._pSendBackDialog = Fragment.load({
+                        id: this.getView().getId(),
+                        name: "com.registration.registrationapprovalaisp.fragments.SendBackComment",
+                        controller: this
+                    }).then(function (oDialog) {
+                        this.getView().addDependent(oDialog);
+                        return oDialog;
+                    }.bind(this));
+                }
+            
+                this._pSendBackDialog.then(function (oDialog) {
+                    oDialog.open();
+                });
+            },
+
+            onSendBackConfirm: function () {
+                const oDialog = this.byId("sendBackDialog");
+                const sComment = this.byId("sendBackCommentTextArea").getValue();
+            
+                if (!sComment?.trim()) {
+                    MessageBox.warning("Please enter a comment before proceeding.");
+                    return;
+                }
+            
+                oDialog.close();
+                this._submitPostRegAction("SEND_BACK", sComment); // pass comment
+            },
+            
+            onSendBackCancel: function () {
+                this.byId("sendBackDialog").close();
             }
+            
+            
+            
+            
 
         });
     });

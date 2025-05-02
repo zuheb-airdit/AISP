@@ -58,7 +58,7 @@ sap.ui.define(
                 let oModel = this.getView().getModel();
                 var aFilters = [
                     new sap.ui.model.Filter("COMPANY_CODE", sap.ui.model.FilterOperator.EQ, this.COMPANY_CODE),
-                    new sap.ui.model.Filter("REQUEST_TYPE", sap.ui.model.FilterOperator.EQ, "Create Supplier")
+                    new sap.ui.model.Filter("REQUEST_TYPE", sap.ui.model.FilterOperator.EQ, this.REQUEST_TYPE)
                 ];
                 console.log("Fetching FieldConfig from OData model:", oModel);
 
@@ -1301,6 +1301,7 @@ sap.ui.define(
 
             submitForm: function () {
                 var oPayload = this.buildPayload();
+                this.getView().setBusy(true)
                 debugger;
                 var oModel = this.getView().getModel("regModel"); // OData model ("admin")
 
@@ -1315,6 +1316,7 @@ sap.ui.define(
                 oModel.create("/PostRegData", oPayload, {
                     success: function (oData, oResponse) {
                         console.log("Form submitted successfully:", oData, oResponse);
+                        this.getView().setBusy(false)
                         MessageBox.success("Form submitted successfully!", {
                             onClose: function () {
                                 this.getOwnerComponent().getRouter().navTo("RouteRequestManagement");
@@ -1323,6 +1325,7 @@ sap.ui.define(
                     }.bind(this),
                     error: function (oError) {
                         console.error("Error submitting form:", oError);
+                        this.getView().setBusy(false)
                         var sMessage = "Failed to submit the form.";
                         if (oError.responseText) {
                             try {
