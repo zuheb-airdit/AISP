@@ -89,14 +89,14 @@ sap.ui.define([
             }
             switch (status) {
                 case 15:
-                    return `In Req Approval-${role}`
+                    return `In RegApproval-${role}`
                 case 2:
-                    return `In Req Approval-${role}`
+                    return `In RegApproval-${role}`
 
                 case 3:
-                    return `In Req Approval-${role}`
+                    return `In RegApproval-${role}`
                 case 4:
-                    return `In Req Appr-${role}`
+                    return `In RegApproval-${role}`
                 default:
                     return "Registration Completed"
             }

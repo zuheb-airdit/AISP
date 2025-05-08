@@ -49,7 +49,7 @@
                         <smartFilterBar:ControlConfiguration
                             id="_IDGenControlConfiguration1"
                             key="COMPANY_CODE"
-                            label="Entity"
+                            label="Company Code"
                             visibleInAdvancedArea="true"
                         />
 
@@ -74,7 +74,7 @@
                 beforeExport="onBeforeExport"
                 useVariantManagement="true"
                 useTablePersonalisation="true"
-                header="Entity"
+                header="Company"
                 showRowCount="true"
                 demandPopin="true"
                 enableAutoColumnWidth="true"

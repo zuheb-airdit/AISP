@@ -117,20 +117,18 @@ sap.ui.define([
             let data = oModel?.getData();
             if (this.companyCode) {
                 this.byId("idCreateMassRequest").setEnabled(true)
-
             }
             var sKey = oEvent.getSource().getSelectedKey();
             var oTable = this.byId("idProductsTable");
             var tModel = oTable.getModel();
             var aData = oModel.getProperty("/jsonObjects");
-            data.jsonObjects.forEach(function (item) {
+            data?.jsonObjects?.forEach(function (item) {
                 if (sKey === "R0") {
                     item.checkboxVisible = false;
-                } else if (sKey === "R1") {
+                } else {
                     item.checkboxVisible = true;
                 }
             });
-
             oModel.setData(data)
             debugger
         },

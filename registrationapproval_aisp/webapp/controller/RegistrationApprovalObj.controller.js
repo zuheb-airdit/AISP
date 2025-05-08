@@ -153,6 +153,7 @@ sap.ui.define([
                     }],
             
                     addressData: (oData.TO_ADDRESS?.results || []).map(addr => ({
+                        SR_NO: addr.SR_NO,
                         STREET: addr.STREET,
                         STREET1: addr.STREET1,
                         STREET2: addr.STREET2,
@@ -168,6 +169,7 @@ sap.ui.define([
                     })),
             
                     contactsData: (oData.TO_CONTACTS?.results || []).map(c => ({
+                        SR_NO: c.SR_NO,
                         FIRST_NAME: c.FIRST_NAME,
                         LAST_NAME: c.LAST_NAME,
                         CITY: c.CITY,
@@ -181,6 +183,7 @@ sap.ui.define([
                     })),
             
                     bankData: (oData.TO_BANKS?.results || []).map(bank => ({
+                        SR_NO: bank.SR_NO,
                         BANK_SECTION: bank.BANK_SECTION,
                         SWIFT_CODE: bank.SWIFT_CODE,
                         BRANCH_NAME: bank.BRANCH_NAME,
@@ -200,6 +203,7 @@ sap.ui.define([
                     })),
             
                     Operational_Prod_Desc: (oData.TO_REG_PRODUCT_SERVICE?.results || []).map(p => ({
+                        SR_NO: p.SR_NO,
                         PROD_NAME: p.PROD_NAME,
                         PROD_DESCRIPTION: p.PROD_DESCRIPTION,
                         PROD_TYPE: p.PROD_TYPE,
@@ -207,6 +211,7 @@ sap.ui.define([
                     })),
             
                     Operational_Capacity: (oData.TO_REG_CAPACITY?.results || []).map(cap => ({
+                        SR_NO: cap.SR_NO,
                         TOTAL_PROD_CAPACITY: cap.TOTAL_PROD_CAPACITY,
                         MINIMUM_ORDER_SIZE: cap.MINIMUM_ORDER_SIZE,
                         MAXMIMUM_ORDER_SIZE: cap.MAXMIMUM_ORDER_SIZE,
@@ -214,6 +219,7 @@ sap.ui.define([
                     })),
             
                     Disclosure_Fields: (oData.TO_DISCLOSURE_FIELDS?.results || []).map(d => ({
+                        SR_NO: d.SR_NO,
                         INTEREST_CONFLICT: d.INTEREST_CONFLICT,
                         ANY_LEGAL_CASES: d.ANY_LEGAL_CASES,
                         ABAC_REG: d.ABAC_REG,
@@ -221,6 +227,7 @@ sap.ui.define([
                     })),
             
                     Quality_Certificates: (oData.TO_QA_CERTIFICATES?.results || []).map(q => ({
+                        SR_NO: q.SR_NO,
                         CERTI_NAME: q.CERTI_NAME,
                         CERTI_TYPE: q.CERTI_TYPE,
                         AVAILABLE: q.AVAILABLE,

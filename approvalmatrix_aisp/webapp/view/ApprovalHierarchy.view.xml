@@ -17,7 +17,11 @@
         <headerTitle>
             <ObjectPageDynamicHeaderTitle>
                 <heading>
-                    <m:Title text="New Company" id="idTitle" class="testclass" />
+                    <m:Title
+                        text="New Company"
+                        id="idTitle"
+                        class="testclass"
+                    />
                 </heading>
 
                 <snappedTitleOnMobile>
@@ -25,7 +29,7 @@
                 </snappedTitleOnMobile>
 
                 <actions>
-                 <m:Button
+                    <m:Button
                         id="idEditBtn"
                         icon="sap-icon://edit"
                         type="Emphasized"
@@ -43,17 +47,17 @@
         <sections>
             <ObjectPageSection
                 titleUppercase="false"
-                title="Entity"
+                title="Company"
             >
                 <subSections>
                     <ObjectPageSubSection
-                        title="Entity"
+                        title="Company"
                         titleUppercase="false"
                     >
                         <blocks>
                             <m:HBox>
                                 <m:VBox class="sapUiMediumMarginEnd">
-                                    <m:Label text="Entity (Company Code)" />
+                                    <m:Label text="Company Code" />
                                     <smartfield:SmartField
                                         id="entityFilter"
                                         value="{path: 'COMPANY_CODE'}"
@@ -68,18 +72,14 @@
                                         id="idCompoBoxReq"
                                         selectedKey="{ApprovalType}"
                                         selectionChange="onSelectofApproval"
+                                        items="{
+                                          path: '/ApprovalType',
+                                          sorter: { path: 'CODE' }     
+                                                }"
                                     >
                                         <core:Item
-                                            key="All"
-                                            text="All"
-                                        />
-                                        <core:Item
-                                            key="R0"
-                                            text="Request"
-                                        />
-                                        <core:Item
-                                            key="R1"
-                                            text="Register"
+                                            key="{CODE}"
+                                            text="{DESC}"
                                         />
                                     </m:ComboBox>
                                 </m:VBox>
@@ -133,7 +133,10 @@
                                 </m:headerToolbar>
 
                                 <m:columns>
-                                    <m:Column hAlign="Begin" width="5rem">
+                                    <m:Column
+                                        hAlign="Begin"
+                                        width="5rem"
+                                    >
                                         <m:Text text="Approval Level" />
                                     </m:Column>
                                     <m:Column hAlign="Begin">
@@ -142,16 +145,28 @@
                                     <m:Column hAlign="Begin">
                                         <m:Text text="User" />
                                     </m:Column>
-                                    <m:Column hAlign="Center" width="5rem">
+                                    <m:Column
+                                        hAlign="Center"
+                                        width="5rem"
+                                    >
                                         <m:Text text="Approve" />
                                     </m:Column>
-                                    <m:Column hAlign="Center" width="5rem">
+                                    <m:Column
+                                        hAlign="Center"
+                                        width="5rem"
+                                    >
                                         <m:Text text="Reject" />
                                     </m:Column>
-                                    <m:Column hAlign="Center" width="5rem">
+                                    <m:Column
+                                        hAlign="Center"
+                                        width="5rem"
+                                    >
                                         <m:Text text="SendBack" />
                                     </m:Column>
-                                    <m:Column hAlign="Center" width="5rem">
+                                    <m:Column
+                                        hAlign="Center"
+                                        width="5rem"
+                                    >
                                         <m:Text text="Edit" />
                                     </m:Column>
                                 </m:columns>
@@ -241,24 +256,26 @@
             </ObjectPageSection>
         </sections>
         <footer>
-    <m:Toolbar>
-        <m:ToolbarSpacer />
-        <m:Text text="Draft Updated" class="sapUiTinyMarginEnd" />
+            <m:Toolbar>
+                <m:ToolbarSpacer />
+                <m:Text
+                    text="Draft Updated"
+                    class="sapUiTinyMarginEnd"
+                />
                 <m:Button
-            id="idCreateFooterButton"
-            text="Create"
-            type="Emphasized"
-            press="onFooterCreatePress"
-        />
+                    id="idCreateFooterButton"
+                    text="Create"
+                    type="Emphasized"
+                    press="onFooterCreatePress"
+                />
 
-        <m:Button
-            id="idDiscardDraftButton"
-            text="Discard Draft"
-            type="Transparent"
-            press="onFooterDiscardPress"
-        />
-    </m:Toolbar>
-</footer>
- 
+                <m:Button
+                    id="idDiscardDraftButton"
+                    text="Discard Draft"
+                    type="Transparent"
+                    press="onFooterDiscardPress"
+                />
+            </m:Toolbar>
+        </footer>
     </ObjectPageLayout>
 </mvc:View>

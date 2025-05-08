@@ -11,29 +11,62 @@ sap.ui.define([
         onInit() {
         },
 
-        statusFormatter: function (status) {
+        // statusFormatter: function (status) {
+        //     switch (status) {
+        //         case 15:
+        //             return "Not Invited"
+        //         case 16:
+        //             return "Invited"
+        //         case 2:
+        //             return "In ReqApproval"
+
+        //         case 3:
+        //             return "Rejected"
+        //         case 7:
+        //             return "SendBack"
+        //         default:
+        //             return "No Data"
+        //     }
+        // },
+        // statusColorFormatter: function (status) {
+        //     switch (status) {
+        //         case 15:
+        //             return "Indication13"
+        //         case 2:
+        //             return "Indication14"
+        //         case 16:
+        //             return "Indication14"
+        //         case 3:
+        //             return "Indication11"
+        //         case 7:
+        //             return "Indication15"
+        //         default:
+        //             return "None"
+        //     }
+        // },
+
+
+        statusFormatter: function (status, role) {
             switch (status) {
                 case 15:
-                    return "Not Invited"
+                case 2:
+                    return `In ReqApproval ${role}`
                 case 16:
                     return "Invited"
-                case 2:
-                    return "In ReqApproval"
 
                 case 3:
                     return "Rejected"
                 case 7:
                     return "SendBack"
                 default:
-                    return "No Data"
+                    return "Registered"
             }
         },
-        statusColorFormatter: function (status) {
+        statusColorFormatter: function (status, role) {
             switch (status) {
                 case 15:
-                    return "Indication13"
                 case 2:
-                    return "Indication14"
+                    return "Indication15"
                 case 16:
                     return "Indication14"
                 case 3:
@@ -44,6 +77,7 @@ sap.ui.define([
                     return "None"
             }
         },
+
 
         onCreateRquestManagement: function () {
             if (!this.vhFragmentReqManagement) {

@@ -106,14 +106,14 @@
                                     <ToolbarSpacer />
                                     <Button
                                         id="idCreateRequestManagements"
-                                        text="Create"
-                                        press="onCreateRquestManagement"
+                                        text="Create-Filled By User"
+                                        press="onInviteRquestManagement"
                                         icon="sap-icon://create"
                                     />
-                                      <Button
+                                    <Button
                                         id="idInviteRequestManagements"
                                         text="Invite Supplier"
-                                        press="onInviteRquestManagement"
+                                        press="onCreateRquestManagement"
                                         icon="sap-icon://create"
                                     />
                                 </OverflowToolbar>
@@ -262,8 +262,20 @@
                                             <Text text="{VENDOR_NAME1}" />
                                             <Text text="{REGISTERED_ID}" />
                                             <ObjectStatus
-                                                text="{ path: 'STATUS', formatter: '.statusFormatter'}"
-                                                state="{ path: 'STATUS', formatter: '.statusColorFormatter'}"
+                                                text="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusFormatter'
+    }"
+                                                state="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusColorFormatter'
+    }"
                                                 inverted="true"
                                                 class="noWrapText"
                                             />
@@ -480,8 +492,20 @@
                                             </VBox>
                                             <!-- Index 5: Status -->
                                             <ObjectStatus
-                                                text="{ path: 'STATUS', formatter: '.statusFormatter'}"
-                                                state="{ path: 'STATUS', formatter: '.statusColorFormatter'}"
+                                                text="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusFormatter'
+    }"
+                                                state="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusColorFormatter'
+    }"
                                                 inverted="true"
                                                 class="noWrapText"
                                             />
@@ -689,8 +713,20 @@
                                             </VBox>
                                             <!-- Index 5: Status -->
                                             <ObjectStatus
-                                                text="{ path: 'STATUS', formatter: '.statusFormatter'}"
-                                                state="{ path: 'STATUS', formatter: '.statusColorFormatter'}"
+                                                text="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusFormatter'
+    }"
+                                                state="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusColorFormatter'
+    }"
                                                 inverted="true"
                                             />
                                             <!-- Index 6: Action -->
@@ -896,8 +932,20 @@
                                             </VBox>
                                             <!-- Index 5: Status -->
                                             <ObjectStatus
-                                                text="{ path: 'STATUS', formatter: '.statusFormatter'}"
-                                                state="{ path: 'STATUS', formatter: '.statusColorFormatter'}"
+                                                text="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusFormatter'
+    }"
+                                                state="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusColorFormatter'
+    }"
                                                 inverted="true"
                                                 class="noWrapText"
                                             />
@@ -1104,8 +1152,20 @@
                                             </VBox>
                                             <!-- Index 5: Status -->
                                             <ObjectStatus
-                                                text="{ path: 'STATUS', formatter: '.statusFormatter'}"
-                                                state="{ path: 'STATUS', formatter: '.statusColorFormatter'}"
+                                                text="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusFormatter'
+    }"
+                                                state="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusColorFormatter'
+    }"
                                                 inverted="true"
                                                 class="noWrapText"
                                             />
