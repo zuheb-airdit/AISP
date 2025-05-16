@@ -11,41 +11,6 @@ sap.ui.define([
         onInit() {
         },
 
-        // statusFormatter: function (status) {
-        //     switch (status) {
-        //         case 15:
-        //             return "Not Invited"
-        //         case 16:
-        //             return "Invited"
-        //         case 2:
-        //             return "In ReqApproval"
-
-        //         case 3:
-        //             return "Rejected"
-        //         case 7:
-        //             return "SendBack"
-        //         default:
-        //             return "No Data"
-        //     }
-        // },
-        // statusColorFormatter: function (status) {
-        //     switch (status) {
-        //         case 15:
-        //             return "Indication13"
-        //         case 2:
-        //             return "Indication14"
-        //         case 16:
-        //             return "Indication14"
-        //         case 3:
-        //             return "Indication11"
-        //         case 7:
-        //             return "Indication15"
-        //         default:
-        //             return "None"
-        //     }
-        // },
-
-
         statusFormatter: function (status, role) {
             switch (status) {
                 case 15:
@@ -59,7 +24,7 @@ sap.ui.define([
                 case 7:
                     return "SendBack"
                 default:
-                    return "Registered"
+                    return "No Data"
             }
         },
         statusColorFormatter: function (status, role) {
@@ -78,8 +43,88 @@ sap.ui.define([
             }
         },
 
+        // onCreateRquestManagement: function () {
+        //     if (!this.vhFragmentReqManagement) {
+        //         this.vhFragmentReqManagement = sap.ui.xmlfragment("com.requestmanagement.requestmanagement.fragments.createRequestManagement", this);
+        //         this.getView().addDependent(this.vhFragmentReqManagement);
+        //     }
+        //     this.vhFragmentReqManagement.open();
+        // },
+
+        onCloseReqManagement: function () {
+            this.vhFragmentReqManagement.close();
+        },
 
         onCreateRquestManagement: function () {
+            var oModel = this.getOwnerComponent().getModel();
+
+            // Fetch CompanyCode data
+            oModel.read("/CompanyCode", {
+                success: function (oData) {
+                    var oCompanyModel = new JSONModel(oData.results);
+                    this.getView().setModel(oCompanyModel, "companyModel");
+
+                    // Load the fragment
+                    if (!this._oDialog) {
+                        Fragment.load({
+                            id: this.getView().getId(),
+                            name: "com.requestmanagement.requestmanagement.fragments.CompanyCodeRequestTypeDialog",
+                            controller: this
+                        }).then(function (oDialog) {
+                            this._oDialog = oDialog;
+                            this.getView().addDependent(this._oDialog);
+                            this._oDialog.bindElement({
+                                path: "/CompanyCode"
+                            });
+                            this._oDialog.open();
+                        }.bind(this));
+                    } else {
+                        this._oDialog.open();
+                    }
+                }.bind(this),
+                error: function (oError) {
+                    console.error("Error fetching CompanyCode data:", oError);
+                    MessageBox.error("Failed to load company codes. Please try again.");
+                }
+            });
+        },
+
+        // onInviteRquestManagement: function () {
+        //     var oModel = this.getOwnerComponent().getModel(); // OData model
+
+        //     // Fetch CompanyCode data
+        //     oModel.read("/CompanyCode", {
+        //         success: function (oData) {
+        //             var oCompanyModel = new JSONModel(oData.results);
+        //             this.getView().setModel(oCompanyModel, "companyModel");
+
+        //             // Load the fragment
+        //             if (!this._oDialog) {
+        //                 Fragment.load({
+        //                     id: this.getView().getId(),
+        //                     name: "com.requestmanagement.requestmanagement.fragments.CompanyCodeRequestTypeDialog",
+        //                     controller: this
+        //                 }).then(function (oDialog) {
+        //                     this._oDialog = oDialog;
+        //                     this.getView().addDependent(this._oDialog);
+        //                     this._oDialog.bindElement({
+        //                         path: "/CompanyCode"
+        //                     });
+        //                     this._oDialog.open();
+        //                 }.bind(this));
+        //             } else {
+        //                 this._oDialog.open();
+        //             }
+        //         }.bind(this),
+        //         error: function (oError) {
+        //             console.error("Error fetching CompanyCode data:", oError);
+        //             MessageBox.error("Failed to load company codes. Please try again.");
+        //         }
+        //     });
+
+        // },
+
+        onInviteRquestManagement: function () {
             if (!this.vhFragmentReqManagement) {
                 this.vhFragmentReqManagement = sap.ui.xmlfragment("com.requestmanagement.requestmanagement.fragments.createRequestManagement", this);
                 this.getView().addDependent(this.vhFragmentReqManagement);
@@ -87,12 +132,25 @@ sap.ui.define([
             this.vhFragmentReqManagement.open();
         },
 
-        onCloseReqManagement: function () {
+        onCloseInviteSupplier: function () {
             this.vhFragmentReqManagement.close();
         },
 
+        handleRowClick: function (oEvent) {
+            const selectedItem = oEvent.getSource();
+            const context = selectedItem.getBindingContext();
+            console.log(context);
+            // debugger;
+            const requestNumber = context.getProperty("REQUEST_NO");
+
+            this.getOwnerComponent().getRouter().navTo("RequestSendBack", {
+                requestNumber: requestNumber,
+                requestType: "Create User",
+            });
+        },
+
         onSumbitReqManagement: function () {
-            debugger;
+            // debugger;
             this.getView().setBusy(true);
             this.vhFragmentReqManagement.close();
             let reqModel = this.getView().getModel("request-process");
@@ -107,7 +165,7 @@ sap.ui.define([
             let suplDescr = vendorSubType.split("-")[1];
             let bpType = vendorType.split("-")[0];
             let byDesc = vendorType.split("-")[1];
-            debugger;
+            // debugger;
             let payload = {
                 action: "CREATE",
                 inputData: [
@@ -128,7 +186,7 @@ sap.ui.define([
 
             reqModel.create("/RequestProcess", payload, {
                 success: function (oData) {
-                    debugger;
+                    // debugger;
                     this.getView().setBusy(false);
                     MessageBox.success("Request Sent SuccesFully!");
                     this.getView().byId("idSmartTableReqManagementInvidted").rebindTable();
@@ -154,9 +212,12 @@ sap.ui.define([
         },
 
         onNotInvitedFilter: function (oEvent) {
-            debugger
+            // debugger
             let oBindingParams = oEvent.getParameter("bindingParams");
-            var oFilter = new sap.ui.model.Filter("STATUS", "EQ", 15)
+            var oFilter = new sap.ui.model.Filter([
+                new sap.ui.model.Filter("STATUS", "EQ", 15),
+                new sap.ui.model.Filter("STATUS", "EQ", 2)
+            ], false)
             oBindingParams.filters.push(oFilter);
             oBindingParams.events = {
                 dataReceived: function (oData) {
@@ -167,7 +228,7 @@ sap.ui.define([
         },
 
         onInvitedFiltertest: function (oEvent) {
-            debugger;
+            // debugger;
             let oBindingParams = oEvent.getParameter("bindingParams");
             let oFilter = new sap.ui.model.Filter("STATUS", "EQ", 16)
             oBindingParams.filters.push(oFilter);
@@ -216,7 +277,7 @@ sap.ui.define([
         },
 
         onValueHelpVendorFrag: function () {
-            debugger;
+            // debugger;
             let oView = this.getView();
 
             // Check if the dialog already exists
@@ -241,7 +302,7 @@ sap.ui.define([
         },
 
         _bindVendorTypeData1: function (oDialog) {
-            debugger;
+            // debugger;
             let oModel = this.getView().getModel("request-process"); // Get the model
             oDialog.setModel(oModel); // Set model to the dialog
 
@@ -277,7 +338,7 @@ sap.ui.define([
         },
 
         onValueHelpSubVendorFrag: function () {
-            debugger;
+            // debugger;
             let oView = this.getView();
 
             // Check if the dialog already exists
@@ -302,7 +363,7 @@ sap.ui.define([
         },
 
         _bindVendorTypeData: function (oDialog) {
-            debugger;
+            // debugger;
             let oModel = this.getView().getModel("request-process"); // Get the model
             oDialog.setModel(oModel); // Set model to the dialog
 
@@ -338,7 +399,7 @@ sap.ui.define([
         },
 
         onValueHelpOkPressRolesVendor: function (oEvent) {
-            debugger;
+            // debugger;
             let aSelectedContexts = oEvent.getParameter("tokens");
             if (aSelectedContexts.length) {
                 let oSelectedItem = aSelectedContexts[0].data(); // Assuming single selection
@@ -353,7 +414,7 @@ sap.ui.define([
 
 
         onValueHelpOkPressRoles: function (oEvent) {
-            debugger;
+            // debugger;
             let aSelectedContexts = oEvent.getParameter("tokens");
             if (aSelectedContexts.length) {
                 let oSelectedItem = aSelectedContexts[0].data(); // Assuming single selection
@@ -367,23 +428,23 @@ sap.ui.define([
         },
 
         onValueHelpCancelPress: function () {
-            debugger;
+            // debugger;
             this._oValueHelpDialog.close();
         },
 
         onValueHelpCancelPressVendor: function () {
-            debugger;
+            // debugger;
             this._oValueHelpDialog1.close();
         },
 
         onValueHelpAfterClose: function () {
-            debugger;
+            // debugger;
             this._oValueHelpDialog.destroy();
             this._oValueHelpDialog = null;
         },
 
         onFilterBarSearch: function (oEvent) {
-            debugger;
+            // debugger;
             let oFilterData = oEvent.getSource().getFilterData();
             console.log("Filter Data:", oFilterData);
 
@@ -391,7 +452,7 @@ sap.ui.define([
         },
 
         onSubmitReqManagement: function (oEvent) {
-            debugger;
+            // debugger;
 
             // Create busy dialog
             const oBusyDialog = new BusyDialog({
@@ -509,43 +570,8 @@ sap.ui.define([
             }
         },
 
-        onInviteRquestManagement: function () {
-            var oModel = this.getOwnerComponent().getModel(); // OData model
-
-            // Fetch CompanyCode data
-            oModel.read("/CompanyCode", {
-                success: function (oData) {
-                    var oCompanyModel = new JSONModel(oData.results);
-                    this.getView().setModel(oCompanyModel, "companyModel");
-
-                    // Load the fragment
-                    if (!this._oDialog) {
-                        Fragment.load({
-                            id: this.getView().getId(),
-                            name: "com.requestmanagement.requestmanagement.fragments.CompanyCodeRequestTypeDialog",
-                            controller: this
-                        }).then(function (oDialog) {
-                            this._oDialog = oDialog;
-                            this.getView().addDependent(this._oDialog);
-                            this._oDialog.bindElement({
-                                path: "/CompanyCode"
-                            });
-                            this._oDialog.open();
-                        }.bind(this));
-                    } else {
-                        this._oDialog.open();
-                    }
-                }.bind(this),
-                error: function (oError) {
-                    console.error("Error fetching CompanyCode data:", oError);
-                    MessageBox.error("Failed to load company codes. Please try again.");
-                }
-            });
-
-        },
-
         onProceedWithRequest: function () {
-            debugger;
+            // debugger;
             var oCompanyCodeSelect = this.byId("companyCodeSelect");
             var sCompanyCode = oCompanyCodeSelect.getSelectedKey();
             var sRequestType = "Create User"; // Fixed as per requirement

@@ -107,13 +107,13 @@
                                     <Button
                                         id="idCreateRequestManagements"
                                         text="Create-Filled By User"
-                                        press="onInviteRquestManagement"
+                                        press="onCreateRquestManagement"
                                         icon="sap-icon://create"
                                     />
                                     <Button
                                         id="idInviteRequestManagements"
                                         text="Invite Supplier"
-                                        press="onCreateRquestManagement"
+                                        press="onInviteRquestManagement"
                                         icon="sap-icon://create"
                                     />
                                 </OverflowToolbar>
@@ -244,10 +244,7 @@
                                 </columns>
 
                                 <items>
-                                    <ColumnListItem
-                                        vAlign="Middle"
-                                        press="handleProcessTable_RowClick"
-                                    >
+                                    <ColumnListItem vAlign="Middle">
                                         <cells>
                                             <VBox>
                                                 <Text
@@ -523,6 +520,7 @@
                             </Table>
                         </smartTable:SmartTable>
                     </IconTabFilter>
+
                     <IconTabFilter
                         icon="./Images/Rejected.png"
                         key="Rejected"
@@ -743,6 +741,7 @@
                             </Table>
                         </smartTable:SmartTable>
                     </IconTabFilter>
+
                     <IconTabFilter
                         icon="./Images/SendBack.png"
                         key="SendBack"
@@ -900,7 +899,8 @@
                                 <items>
                                     <ColumnListItem
                                         vAlign="Middle"
-                                        press="handleProcessTable_RowClick"
+                                        type="Navigation"
+                                        press="handleRowClick"
                                     >
                                         <cells>
                                             <!-- Index 0: Requested Number -->
@@ -963,6 +963,7 @@
                             </Table>
                         </smartTable:SmartTable>
                     </IconTabFilter>
+
                     <IconTabFilter
                         icon="./Images/Registered.png"
                         key="Registered"

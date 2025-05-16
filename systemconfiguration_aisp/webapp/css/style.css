@@ -32,6 +32,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 1rem;
+    
 }
 
 /* Input Group */
@@ -101,10 +102,10 @@
 
 
 /* styling for edit form fragment */
-.customFormFieldDialogModernVBox {
+/* .customFormFieldDialogModernVBox {
     background: linear-gradient(180deg, #fff 90%, #f7fafd 100%);
     border-radius: 18px;
-}
+} */
 .dividerBar {
     height: 1px;
     background: #e5ebf3;
@@ -135,6 +136,37 @@
     font-weight: 500;
     min-width: 72px;
 }
+
+.sapFDynamicPageContent{
+    object-fit: fill;
+}
+
+/* Custom Style for Section - Red Color */
+.customSectionText {
+    color: red !important;
+}
+
+/* Green color for 'Yes' in Visibility */
+.visibleGreen {
+    color: green !important;
+}
+
+/* Red color for 'No' in Visibility */
+.visibleRed {
+    color: red !important;
+}
+
+/* Green color for 'Yes' in Mandatory */
+.mandatoryGreen {
+    color: green !important;
+}
+
+/* Red color for 'No' in Mandatory */
+.mandatoryRed {
+    color: red !important;
+}
+
+
 
 
 

@@ -24,7 +24,7 @@ sap.ui.define([
             this.getOwnerComponent().getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
             this.getOwnerComponent().getRouter().navTo("RouteHierarchyid", {
                 id: companyCode,
-                appType:apprType
+                appType: apprType
             });
         },
 

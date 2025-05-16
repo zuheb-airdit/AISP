@@ -211,106 +211,104 @@
                         text="Masters"
                         class="sapUiTinyMarginBegin"
                     >
-                        <VBox class="customCard">
-                            <Table
-                                id="idProductsTable"
-                                inset="false"
-                                items="{ path: 'mastJsonModel>/results' }"
-                                growing="true"
-                                growingThreshold="10"
-                                growingScrollToLoad="true"
-                            >
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                        <Title
-                                            text="Items"
-                                            level="H2"
+                        <Table
+                            id="idProductsTable"
+                            inset="false"
+                            items="{ path: 'mastJsonModel>/results' }"
+                            growing="true"
+                            growingThreshold="7"
+                            growingScrollToLoad="false"
+                        >
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title
+                                        text="Items"
+                                        level="H2"
+                                    />
+                                    <SearchField
+                                        id="searchFieldS"
+                                        width="20rem"
+                                        search="onSearchProducts"
+                                    />
+                                    <ToolbarSpacer />
+                                    <Label
+                                        text="Master Table"
+                                        required="true"
+                                    />
+                                    <Select
+                                        id="selectControl"
+                                        change="onComboBoxChangeMaster"
+                                    >
+                                        <core:Item
+                                            key="country"
+                                            text="Country"
                                         />
-                                        <SearchField
-                                            id="searchFieldS"
-                                            width="20rem"
-                                            search="onSearchProducts"
+                                        <core:Item
+                                            key="currency"
+                                            text="Currency"
                                         />
-                                        <ToolbarSpacer />
-                                        <Label
-                                            text="Master Table"
-                                            required="true"
+                                        <core:Item
+                                            key="approvalType"
+                                            text="Approval Types"
                                         />
-                                        <Select
-                                            id="selectControl"
-                                            change="onComboBoxChangeMaster"
-                                        >
-                                            <core:Item
-                                                key="country"
-                                                text="Country"
-                                            />
-                                            <core:Item
-                                                key="currency"
-                                                text="Currency"
-                                            />
-                                            <core:Item
-                                                key="approvalType"
-                                                text="Approval Types"
-                                            />
-                                            <core:Item
-                                                key="companyCode"
-                                                text="Company Code"
-                                            />
-                                            <core:Item
-                                                key="userRole"
-                                                text="User Role"
-                                            />
-                                        </Select>
-                                        <Button
-                                            id="idCreateButton"
-                                            text="Create"
-                                            press="onAddProduct"
-                                            icon="sap-icon://add"
+                                        <core:Item
+                                            key="companyCode"
+                                            text="Company Code"
                                         />
-                                    </OverflowToolbar>
-                                </headerToolbar>
+                                        <core:Item
+                                            key="userRole"
+                                            text="User Role"
+                                        />
+                                    </Select>
+                                    <Button
+                                        id="idCreateButton"
+                                        text="Create"
+                                        press="onAddProduct"
+                                        icon="sap-icon://add"
+                                    />
+                                </OverflowToolbar>
+                            </headerToolbar>
 
-                                <columns>
-                                    <Column>
-                                        <Text text="Code" />
-                                    </Column>
-                                    <Column>
-                                        <Text text="Description" />
-                                    </Column>
-                                    <Column>
-                                        <Text text="Short Text" />
-                                    </Column>
-                                    <Column>
-                                        <Text text="Action" />
-                                    </Column>
-                                </columns>
+                            <columns>
+                                <Column>
+                                    <Text text="Code" />
+                                </Column>
+                                <Column>
+                                    <Text text="Description" />
+                                </Column>
+                                <Column>
+                                    <Text text="Short Text" />
+                                </Column>
+                                <Column>
+                                    <Text text="Action" />
+                                </Column>
+                            </columns>
 
-                                <items>
-                                    <ColumnListItem vAlign="Middle">
-                                        <cells>
-                                            <Text text="{mastJsonModel>CODE}" />
-                                            <Text
-                                                text="{mastJsonModel>DESCRIPTION}"
+                            <items>
+                                <ColumnListItem vAlign="Middle">
+                                    <cells>
+                                        <Text text="{mastJsonModel>CODE}" />
+                                        <Text
+                                            text="{mastJsonModel>DESCRIPTION}"
+                                        />
+                                        <Text
+                                            text="{mastJsonModel>SHORTTEXT}"
+                                        />
+                                        <HBox>
+                                            <Button
+                                                icon="sap-icon://delete"
+                                                press="onDeleteFunction"
                                             />
-                                            <Text
-                                                text="{mastJsonModel>SHORTTEXT}"
+                                            <Button
+                                                icon="sap-icon://edit"
+                                                press="onEditFunction"
+                                                class="sapUiTinyMarginBegin"
                                             />
-                                            <HBox>
-                                                <Button
-                                                    icon="sap-icon://delete"
-                                                    press="onDeleteFunction"
-                                                />
-                                                <Button
-                                                    icon="sap-icon://edit"
-                                                    press="onEditFunction"
-                                                    class="sapUiTinyMarginBegin"
-                                                />
-                                            </HBox>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
-                        </VBox>
+                                        </HBox>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
                     </IconTabFilter>
 
                     <IconTabFilter
@@ -321,177 +319,186 @@
                         text="Form Fields"
                         class="sapUiTinyMarginBegin"
                     >
-                        <VBox class="customCard">
-                            <HBox class="sapUiSmallMarginBottom">
-                                <Title
-                                    text="Registration Form Fields"
-                                    level="H3"
-                                />
-                                <ToolbarSpacer />
-                            </HBox>
-                            <HBox class="sapUiSmallMarginBottom">
-                                <Label
-                                    text="Request Type:"
-                                    class="sapUiTinyMarginEnd"
-                                />
-                                <ComboBox
-                                    id="requestTypeCombo"
-                                    selectedKey="Create Normal"
-                                    class="sapUiTinyMarginEnd"
-                                >
-                                    <core:Item
-                                        key="Create Supplier"
-                                        text="Create Supplier"
-                                    />
-                                    <core:Item
-                                        key="Create User"
-                                        text="Create User"
-                                    />
-                                </ComboBox>
-                                <Label
-                                    text="Entity Code:"
-                                    class="sapUiTinyMarginEnd"
-                                />
-                                <ComboBox
-                                    id="idSourceCC"
-                                    selectedKey="{CompanyCode>BUKRS}"
-                                    items="{
-        path: '/CompanyCode'
-    }"
-                                >
-                                    <core:Item
-                                        key="{BUKRS}"
-                                        text="{BUKRS} - {BUTXT}"
-                                    />
-                                </ComboBox>
-                                <Button
-                                    text="Submit/Refresh"
-                                    type="Emphasized"
-                                    icon="sap-icon://refresh"
-                                    press="onSubmitRefreshPress"
-                                    class="sapUiTinyMarginBegin"
-                                />
-                            </HBox>
-                            <Table
-                                id="fieldConfigTable"
-                                inset="false"
-                                items="{ path: 'fieldConfigModel>/results' }"
-                                growing="true"
-                                growingThreshold="10"
-                                class="customTable"
+                        <sf:SimpleForm
+                            id="registrationForm"
+                            title="Registration Form Fields"
+                            editable="true"
+                            layout="ColumnLayout"
+                            labelSpanXL="2"
+                            labelSpanL="2"
+                            labelSpanM="2"
+                            labelSpanS="12"
+                            adjustLabelSpan="false"
+                            emptySpanXL="0"
+                            emptySpanL="0"
+                            emptySpanM="0"
+                            emptySpanS="0"
+                            columnsXL="3"
+                            columnsL="3"
+                            columnsM="3"
+                            class="sapUiSmallMarginBottom"
+                        >
+                            <!-- <Title
+                                text="Registration Form Fields"
+                                level="H3"
+                            /> -->
+
+                            <Label text="Request Type" />
+                            <ComboBox
+                                id="requestTypeCombo"
+                                selectedKey="Create Normal"
                             >
-                                <headerToolbar>
-                                    <OverflowToolbar
-                                        design="Solid"
-                                        class="customToolbar"
-                                    >
-                                        <content>
-                                            <SearchField
-                                                id="searchField"
-                                                width="20rem"
-                                                placeholder="Search by Section, Field ID or Description"
-                                                search="onSearchFields"
-                                                class="sapUiSmallMarginBeginEnd"
+                                <core:Item
+                                    key="Create Supplier"
+                                    text="Create Supplier"
+                                />
+                                <core:Item
+                                    key="Create User"
+                                    text="Create User"
+                                />
+                            </ComboBox>
+
+                            <Label text="Entity Code" />
+                            <ComboBox
+                                id="idSourceCC"
+                                selectedKey="{CompanyCode>BUKRS}"
+                                items="{ path: '/CompanyCode' }"
+                            >
+                                <core:Item
+                                    key="{BUKRS}"
+                                    text="{BUKRS} - {BUTXT}"
+                                />
+                            </ComboBox>
+
+                            <Label text="Submit/Refresh" />
+                            <!-- Filler label to align the button -->
+                            <Button
+                                text="Go"
+                                type="Emphasized"
+                                icon="sap-icon://refresh"
+                                press="onSubmitRefreshPress"
+                                width="2rem"
+                            />
+                        </sf:SimpleForm>
+                        <Table
+                            id="fieldConfigTable"
+                            inset="false"
+                            items="{ path: 'fieldConfigModel>/results' }"
+                            growing="true"
+                            growingThreshold="10"
+                        >
+                            <headerToolbar>
+                                <OverflowToolbar
+                                    design="Solid"
+                                    class="customToolbar"
+                                >
+                                    <content>
+                                        <SearchField
+                                            id="searchField"
+                                            width="20rem"
+                                            placeholder="Search by Section, Field ID or Description"
+                                            search="onSearchFields"
+                                            class="sapUiSmallMarginBeginEnd"
+                                        />
+                                        <ToolbarSpacer />
+                                        <Button
+                                            text="Create"
+                                            type="Emphasized"
+                                            icon="sap-icon://add"
+                                            press="onCreateFieldPress"
+                                            class="customButton customCreateButton"
+                                        />
+                                    </content>
+                                </OverflowToolbar>
+                            </headerToolbar>
+
+                            <columns>
+                                <Column>
+                                    <Text
+                                        text="Section / Category"
+                                        class="customColumnHeader"
+                                    />
+                                </Column>
+                                <Column>
+                                    <Text
+                                        text="Field ID"
+                                        class="customColumnHeader"
+                                    />
+                                </Column>
+                                <Column>
+                                    <Text
+                                        text="Description"
+                                        class="customColumnHeader"
+                                    />
+                                </Column>
+                                <Column hAlign="Center">
+                                    <Text
+                                        text="Visibility"
+                                        class="customColumnHeader"
+                                    />
+                                </Column>
+                                <Column hAlign="Center">
+                                    <Text
+                                        text="Mandatory"
+                                        class="customColumnHeader"
+                                    />
+                                </Column>
+                                <Column hAlign="Begin">
+                                    <Text
+                                        text="Action"
+                                        class="customColumnHeader"
+                                    />
+                                </Column>
+                            </columns>
+
+                            <items>
+                                <ColumnListItem
+                                    type="Active"
+                                    class="customTableRow"
+                                >
+                                    <cells>
+                                        <!-- Section with red color -->
+                                        <VBox>
+                                            <Text
+                                                text="{fieldConfigModel>SECTION}"
+                                                class="customSectionText"
                                             />
-                                            <ToolbarSpacer />
+                                            <Text
+                                                text="{fieldConfigModel>CATEGORY}"
+                                            />
+                                        </VBox>
+
+                                        <Text
+                                            text="{fieldConfigModel>FIELD_ID}"
+                                        />
+                                        <Text
+                                            text="{fieldConfigModel>DESCRIPTION}"
+                                        />
+
+                                        <!-- Visibility using ObjectStatus -->
+                                        <ObjectStatus
+                                            text="{= ${fieldConfigModel>IS_VISIBLE} ? 'Yes' : 'No'}"
+                                            state="{= ${fieldConfigModel>IS_VISIBLE} ? 'Success' : 'Error'}"
+                                        />
+
+                                        <!-- Mandatory using ObjectStatus -->
+                                        <ObjectStatus
+                                            text="{= ${fieldConfigModel>IS_MANDATORY} ? 'Yes' : 'No'}"
+                                            state="{= ${fieldConfigModel>IS_MANDATORY} ? 'Success' : 'Error'}"
+                                        />
+
+                                        <HBox alignContent="Center">
                                             <Button
-                                                text="Create"
-                                                type="Emphasized"
-                                                icon="sap-icon://add"
-                                                press="onCreateFieldPress"
-                                                class="customButton customCreateButton"
+                                                type="Default"
+                                                icon="sap-icon://edit"
+                                                press="onEditFieldPress"
+                                                tooltip="Edit"
                                             />
-                                        </content>
-                                    </OverflowToolbar>
-                                </headerToolbar>
-                                <columns>
-                                    <Column width="20%">
-                                        <Text
-                                            text="Section / Category"
-                                            class="customColumnHeader"
-                                        />
-                                    </Column>
-                                    <Column width="15%">
-                                        <Text
-                                            text="Field ID"
-                                            class="customColumnHeader"
-                                        />
-                                    </Column>
-                                    <Column width="25%">
-                                        <Text
-                                            text="Description"
-                                            class="customColumnHeader"
-                                        />
-                                    </Column>
-                                    <Column
-                                        width="10%"
-                                        hAlign="Center"
-                                    >
-                                        <Text
-                                            text="Visibility"
-                                            class="customColumnHeader"
-                                        />
-                                    </Column>
-                                    <Column
-                                        width="10%"
-                                        hAlign="Center"
-                                    >
-                                        <Text
-                                            text="Mandatory"
-                                            class="customColumnHeader"
-                                        />
-                                    </Column>
-                                    <Column
-                                        width="10%"
-                                        hAlign="End"
-                                    >
-                                        <Text
-                                            text="Action"
-                                            class="customColumnHeader"
-                                        />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem
-                                        vAlign="Middle"
-                                        type="Active"
-                                        class="customTableRow"
-                                    >
-                                        <cells>
-                                            <VBox>
-                                                <Text
-                                                    text="{fieldConfigModel>SECTION}"
-                                                />
-                                                <Text
-                                                    text="{fieldConfigModel>CATEGORY}"
-                                                />
-                                            </VBox>
-                                            <Text
-                                                text="{fieldConfigModel>FIELD_ID}"
-                                            />
-                                            <Text
-                                                text="{fieldConfigModel>DESCRIPTION}"
-                                            />
-                                            <Text
-                                                text="{= ${fieldConfigModel>IS_VISIBLE} ? 'Yes' : 'No'}"
-                                            />
-                                            <Text
-                                                text="{= ${fieldConfigModel>IS_MANDATORY} ? 'Yes' : 'No'}"
-                                            />
-                                            <HBox>
-                                                <Button
-                                                    type="Default"
-                                                    icon="sap-icon://edit"
-                                                    press="onEditFieldPress"
-                                                    tooltip="Edit"
-                                                    class="customActionButton sapUiTinyMarginEnd"
-                                                />
-                                            </HBox>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
-                        </VBox>
+                                        </HBox>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
                     </IconTabFilter>
                 </items>
             </IconTabBar>

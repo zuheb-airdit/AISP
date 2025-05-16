@@ -79,7 +79,7 @@
                                     >
                                         <core:Item
                                             key="{CODE}"
-                                            text="{DESC}"
+                                            text="{CODE} - {DESC}"
                                         />
                                     </m:ComboBox>
                                 </m:VBox>
@@ -226,24 +226,31 @@
                                                 </m:suggestionItems>
                                             </m:Input>
 
+                                            <!-- Approve -->
                                             <m:CheckBox
-                                                visible="{hierarchydata>checkboxVisible}"
-                                                selected="{hierarchydata>approveCheckboxVisible}"
+                                                visible="{hierarchydata>approveCheckboxVisible}"
+                                                selected="{hierarchydata>approveCheckboxSelected}"
                                                 editable="{hierarchydata>editablechk}"
                                             />
+
+                                            <!-- Reject -->
                                             <m:CheckBox
-                                                visible="{hierarchydata>checkboxVisible}"
-                                                selected="{hierarchydata>rejectCheckboxVisible}"
+                                                visible="{hierarchydata>rejectCheckboxVisible}"
+                                                selected="{hierarchydata>rejectCheckboxSelected}"
                                                 editable="{hierarchydata>editablechk}"
                                             />
+
+                                            <!-- Send Back -->
                                             <m:CheckBox
-                                                visible="{hierarchydata>checkboxVisible}"
-                                                selected="{hierarchydata>sendBackCheckboxVisible}"
+                                                visible="{hierarchydata>sendBackCheckboxVisible}"
+                                                selected="{hierarchydata>sendBackCheckboxSelected}"
                                                 editable="{hierarchydata>editablechk}"
                                             />
+
+                                            <!-- Edit -->
                                             <m:CheckBox
-                                                visible="{hierarchydata>checkboxVisible}"
-                                                selected="{hierarchydata>editCheckboxVisible}"
+                                                visible="{hierarchydata>editCheckboxVisible}"
+                                                selected="{hierarchydata>editCheckboxSelected}"
                                                 editable="{hierarchydata>editablechk}"
                                             />
                                         </m:cells>
@@ -258,22 +265,11 @@
         <footer>
             <m:Toolbar>
                 <m:ToolbarSpacer />
-                <m:Text
-                    text="Draft Updated"
-                    class="sapUiTinyMarginEnd"
-                />
                 <m:Button
                     id="idCreateFooterButton"
                     text="Create"
                     type="Emphasized"
                     press="onFooterCreatePress"
-                />
-
-                <m:Button
-                    id="idDiscardDraftButton"
-                    text="Discard Draft"
-                    type="Transparent"
-                    press="onFooterDiscardPress"
                 />
             </m:Toolbar>
         </footer>

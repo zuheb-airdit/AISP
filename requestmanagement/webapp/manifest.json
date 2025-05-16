@@ -160,6 +160,13 @@
           "target": [
             "TargetRegistrationform"
           ]
+        },
+        {
+          "name": "RequestSendBack",
+          "pattern": "RequestSendBack/{requestNumber}/{requestType}",
+          "target": [
+            "TargetRequestSendBack"
+          ]
         }
       ],
       "targets": {
@@ -169,6 +176,10 @@
         },
         "TargetRegistrationform": {
           "id": "Registrationform",
+          "name": "Registrationform"
+        },
+        "TargetRequestSendBack": {
+          "id": "RequestSendBack",
           "name": "Registrationform"
         }
       }

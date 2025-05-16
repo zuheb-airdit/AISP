@@ -42,7 +42,6 @@
                             key="APPR_TYPE"
                             label="Approval Type"
                             visibleInAdvancedArea="true"
-                            controlType="dropDownList"
                         />
 
                         <!-- Entity Field -->

@@ -53,7 +53,7 @@
                 enableAutoColumnWidth="true"
                 enableCopy="false"
                 header="Registration Approval List"
-                class="smallerFontTable"
+
             >
                 <smartTable:customToolbar>
                     <OverflowToolbar design="Transparent">
@@ -229,54 +229,54 @@
                                 <VBox>
                                     <Text
                                         text="{REQUEST_NO}"
-                                        class="usermasterColo smallerFont"
+                                        class="usermasterColo"
                                     />
                                     <Text
                                         text="{REQUEST_TYPE}"
-                                        class="blackText smallerFont"
+                                        class="blackText"
                                     />
                                 </VBox>
                                 <Text
                                     text="{VENDOR_NAME1}"
-                                    class="smallerFont"
+                                    class=""
                                 />
                                 <Text
                                     text="{COMPANY_CODE}"
-                                    class="smallerFont"
+                                    class=""
                                 />
                                 <Text
                                     text="{REGISTERED_ID}"
-                                    class="smallerFont"
+                                    class=""
                                 />
                                 <VBox>
                                     <Text
                                         text="{SUPPL_TYPE}"
-                                        class="smallerFont"
+                                        class=""
                                     />
                                     <Text
                                         text="{SUPPL_TYPE_DESC}"
-                                        class="smallerFont"
+                                        class=""
                                     />
                                 </VBox>
                                 <VBox>
                                     <Text
                                         text="{BP_TYPE_CODE}"
-                                        class="smallerFont"
+                                        class=""
                                     />
                                     <Text
                                         text="{BP_TYPE_DESC}"
-                                        class="smallerFont"
+                                        class=""
                                     />
                                 </VBox>
                                 <Text
                                     text="{path: 'CREATED_ON', formatter: '.createdOnAndByFormatter'}"
-                                    class="smallerFont"
+                                    class=""
                                 />
                                 <ObjectStatus
                                     text="{ parts :[{path: 'STATUS'},{path: 'APPROVER_ROLE'}], formatter: '.statusFormatter'}"
                                     state="Indication15"
                                     inverted="true"
-                                    class="noWrapText smallerFont"
+                                    class="noWrapText"
                                 />
                             </cells>
                         </ColumnListItem>
