@@ -51,3 +51,8 @@
     margin-top: 0.5rem !important;
     text-align: center !important;
 }
+
+.sapUiCompSmartTable{
+    margin-left: -29px !important;
+    margin-right: -29px !important;
+}

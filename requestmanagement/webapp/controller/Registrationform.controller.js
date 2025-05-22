@@ -1651,40 +1651,40 @@ sap.ui.define(
                     console.log("Attachment section already created, skipping re-render");
                     return;
                 }
-
+            
                 if (!oAttachmentFields || oAttachmentFields.length === 0) {
                     console.error("No fields found for Attachments");
                     return;
                 }
-
+            
                 var oContainer = this.getView().byId("AttachmentsFormContainer");
                 if (!oContainer) {
                     console.error("AttachmentsFormContainer not found. Check your view XML.");
                     return;
                 }
-
+            
                 // Clear the container only if we are forcing a recreate
                 if (bForceRecreate || !this._bAttachmentSectionCreated) {
                     oContainer.removeAllContent();
                 }
-
+            
                 var oMainVBox = new sap.m.VBox().addStyleClass("subSectionSpacing");
                 this._oMainVBox = oMainVBox;
-
+            
                 var oFormDataModel = this.getView().getModel("formDataModel");
                 if (!oFormDataModel) {
                     console.error("formDataModel not found in the view. Ensure it is set in onInit.");
                     return;
                 }
-
+            
                 // Log the initial oAttachmentFields
                 console.log("Initial oAttachmentFields:", oAttachmentFields);
-
+            
                 // Transform oAttachmentFields to include title and empty description
                 var transformedFields = oAttachmentFields.map(field => {
                     const updatedField = {
                         description: field.description || "",
-                        title: field.title || "Untitled Section", // Use the original title from input
+                        title: field.title || "Untitled Section",
                         fileName: field.fileName || "",
                         uploaded: field.uploaded || false,
                         fieldPath: field.fieldPath || (field.title || "DEFAULT").toUpperCase().replace(/\s+/g, '_'),
@@ -1694,214 +1694,109 @@ sap.ui.define(
                     console.log("Transformed field:", updatedField);
                     return updatedField;
                 });
-
+            
                 // Set the transformed data into the model only if it hasn't been set yet
                 if (!oFormDataModel.getProperty("/Attachments") || bForceRecreate) {
                     oFormDataModel.setProperty("/Attachments", transformedFields);
-                    oFormDataModel.refresh(true); // Force a model refresh
+                    oFormDataModel.refresh(true);
                     console.log("Model after setting Attachments:", oFormDataModel.getProperty("/Attachments"));
                 }
-
+            
                 this._attachmentFields = transformedFields;
-
-                // Create the "Add Other Document" button in the header
-                var oAddButton = new sap.m.Button({
-                    text: "Add Other Document",
-                    press: () => {
-                        var newAttachment = {
-                            description: "",
-                            title: "Other Documents",
-                            fileName: "",
-                            uploaded: false,
-                            fieldPath: "OTHER_DOCUMENTS",
-                            fieldId: "V1R1D" + Date.now(),
-                            imageUrl: "",
-                        };
-
-                        var oAttachments = oFormDataModel.getProperty("/Attachments");
-                        oAttachments.push(newAttachment);
-                        oFormDataModel.setProperty("/Attachments", oAttachments);
-                        console.log("Added new attachment:", newAttachment);
-
-                        var oExistingVBox = this._oMainVBox.getItems().find(item => {
-                            return item instanceof sap.m.VBox &&
-                                item.getItems()[0] instanceof sap.m.Title &&
-                                item.getItems()[0].getText() === "Other Documents";
-                        });
-
-                        if (!oExistingVBox) {
-                            var oNewTable = new sap.m.Table({
-                                growing: true,
-                                columns: [
-                                    new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
-                                    new sap.m.Column({ header: new sap.m.Label({ text: "Upload" }) }),
-                                    new sap.m.Column({ header: new sap.m.Label({ text: "File Name" }) }),
-                                    new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
-                                ]
-                            });
-
-                            var oFileUploader = new sap.ui.unified.FileUploader({
-                                name: "myFileUpload",
-                                uploadUrl: "upload/",
-                                tooltip: "Upload your file to the local server",
-                                uploadComplete: this.handleUploadComplete.bind(this),
-                                change: this.handleValueChange.bind(this),
-                                typeMissmatch: this.handleTypeMissmatch.bind(this),
-                                style: "Emphasized",
-                                fileType: "txt,jpg,pdf,doc,docx,png",
-                                placeholder: "Choose a file for Upload...",
-                                visible: true
-                            });
-
-                            var oItemTemplate = new sap.m.ColumnListItem({
-                                cells: [
-                                    new sap.m.Input({
-                                        value: "{formDataModel>description}",
-                                        change: this.onDescriptionChange.bind(this)
-                                    }),
-                                    new sap.m.Button({
-                                        text: "Upload",
-                                        press: function (oEvent) {
-                                            var oButton = oEvent.getSource();
-                                            var oContext = oButton.getBindingContext("formDataModel");
-                                            if (oContext) {
-                                                oButton.addDependent(oFileUploader);
-                                                oFileUploader.setBindingContext(oContext, "formDataModel");
-
-                                                oContainer.addContent(oFileUploader);
-
-                                                setTimeout(() => {
-                                                    var $fileInput = oFileUploader.$().find("input[type='file']");
-                                                    if ($fileInput.length > 0) {
-                                                        $fileInput.trigger("click");
-                                                        if (!oFileUploader.getFocusDomRef()) {
-                                                            console.warn("FileUploader focus issue detected after delay");
-                                                        }
-                                                    } else {
-                                                        console.error("File input not found in FileUploader");
-                                                    }
-                                                    oContainer.removeContent(oFileUploader);
-                                                }, 100);
-                                            } else {
-                                                console.error("No binding context found for Upload button");
-                                            }
-                                        }
-                                    }),
-                                    new sap.m.Text({
-                                        text: "{formDataModel>fileName}"
-                                    }),
-                                    new sap.m.HBox({
-                                        visible: true,
-                                        items: [
-                                            new sap.m.Button({
-                                                icon: "sap-icon://download",
-                                                type: "Transparent",
-                                                tooltip: "Download",
-                                                press: function (oEvent) {
-                                                    var oContext = oEvent.getSource().getBindingContext("formDataModel");
-                                                    var sFileName = oContext.getProperty("fileName");
-                                                    sap.m.MessageToast.show("Download functionality for " + sFileName + " to be implemented");
-                                                }
-                                            }),
-                                            new sap.m.Button({
-                                                icon: "sap-icon://delete",
-                                                type: "Transparent",
-                                                tooltip: "Remove",
-                                                press: function (oEvent) {
-                                                    var oContext = oEvent.getSource().getBindingContext("formDataModel");
-                                                    var sPath = oContext.getPath();
-                                                    oFormDataModel.setProperty(sPath + "/fileName", "");
-                                                    oFormDataModel.setProperty(sPath + "/uploaded", false);
-                                                    oFormDataModel.setProperty(sPath + "/imageUrl", "");
-                                                }
-                                            })
-                                        ]
-                                    })
-                                ]
-                            });
-
-                            oNewTable.bindItems({
-                                path: "formDataModel>/Attachments",
-                                template: oItemTemplate,
-                                filters: [
-                                    new sap.ui.model.Filter({
-                                        path: "title",
-                                        operator: sap.ui.model.FilterOperator.EQ,
-                                        value1: "Other Documents"
-                                    })
-                                ]
-                            });
-
-                            var oNewVBox = new sap.m.VBox({
-                                items: [
-                                    new sap.m.Title({
-                                        text: "Other Documents",
-                                        level: "H3"
-                                    }),
-                                    oNewTable
-                                ]
-                            }).addStyleClass("attachmentTableSection");
-
-                            this._oMainVBox.addItem(oNewVBox);
-                            console.log("Created new table for Other Documents");
-
-                            var oNewTableBinding = oNewTable.getBinding("items");
-                            if (oNewTableBinding) {
-                                oNewTableBinding.refresh();
-                                console.log("Refreshed binding for Other Documents table");
-                            } else {
-                                console.warn("Binding for Other Documents table not found, attempting delayed refresh");
-                                setTimeout(() => {
-                                    var delayedBinding = oNewTable.getBinding("items");
-                                    if (delayedBinding) {
-                                        delayedBinding.refresh();
-                                        console.log("Delayed refresh successful for Other Documents table");
-                                    } else {
-                                        console.error("Delayed binding for Other Documents table still not found");
-                                    }
-                                }, 100);
+            
+                // Model for fragment dialog
+                var oDialogModel = new sap.ui.model.json.JSONModel({
+                    newDocumentName: "",
+                    showError: false
+                });
+                this.getView().setModel(oDialogModel, "dialogModel");
+            
+                // Method to open the document name input dialog
+                this.openDocumentDialog = function () {
+                    sap.ui.getCore().loadLibrary("sap.m", { async: false });
+            
+                    // Check if dialog exists and is valid, otherwise create a new one
+                    if (!this._oDialog || !(this._oDialog instanceof sap.m.Dialog) || this._oDialog.bIsDestroyed) {
+                        try {
+                            this._oDialog = sap.ui.xmlfragment(
+                                "com.requestmanagement.requestmanagement.fragments.AddDocumentDialog",
+                                this
+                            );
+                            if (!(this._oDialog instanceof sap.m.Dialog)) {
+                                console.error("Fragment did not return a Dialog object:", this._oDialog);
+                                sap.m.MessageToast.show("Failed to load document dialog. Please check the fragment configuration.");
+                                return;
                             }
-                        } else {
-                            var oExistingTable = oExistingVBox.getItems()[1];
-                            if (oExistingTable) {
-                                var oExistingBinding = oExistingTable.getBinding("items");
-                                if (oExistingBinding) {
-                                    oExistingBinding.refresh();
-                                    console.log("Refreshed existing table for Other Documents");
-                                } else {
-                                    console.warn("Binding for existing Other Documents table not found, attempting delayed refresh");
-                                    setTimeout(() => {
-                                        var delayedBinding = oExistingTable.getBinding("items");
-                                        if (delayedBinding) {
-                                            delayedBinding.refresh();
-                                            console.log("Delayed refresh successful for existing Other Documents table");
-                                        } else {
-                                            console.error("Delayed binding for existing Other Documents table still not found");
-                                        }
-                                    }, 100);
-                                }
-                            }
+                            this.getView().addDependent(this._oDialog);
+                            this._oDialog.setModel(oDialogModel, "dialogModel");
+                            console.log("Dialog created successfully:", this._oDialog);
+                        } catch (e) {
+                            console.error("Error loading fragment:", e);
+                            sap.m.MessageToast.show("Error loading document dialog. Please contact support.");
+                            return;
                         }
                     }
-                });
-
-                // Create the header with the Add button
-                var oHeader = new sap.m.HBox({
-                    items: [
-                        new sap.m.Title({ text: "Attachments", level: "H2" }),
-                        oAddButton
-                    ],
-                    justifyContent: "SpaceBetween",
-                });
-
-                oMainVBox.addItem(oHeader);
-
-                // Store tables for delayed refresh
-                var aTables = [];
-
-                if (bForceRecreate || !this._bAttachmentSectionCreated) {
-                    transformedFields.forEach((oField, index) => {
-                        var oTable = new sap.m.Table({
+            
+                    // Reset dialog model state
+                    oDialogModel.setProperty("/newDocumentName", "");
+                    oDialogModel.setProperty("/showError", false);
+            
+                    // Open the dialog
+                    try {
+                        this._oDialog.open();
+                    } catch (e) {
+                        console.error("Error opening dialog:", e);
+                        sap.m.MessageToast.show("Error opening document dialog.");
+                    }
+                };
+            
+                // Handle dialog submit
+                this.onSubmitDocumentName = function () {
+                    var sNewTitle = oDialogModel.getProperty("/newDocumentName").trim();
+                    if (!sNewTitle) {
+                        sap.m.MessageToast.show("Please enter a document name");
+                        return;
+                    }
+            
+                    // Check for duplicate title
+                    var bTitleExists = oFormDataModel.getProperty("/Attachments").some(field => 
+                        field.title.toLowerCase() === sNewTitle.toLowerCase()
+                    );
+                    if (bTitleExists) {
+                        oDialogModel.setProperty("/showError", true);
+                        return;
+                    }
+            
+                    // Close dialog
+                    this._oDialog.close();
+            
+                    // Proceed with adding new document
+                    var newAttachment = {
+                        description: "",
+                        title: sNewTitle,
+                        fileName: "",
+                        uploaded: false,
+                        fieldPath: sNewTitle.toUpperCase().replace(/\s+/g, '_'),
+                        fieldId: "V1R1D" + Date.now(),
+                        imageUrl: ""
+                    };
+            
+                    var oAttachments = oFormDataModel.getProperty("/Attachments");
+                    oAttachments.push(newAttachment);
+                    oFormDataModel.setProperty("/Attachments", oAttachments);
+                    oFormDataModel.refresh(true);
+                    console.log("Added new attachment:", newAttachment);
+            
+                    // Check if a VBox for this title already exists
+                    var oExistingVBox = this._oMainVBox.getItems().find(item => {
+                        return item instanceof sap.m.VBox &&
+                            item.getItems()[0] instanceof sap.m.HBox &&
+                            item.getItems()[0].getItems()[0] instanceof sap.m.Title &&
+                            item.getItems()[0].getItems()[0].getText() === sNewTitle;
+                    });
+            
+                    if (!oExistingVBox) {
+                        var oNewTable = new sap.m.Table({
                             growing: true,
                             columns: [
                                 new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
@@ -1910,7 +1805,7 @@ sap.ui.define(
                                 new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
                             ]
                         });
-
+            
                         var oFileUploader = new sap.ui.unified.FileUploader({
                             name: "myFileUpload",
                             uploadUrl: "upload/",
@@ -1923,7 +1818,7 @@ sap.ui.define(
                             placeholder: "Choose a file for Upload...",
                             visible: true
                         });
-
+            
                         var oItemTemplate = new sap.m.ColumnListItem({
                             cells: [
                                 new sap.m.Input({
@@ -1938,9 +1833,237 @@ sap.ui.define(
                                         if (oContext) {
                                             oButton.addDependent(oFileUploader);
                                             oFileUploader.setBindingContext(oContext, "formDataModel");
-
                                             oContainer.addContent(oFileUploader);
-
+                                            setTimeout(() => {
+                                                var $fileInput = oFileUploader.$().find("input[type='file']");
+                                                if ($fileInput.length > 0) {
+                                                    $fileInput.trigger("click");
+                                                    if (!oFileUploader.getFocusDomRef()) {
+                                                        console.warn("FileUploader focus issue detected after delay");
+                                                    }
+                                                } else {
+                                                    console.error("File input not found in FileUploader");
+                                                }
+                                                oContainer.removeContent(oFileUploader);
+                                            }, 100);
+                                        } else {
+                                            console.error("No binding context found for Upload button");
+                                        }
+                                    }
+                                }),
+                                new sap.m.Text({
+                                    text: "{formDataModel>fileName}"
+                                }),
+                                new sap.m.HBox({
+                                    visible: true,
+                                    items: [
+                                        new sap.m.Button({
+                                            icon: "sap-icon://download",
+                                            type: "Transparent",
+                                            tooltip: "Download",
+                                            press: function (oEvent) {
+                                                var oContext = oEvent.getSource().getBindingContext("formDataModel");
+                                                var sFileName = oContext.getProperty("fileName");
+                                                var sImageUrl = oContext.getProperty("imageUrl");
+                                                sap.m.MessageToast.show("Download functionality for " + sImageUrl + " to be implemented");
+                                            }
+                                        }),
+                                        new sap.m.Button({
+                                            icon: "sap-icon://delete",
+                                            type: "Transparent",
+                                            tooltip: "Remove",
+                                            press: function (oEvent) {
+                                                var oContext = oEvent.getSource().getBindingContext("formDataModel");
+                                                var sPath = oContext.getPath();
+                                                oFormDataModel.setProperty(sPath + "/fileName", "");
+                                                oFormDataModel.setProperty(sPath + "/uploaded", false);
+                                                oFormDataModel.setProperty(sPath + "/imageUrl", "");
+                                            }
+                                        })
+                                    ]
+                                })
+                            ]
+                        });
+            
+                        oNewTable.bindItems({
+                            path: "formDataModel>/Attachments",
+                            template: oItemTemplate,
+                            filters: [
+                                new sap.ui.model.Filter({
+                                    path: "title",
+                                    operator: sap.ui.model.FilterOperator.EQ,
+                                    value1: sNewTitle
+                                })
+                            ]
+                        });
+            
+                        // Create an HBox for the title and Remove button
+                        var oHeaderHBox = new sap.m.HBox({
+                            items: [
+                                new sap.m.Title({
+                                    text: sNewTitle,
+                                    level: "H3"
+                                }),
+                                new sap.m.Button({
+                                    icon: "sap-icon://decline",
+                                    type: "Transparent",
+                                    tooltip: "Remove Section",
+                                    press: this.onRemoveDocumentSection.bind(this, sNewTitle)
+                                })
+                            ],
+                            justifyContent: "SpaceBetween",
+                            alignItems: "Center"
+                        });
+            
+                        var oNewVBox = new sap.m.VBox({
+                            items: [
+                                oHeaderHBox,
+                                oNewTable
+                            ]
+                        }).addStyleClass("attachmentTableSection");
+            
+                        this._oMainVBox.addItem(oNewVBox);
+                        console.log(`Created new table for ${sNewTitle}`);
+            
+                        var oNewTableBinding = oNewTable.getBinding("items");
+                        if (oNewTableBinding) {
+                            oNewTableBinding.refresh();
+                            console.log(`Refreshed binding for ${sNewTitle} table`);
+                        } else {
+                            console.warn(`Binding for ${sNewTitle} table not found, attempting delayed refresh`);
+                            setTimeout(() => {
+                                var delayedBinding = oNewTable.getBinding("items");
+                                if (delayedBinding) {
+                                    delayedBinding.refresh();
+                                    console.log(`Delayed refresh successful for ${sNewTitle} table`);
+                                } else {
+                                    console.error(`Delayed binding for ${sNewTitle} table still not found`);
+                                }
+                            }, 100);
+                        }
+                    } else {
+                        var oExistingTable = oExistingVBox.getItems()[1];
+                        if (oExistingTable) {
+                            var oExistingBinding = oExistingTable.getBinding("items");
+                            if (oExistingBinding) {
+                                oExistingBinding.refresh();
+                                console.log(`Refreshed existing table for ${sNewTitle}`);
+                            } else {
+                                console.warn(`Binding for existing ${sNewTitle} table not found, attempting delayed refresh`);
+                                setTimeout(() => {
+                                    var delayedBinding = oExistingTable.getBinding("items");
+                                    if (delayedBinding) {
+                                        delayedBinding.refresh();
+                                        console.log(`Delayed refresh successful for existing ${sNewTitle} table`);
+                                    } else {
+                                        console.error(`Delayed binding for existing ${sNewTitle} table still not found`);
+                                    }
+                                }, 100);
+                            }
+                        }
+                    }
+                };
+            
+                // Handle section removal
+                this.onRemoveDocumentSection = function (sTitle) {
+                    // Confirm deletion
+                    sap.m.MessageBox.confirm(`Are you sure you want to remove the "${sTitle}" section?`, {
+                        title: "Confirm Deletion",
+                        onClose: function (oAction) {
+                            if (oAction === sap.m.MessageBox.Action.OK) {
+                                // Remove from model
+                                var oAttachments = oFormDataModel.getProperty("/Attachments");
+                                oAttachments = oAttachments.filter(field => field.title !== sTitle);
+                                oFormDataModel.setProperty("/Attachments", oAttachments);
+                                oFormDataModel.refresh(true);
+                                console.log(`Removed attachments with title: ${sTitle}`);
+            
+                                // Remove the VBox from UI
+                                var oVBoxToRemove = this._oMainVBox.getItems().find(item => {
+                                    return item instanceof sap.m.VBox &&
+                                        item.getItems()[0] instanceof sap.m.HBox &&
+                                        item.getItems()[0].getItems()[0] instanceof sap.m.Title &&
+                                        item.getItems()[0].getItems()[0].getText() === sTitle;
+                                });
+                                if (oVBoxToRemove) {
+                                    this._oMainVBox.removeItem(oVBoxToRemove);
+                                    oVBoxToRemove.destroy();
+                                    console.log(`Removed VBox for ${sTitle} from UI`);
+                                } else {
+                                    console.warn(`VBox for ${sTitle} not found in UI`);
+                                }
+            
+                                sap.m.MessageToast.show(`Section "${sTitle}" removed successfully`);
+                            }
+                        }.bind(this)
+                    });
+                };
+            
+                // Handle dialog cancel
+                this.onCancelDocumentName = function () {
+                    this._oDialog.destroy();
+                };
+            
+                // Create the "Add Other Document" button in the header
+                var oAddButton = new sap.m.Button({
+                    text: "Add Other Document",
+                    press: this.openDocumentDialog.bind(this)
+                });
+            
+                // Create the header with the Add button
+                var oHeader = new sap.m.HBox({
+                    items: [
+                        new sap.m.Title({ text: "Attachments", level: "H2" }),
+                        oAddButton
+                    ],
+                    justifyContent: "SpaceBetween"
+                });
+            
+                oMainVBox.addItem(oHeader);
+            
+                // Store tables for delayed refresh
+                var aTables = [];
+            
+                if (bForceRecreate || !this._bAttachmentSectionCreated) {
+                    transformedFields.forEach((oField, index) => {
+                        var oTable = new sap.m.Table({
+                            growing: true,
+                            columns: [
+                                new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
+                                new sap.m.Column({ header: new sap.m.Label({ text: "Upload" }) }),
+                                new sap.m.Column({ header: new sap.m.Label({ text: "File Name" }) }),
+                                new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
+                            ]
+                        });
+            
+                        var oFileUploader = new sap.ui.unified.FileUploader({
+                            name: "myFileUpload",
+                            uploadUrl: "upload/",
+                            tooltip: "Upload your file to the local server",
+                            uploadComplete: this.handleUploadComplete.bind(this),
+                            change: this.handleValueChange.bind(this),
+                            typeMissmatch: this.handleTypeMissmatch.bind(this),
+                            style: "Emphasized",
+                            fileType: "txt,jpg,pdf,doc,docx,png",
+                            placeholder: "Choose a file for Upload...",
+                            visible: true
+                        });
+            
+                        var oItemTemplate = new sap.m.ColumnListItem({
+                            cells: [
+                                new sap.m.Input({
+                                    value: "{formDataModel>description}",
+                                    change: this.onDescriptionChange.bind(this)
+                                }),
+                                new sap.m.Button({
+                                    text: "Upload",
+                                    press: function (oEvent) {
+                                        var oButton = oEvent.getSource();
+                                        var oContext = oButton.getBindingContext("formDataModel");
+                                        if (oContext) {
+                                            oButton.addDependent(oFileUploader);
+                                            oFileUploader.setBindingContext(oContext, "formDataModel");
+                                            oContainer.addContent(oFileUploader);
                                             setTimeout(() => {
                                                 var $fileInput = oFileUploader.$().find("input[type='file']");
                                                 if ($fileInput.length > 0) {
@@ -1990,12 +2113,10 @@ sap.ui.define(
                                 })
                             ]
                         });
-
+            
                         console.log(`Binding table with title: ${oField.title}`);
-
-                        // Log model data before binding
                         console.log("Model data before binding:", oFormDataModel.getProperty("/Attachments"));
-
+            
                         oTable.bindItems({
                             path: "formDataModel>/Attachments",
                             template: oItemTemplate,
@@ -2007,10 +2128,9 @@ sap.ui.define(
                                 })
                             ]
                         });
-
-                        // Store table for delayed refresh
+            
                         aTables.push({ table: oTable, title: oField.title });
-
+            
                         oMainVBox.addItem(new sap.m.VBox({
                             items: [
                                 new sap.m.Title({
@@ -2021,7 +2141,7 @@ sap.ui.define(
                             ]
                         }).addStyleClass("attachmentTableSection"));
                     });
-
+            
                     // Perform delayed refresh for all initial tables
                     setTimeout(() => {
                         aTables.forEach(({ table, title }) => {
@@ -2029,23 +2149,20 @@ sap.ui.define(
                             if (oBinding) {
                                 oBinding.refresh();
                                 console.log(`Delayed refresh successful for table with title: ${title}`);
-                                // Log the binding contexts to confirm data
                                 console.log(`Binding contexts for ${title}:`, oBinding.getContexts());
                             } else {
                                 console.error(`Delayed binding for table with title ${title} still not found.`);
                             }
                         });
                     }, 100);
-
+            
                     oContainer.addContent(new sap.m.VBox({
-                        items: [
-                            oMainVBox
-                        ]
+                        items: [oMainVBox]
                     }));
-
+            
                     // Load external CSS file dynamically
                     var sCssPath = sap.ui.require.toUrl("com/aispsuppform/aispsupplierform/css/AttachmentsForm.css");
-                    if (!Core.byId("customAttachmentsFormStyles")) {
+                    if (!sap.ui.getCore().byId("customAttachmentsFormStyles")) {
                         $('<link>')
                             .attr({
                                 id: "customAttachmentsFormStyles",
@@ -2055,12 +2172,431 @@ sap.ui.define(
                             })
                             .appendTo('head');
                     }
-
+            
                     this._bAttachmentSectionCreated = true;
                 }
-
+            
                 console.log("Final Attachments in model after setup:", oFormDataModel.getProperty("/Attachments"));
             },
+
+            // createAttachmentsForm: function (oAttachmentFields, bForceRecreate = false) {
+            //     // Check if the attachment section has already been created
+            //     if (this._bAttachmentSectionCreated && !bForceRecreate) {
+            //         console.log("Attachment section already created, skipping re-render");
+            //         return;
+            //     }
+
+            //     if (!oAttachmentFields || oAttachmentFields.length === 0) {
+            //         console.error("No fields found for Attachments");
+            //         return;
+            //     }
+
+            //     var oContainer = this.getView().byId("AttachmentsFormContainer");
+            //     if (!oContainer) {
+            //         console.error("AttachmentsFormContainer not found. Check your view XML.");
+            //         return;
+            //     }
+
+            //     // Clear the container only if we are forcing a recreate
+            //     if (bForceRecreate || !this._bAttachmentSectionCreated) {
+            //         oContainer.removeAllContent();
+            //     }
+
+            //     var oMainVBox = new sap.m.VBox().addStyleClass("subSectionSpacing");
+            //     this._oMainVBox = oMainVBox;
+
+            //     var oFormDataModel = this.getView().getModel("formDataModel");
+            //     if (!oFormDataModel) {
+            //         console.error("formDataModel not found in the view. Ensure it is set in onInit.");
+            //         return;
+            //     }
+
+            //     // Log the initial oAttachmentFields
+            //     console.log("Initial oAttachmentFields:", oAttachmentFields);
+
+            //     // Transform oAttachmentFields to include title and empty description
+            //     var transformedFields = oAttachmentFields.map(field => {
+            //         const updatedField = {
+            //             description: field.description || "",
+            //             title: field.title || "Untitled Section", // Use the original title from input
+            //             fileName: field.fileName || "",
+            //             uploaded: field.uploaded || false,
+            //             fieldPath: field.fieldPath || (field.title || "DEFAULT").toUpperCase().replace(/\s+/g, '_'),
+            //             fieldId: field.fieldId || "V1R1D" + Date.now(),
+            //             imageUrl: field.imageUrl || ""
+            //         };
+            //         console.log("Transformed field:", updatedField);
+            //         return updatedField;
+            //     });
+
+            //     // Set the transformed data into the model only if it hasn't been set yet
+            //     if (!oFormDataModel.getProperty("/Attachments") || bForceRecreate) {
+            //         oFormDataModel.setProperty("/Attachments", transformedFields);
+            //         oFormDataModel.refresh(true); // Force a model refresh
+            //         console.log("Model after setting Attachments:", oFormDataModel.getProperty("/Attachments"));
+            //     }
+
+            //     this._attachmentFields = transformedFields;
+
+            //     // Create the "Add Other Document" button in the header
+            //     var oAddButton = new sap.m.Button({
+            //         text: "Add Other Document",
+            //         press: () => {
+            //             var newAttachment = {
+            //                 description: "",
+            //                 title: "Other Documents",
+            //                 fileName: "",
+            //                 uploaded: false,
+            //                 fieldPath: "OTHER_DOCUMENTS",
+            //                 fieldId: "V1R1D" + Date.now(),
+            //                 imageUrl: "",
+            //             };
+
+            //             var oAttachments = oFormDataModel.getProperty("/Attachments");
+            //             oAttachments.push(newAttachment);
+            //             oFormDataModel.setProperty("/Attachments", oAttachments);
+            //             console.log("Added new attachment:", newAttachment);
+
+            //             var oExistingVBox = this._oMainVBox.getItems().find(item => {
+            //                 return item instanceof sap.m.VBox &&
+            //                     item.getItems()[0] instanceof sap.m.Title &&
+            //                     item.getItems()[0].getText() === "Other Documents";
+            //             });
+
+            //             if (!oExistingVBox) {
+            //                 var oNewTable = new sap.m.Table({
+            //                     growing: true,
+            //                     columns: [
+            //                         new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
+            //                         new sap.m.Column({ header: new sap.m.Label({ text: "Upload" }) }),
+            //                         new sap.m.Column({ header: new sap.m.Label({ text: "File Name" }) }),
+            //                         new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
+            //                     ]
+            //                 });
+
+            //                 var oFileUploader = new sap.ui.unified.FileUploader({
+            //                     name: "myFileUpload",
+            //                     uploadUrl: "upload/",
+            //                     tooltip: "Upload your file to the local server",
+            //                     uploadComplete: this.handleUploadComplete.bind(this),
+            //                     change: this.handleValueChange.bind(this),
+            //                     typeMissmatch: this.handleTypeMissmatch.bind(this),
+            //                     style: "Emphasized",
+            //                     fileType: "txt,jpg,pdf,doc,docx,png",
+            //                     placeholder: "Choose a file for Upload...",
+            //                     visible: true
+            //                 });
+
+            //                 var oItemTemplate = new sap.m.ColumnListItem({
+            //                     cells: [
+            //                         new sap.m.Input({
+            //                             value: "{formDataModel>description}",
+            //                             change: this.onDescriptionChange.bind(this)
+            //                         }),
+            //                         new sap.m.Button({
+            //                             text: "Upload",
+            //                             press: function (oEvent) {
+            //                                 var oButton = oEvent.getSource();
+            //                                 var oContext = oButton.getBindingContext("formDataModel");
+            //                                 if (oContext) {
+            //                                     oButton.addDependent(oFileUploader);
+            //                                     oFileUploader.setBindingContext(oContext, "formDataModel");
+
+            //                                     oContainer.addContent(oFileUploader);
+
+            //                                     setTimeout(() => {
+            //                                         var $fileInput = oFileUploader.$().find("input[type='file']");
+            //                                         if ($fileInput.length > 0) {
+            //                                             $fileInput.trigger("click");
+            //                                             if (!oFileUploader.getFocusDomRef()) {
+            //                                                 console.warn("FileUploader focus issue detected after delay");
+            //                                             }
+            //                                         } else {
+            //                                             console.error("File input not found in FileUploader");
+            //                                         }
+            //                                         oContainer.removeContent(oFileUploader);
+            //                                     }, 100);
+            //                                 } else {
+            //                                     console.error("No binding context found for Upload button");
+            //                                 }
+            //                             }
+            //                         }),
+            //                         new sap.m.Text({
+            //                             text: "{formDataModel>fileName}"
+            //                         }),
+            //                         new sap.m.HBox({
+            //                             visible: true,
+            //                             items: [
+            //                                 new sap.m.Button({
+            //                                     icon: "sap-icon://download",
+            //                                     type: "Transparent",
+            //                                     tooltip: "Download",
+            //                                     press: function (oEvent) {
+            //                                         debugger;
+            //                                         var oContext = oEvent.getSource().getBindingContext("formDataModel");
+            //                                         var sFileName = oContext.getProperty("fileName");
+            //                                         var sImageUrl = oContext.getProperty("imageUrl");
+            //                                         sap.m.MessageToast.show("Download functionality for " + sImageUrl + " to be implemented");
+            //                                     }
+            //                                 }),
+            //                                 new sap.m.Button({
+            //                                     icon: "sap-icon://delete",
+            //                                     type: "Transparent",
+            //                                     tooltip: "Remove",
+            //                                     press: function (oEvent) {
+            //                                         var oContext = oEvent.getSource().getBindingContext("formDataModel");
+            //                                         var sPath = oContext.getPath();
+            //                                         oFormDataModel.setProperty(sPath + "/fileName", "");
+            //                                         oFormDataModel.setProperty(sPath + "/uploaded", false);
+            //                                         oFormDataModel.setProperty(sPath + "/imageUrl", "");
+            //                                     }
+            //                                 })
+            //                             ]
+            //                         })
+            //                     ]
+            //                 });
+
+            //                 oNewTable.bindItems({
+            //                     path: "formDataModel>/Attachments",
+            //                     template: oItemTemplate,
+            //                     filters: [
+            //                         new sap.ui.model.Filter({
+            //                             path: "title",
+            //                             operator: sap.ui.model.FilterOperator.EQ,
+            //                             value1: "Other Documents"
+            //                         })
+            //                     ]
+            //                 });
+
+            //                 var oNewVBox = new sap.m.VBox({
+            //                     items: [
+            //                         new sap.m.Title({
+            //                             text: "Other Documents",
+            //                             level: "H3"
+            //                         }),
+            //                         oNewTable
+            //                     ]
+            //                 }).addStyleClass("attachmentTableSection");
+
+            //                 this._oMainVBox.addItem(oNewVBox);
+            //                 console.log("Created new table for Other Documents");
+
+            //                 var oNewTableBinding = oNewTable.getBinding("items");
+            //                 if (oNewTableBinding) {
+            //                     oNewTableBinding.refresh();
+            //                     console.log("Refreshed binding for Other Documents table");
+            //                 } else {
+            //                     console.warn("Binding for Other Documents table not found, attempting delayed refresh");
+            //                     setTimeout(() => {
+            //                         var delayedBinding = oNewTable.getBinding("items");
+            //                         if (delayedBinding) {
+            //                             delayedBinding.refresh();
+            //                             console.log("Delayed refresh successful for Other Documents table");
+            //                         } else {
+            //                             console.error("Delayed binding for Other Documents table still not found");
+            //                         }
+            //                     }, 100);
+            //                 }
+            //             } else {
+            //                 var oExistingTable = oExistingVBox.getItems()[1];
+            //                 if (oExistingTable) {
+            //                     var oExistingBinding = oExistingTable.getBinding("items");
+            //                     if (oExistingBinding) {
+            //                         oExistingBinding.refresh();
+            //                         console.log("Refreshed existing table for Other Documents");
+            //                     } else {
+            //                         console.warn("Binding for existing Other Documents table not found, attempting delayed refresh");
+            //                         setTimeout(() => {
+            //                             var delayedBinding = oExistingTable.getBinding("items");
+            //                             if (delayedBinding) {
+            //                                 delayedBinding.refresh();
+            //                                 console.log("Delayed refresh successful for existing Other Documents table");
+            //                             } else {
+            //                                 console.error("Delayed binding for existing Other Documents table still not found");
+            //                             }
+            //                         }, 100);
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     });
+
+            //     // Create the header with the Add button
+            //     var oHeader = new sap.m.HBox({
+            //         items: [
+            //             new sap.m.Title({ text: "Attachments", level: "H2" }),
+            //             oAddButton
+            //         ],
+            //         justifyContent: "SpaceBetween",
+            //     });
+
+            //     oMainVBox.addItem(oHeader);
+
+            //     // Store tables for delayed refresh
+            //     var aTables = [];
+
+            //     if (bForceRecreate || !this._bAttachmentSectionCreated) {
+            //         transformedFields.forEach((oField, index) => {
+            //             var oTable = new sap.m.Table({
+            //                 growing: true,
+            //                 columns: [
+            //                     new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
+            //                     new sap.m.Column({ header: new sap.m.Label({ text: "Upload" }) }),
+            //                     new sap.m.Column({ header: new sap.m.Label({ text: "File Name" }) }),
+            //                     new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
+            //                 ]
+            //             });
+
+            //             var oFileUploader = new sap.ui.unified.FileUploader({
+            //                 name: "myFileUpload",
+            //                 uploadUrl: "upload/",
+            //                 tooltip: "Upload your file to the local server",
+            //                 uploadComplete: this.handleUploadComplete.bind(this),
+            //                 change: this.handleValueChange.bind(this),
+            //                 typeMissmatch: this.handleTypeMissmatch.bind(this),
+            //                 style: "Emphasized",
+            //                 fileType: "txt,jpg,pdf,doc,docx,png",
+            //                 placeholder: "Choose a file for Upload...",
+            //                 visible: true
+            //             });
+
+            //             var oItemTemplate = new sap.m.ColumnListItem({
+            //                 cells: [
+            //                     new sap.m.Input({
+            //                         value: "{formDataModel>description}",
+            //                         change: this.onDescriptionChange.bind(this)
+            //                     }),
+            //                     new sap.m.Button({
+            //                         text: "Upload",
+            //                         press: function (oEvent) {
+            //                             var oButton = oEvent.getSource();
+            //                             var oContext = oButton.getBindingContext("formDataModel");
+            //                             if (oContext) {
+            //                                 oButton.addDependent(oFileUploader);
+            //                                 oFileUploader.setBindingContext(oContext, "formDataModel");
+
+            //                                 oContainer.addContent(oFileUploader);
+
+            //                                 setTimeout(() => {
+            //                                     var $fileInput = oFileUploader.$().find("input[type='file']");
+            //                                     if ($fileInput.length > 0) {
+            //                                         $fileInput.trigger("click");
+            //                                         if (!oFileUploader.getFocusDomRef()) {
+            //                                             console.warn("FileUploader focus issue detected after delay");
+            //                                         }
+            //                                     } else {
+            //                                         console.error("File input not found in FileUploader");
+            //                                     }
+            //                                     oContainer.removeContent(oFileUploader);
+            //                                 }, 100);
+            //                             } else {
+            //                                 console.error("No binding context found for Upload button");
+            //                             }
+            //                         }
+            //                     }),
+            //                     new sap.m.Text({
+            //                         text: "{formDataModel>fileName}"
+            //                     }),
+            //                     new sap.m.HBox({
+            //                         visible: true,
+            //                         items: [
+            //                             new sap.m.Button({
+            //                                 icon: "sap-icon://download",
+            //                                 type: "Transparent",
+            //                                 tooltip: "Download",
+            //                                 press: function (oEvent) {
+            //                                     var oContext = oEvent.getSource().getBindingContext("formDataModel");
+            //                                     var sFileName = oContext.getProperty("fileName");
+            //                                     sap.m.MessageToast.show("Download functionality for " + sFileName + " to be implemented");
+            //                                 }
+            //                             }),
+            //                             new sap.m.Button({
+            //                                 icon: "sap-icon://delete",
+            //                                 type: "Transparent",
+            //                                 tooltip: "Remove",
+            //                                 press: function (oEvent) {
+            //                                     var oContext = oEvent.getSource().getBindingContext("formDataModel");
+            //                                     var sPath = oContext.getPath();
+            //                                     oFormDataModel.setProperty(sPath + "/fileName", "");
+            //                                     oFormDataModel.setProperty(sPath + "/uploaded", false);
+            //                                     oFormDataModel.setProperty(sPath + "/imageUrl", "");
+            //                                 }
+            //                             })
+            //                         ]
+            //                     })
+            //                 ]
+            //             });
+
+            //             console.log(`Binding table with title: ${oField.title}`);
+
+            //             // Log model data before binding
+            //             console.log("Model data before binding:", oFormDataModel.getProperty("/Attachments"));
+
+            //             oTable.bindItems({
+            //                 path: "formDataModel>/Attachments",
+            //                 template: oItemTemplate,
+            //                 filters: [
+            //                     new sap.ui.model.Filter({
+            //                         path: "title",
+            //                         operator: sap.ui.model.FilterOperator.EQ,
+            //                         value1: oField.title
+            //                     })
+            //                 ]
+            //             });
+
+            //             // Store table for delayed refresh
+            //             aTables.push({ table: oTable, title: oField.title });
+
+            //             oMainVBox.addItem(new sap.m.VBox({
+            //                 items: [
+            //                     new sap.m.Title({
+            //                         text: oField.title,
+            //                         level: "H3"
+            //                     }),
+            //                     oTable
+            //                 ]
+            //             }).addStyleClass("attachmentTableSection"));
+            //         });
+
+            //         // Perform delayed refresh for all initial tables
+            //         setTimeout(() => {
+            //             aTables.forEach(({ table, title }) => {
+            //                 var oBinding = table.getBinding("items");
+            //                 if (oBinding) {
+            //                     oBinding.refresh();
+            //                     console.log(`Delayed refresh successful for table with title: ${title}`);
+            //                     // Log the binding contexts to confirm data
+            //                     console.log(`Binding contexts for ${title}:`, oBinding.getContexts());
+            //                 } else {
+            //                     console.error(`Delayed binding for table with title ${title} still not found.`);
+            //                 }
+            //             });
+            //         }, 100);
+
+            //         oContainer.addContent(new sap.m.VBox({
+            //             items: [
+            //                 oMainVBox
+            //             ]
+            //         }));
+
+            //         // Load external CSS file dynamically
+            //         var sCssPath = sap.ui.require.toUrl("com/aispsuppform/aispsupplierform/css/AttachmentsForm.css");
+            //         if (!Core.byId("customAttachmentsFormStyles")) {
+            //             $('<link>')
+            //                 .attr({
+            //                     id: "customAttachmentsFormStyles",
+            //                     rel: "stylesheet",
+            //                     type: "text/css",
+            //                     href: sCssPath
+            //                 })
+            //                 .appendTo('head');
+            //         }
+
+            //         this._bAttachmentSectionCreated = true;
+            //     }
+
+            //     console.log("Final Attachments in model after setup:", oFormDataModel.getProperty("/Attachments"));
+            // },
 
             onDescriptionChange: function (oEvent) {
                 var oInput = oEvent.getSource();
@@ -2419,6 +2955,8 @@ sap.ui.define(
                         CONTACT_NO: oFormData["Supplier Information"]["Primary Contact"]["CONTACT_NUMBER"]?.value || "+1-1234567890",
                         MOBILE_NO: oFormData["Supplier Information"]["Primary Contact"]["MOBILE"]?.value || "+1-9876543210"
                     }],
+                    DyanamicFormFields: [
+                    ],
                     bankData: oFormData["Finance Information"]["Primary Bank details"].map(bank => ({
                         BANK_SECTION: bank.BANK_TYPE || "PRIMARY",
                         SWIFT_CODE: bank.SWIFT_CODE?.value || "123",

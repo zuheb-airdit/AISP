@@ -1,0 +1,36 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="actionCommentDialog"
+        title="Action Comment"
+        draggable="true"
+        resizable="true"
+    >
+        <VBox class="sapUiSmallMargin">
+            <Label
+                text="Comment"
+                labelFor="commentInput"
+            />
+            <TextArea
+                id="commentInput"
+                rows="4"
+                width="100%"
+            />
+        </VBox>
+        <beginButton>
+            <Button
+                text="Submit"
+                press="onCommentSubmit"
+                type="Emphasized"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                text="Cancel"
+                press="onCommentCancel"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

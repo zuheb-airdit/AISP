@@ -67,6 +67,9 @@
     },
     "sap.ui5": {
         "flexEnabled": false,
+        "resourceRoots": {
+            "com.registration.registrationapprovalaisp": "./"
+        },
         "dependencies": {
             "minUI5Version": "1.134.0",
             "libs": {
