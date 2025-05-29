@@ -15,6 +15,19 @@
       "version": "1.17.5",
       "toolsId": "ed83fb31-573a-4483-99f0-f19911e29259"
     },
+    "crossNavigation": {
+      "inbounds": {
+          "invoice-actionextract": {
+              "semanticObject": "vendorempanelment",
+              "action": "Display",
+              "title": "Workflow Management",
+              "signature": {
+                  "parameters": {},
+                  "additionalParameters": "allowed"
+              }
+          }
+      }
+  },
     "dataSources": {
       "mainService": {
         "uri": "/v2/odata/v4/registration-manage/",
