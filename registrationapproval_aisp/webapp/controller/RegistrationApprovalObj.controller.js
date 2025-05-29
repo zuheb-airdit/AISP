@@ -17,7 +17,7 @@ sap.ui.define([
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 let oModel = this.getOwnerComponent().getModel();
                 const graphModel = new JSONModel({
-                    dData: { nodes: [], lines: [], groups: [] }
+                    logs: []
                 });
                 this.getView().setModel(graphModel, "graphModel");
 
@@ -28,75 +28,88 @@ sap.ui.define([
             loadApprovalLogs: function (requestNo) {
                 const oModel = this.getView().getModel();
                 const oGraphModel = this.getView().getModel("graphModel");
-
+            
                 const parseTimestamp = (raw) => {
-                    if (typeof raw === "string") return new Date(parseInt(raw.replace("/Date(", "").replace(")/", "")));
+                    if (typeof raw === "string") {
+                        if (raw.includes("/Date(")) {
+                            return new Date(parseInt(raw.replace("/Date(", "").replace(")/", "")));
+                        }
+                        return new Date(raw);
+                    }
                     if (typeof raw === "number") return new Date(raw);
                     if (raw instanceof Date) return raw;
                     return new Date();
                 };
-
-                const getStatusColorKey = (action) => {
+            
+                const formatTimestamp = (date) => {
+                    // Format as "DD/MM/YYYY, HH:MM AM/PM"
+                    const options = {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true
+                    };
+                    return date.toLocaleString("en-GB", options).replace(",", "");
+                };
+            
+                const getStatus = (action) => {
                     switch (action) {
-                        case "CREATE": return "Create";
-                        case "APPROVE": return "Approve";
-                        case "SEND_BACK": return "SendBack";
-                        case "REJECT": return "Reject";
-                        case "EDIT_RESUBMIT": return "Create"; // Treat like Create
-                        default: return "Default";
+                        case "CREATE": return "Information";
+                        case "APPROVE": return "Success";
+                        case "SEND_BACK": return "Warning";
+                        case "REJECT": return "Error";
+                        case "EDIT_RESUBMIT": return "Information";
+                        default: return "None";
                     }
                 };
-
+            
+                const getIcon = (action) => {
+                    switch (action) {
+                        case "CREATE": return "sap-icon://create";
+                        case "APPROVE": return "sap-icon://accept";
+                        case "SEND_BACK": return "sap-icon://undo";
+                        case "REJECT": return "sap-icon://decline";
+                        case "EDIT_RESUBMIT": return "sap-icon://edit";
+                        default: return "sap-icon://activity-items";
+                    }
+                };
+            
                 oModel.read("/APPROVAL_LOGS_AISP", {
                     filters: [new sap.ui.model.Filter("REQUEST_NO", "EQ", requestNo)],
                     success: function (oData) {
                         const aLogs = oData.results || [];
                         if (!aLogs.length) {
                             sap.m.MessageToast.show("No approval logs found.");
+                            oGraphModel.setProperty("/logs", []);
                             return;
                         }
-
+            
                         // Sort logs by timestamp
                         aLogs.sort((a, b) => parseTimestamp(a.TIMESTAMP) - parseTimestamp(b.TIMESTAMP));
-
-                        const nodes = [];
-                        const lines = [];
-
-                        aLogs.forEach((log, index) => {
-                            const nodeId = index;
-                            const timestamp = parseTimestamp(log.TIMESTAMP).toLocaleString();
-
-                            nodes.push({
-                                id: nodeId,
-                                label: `Level ${log.APPROVAL_LEVEL} - ${log.ACTION}`,
+            
+                        const logs = aLogs.map(log => {
+                            const timestamp = parseTimestamp(log.TIMESTAMP);
+                            return {
+                                timestamp: formatTimestamp(timestamp), // For display
+                                rawTimestamp: timestamp.toISOString(), // For binding
+                                action: log.ACTION,
                                 approver: log.APPROVER_ID,
-                                role: log.APPROVER_ROLE,
-                                comment: log.COMMENT,
-                                timestamp: timestamp,
-                                group: "Flow", // Single visual line
-                                status: getStatusColorKey(log.ACTION)
-                            });
-
-                            if (index > 0) {
-                                lines.push({
-                                    from: index - 1,
-                                    to: index,
-                                    label: log.ACTION,
-                                    status: log.ACTION
-                                });
-                            }
+                                role: log.APPROVER_ROLE || "N/A",
+                                comment: log.COMMENT || "No comment provided",
+                                level: log.APPROVAL_LEVEL,
+                                status: getStatus(log.ACTION),
+                                icon: getIcon(log.ACTION)
+                            };
                         });
-
-                        oGraphModel.setProperty("/dData", {
-                            nodes: nodes,
-                            lines: lines,
-                            groups: [
-                                { id: "Flow", label: "Approval Flow", color: "#1976D2" }
-                            ]
-                        });
+            
+                        oGraphModel.setProperty("/logs", logs);
+                        console.log("Timeline logs:", JSON.stringify(logs, null, 2));
                     }.bind(this),
                     error: function (err) {
                         sap.m.MessageToast.show("Error fetching logs.");
+                        oGraphModel.setProperty("/logs", []);
                     }.bind(this)
                 });
             },

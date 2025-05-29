@@ -1,0 +1,34 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="companyCodeCreateDialog"
+        title="Add Company Code"
+        icon="sap-icon://add"
+        afterClose="onCompanyCodeCreateDialogClose"
+        contentWidth="26rem"
+    >
+        <content>
+            <VBox class="sapUiSmallMargin sapUiContentPadding">
+                <Label text="Company Code" required="true" labelFor="createCompanyCodeInput"/>
+                <Input id="createCompanyCodeInput" maxLength="10" placeholder="e.g., 1000"/>
+                
+                <Label text="Description" required="true" labelFor="createCompanyDescInput"/>
+                <Input id="createCompanyDescInput" maxLength="40" placeholder="e.g., Head Office"/>
+
+                <Label text="City" required="true" labelFor="createCompanyCityInput"/>
+                <Input id="createCompanyCityInput" maxLength="30" placeholder="e.g., Mumbai"/>
+
+                <Label text="Currency" required="true" labelFor="createCompanyCurrencyInput"/>
+                <Input id="createCompanyCurrencyInput" maxLength="3" placeholder="e.g., INR"/>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button text="Submit" type="Emphasized" press="onCreateCompanyCodeSubmit" icon="sap-icon://accept"/>
+        </beginButton>
+        <endButton>
+            <Button text="Cancel" press="onCompanyCodeCreateDialogClose" icon="sap-icon://decline"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

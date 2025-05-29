@@ -1,0 +1,73 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+>
+    <Dialog
+        title="Users"
+        class="sapUiPopupWithPadding"
+        stretch="false"
+        resizable="true"
+        draggable="true"
+        contentWidth="60%"
+        contentHeight="70%"
+        afterClose="onValueHelpClose"
+    >
+        <VBox>
+            <Table
+                id="idFilteredUserReassignTable"
+                inset="false"
+                items="{
+			            path: 'FilteredUserReassign>/results'
+		                 }"
+                mode="SingleSelectLeft"
+                selectionChange="onSelectionofReassignEmail"
+                growingThreshold="10"
+                growing="true"
+                growingScrollToLoad="true"
+            >
+                <headerToolbar>
+                    <Toolbar>
+                        <SearchField
+                            width="20vw"
+                            liveChange="onSearchReassignUsers"
+                            placeholder="Search Here..."
+                        />
+                    </Toolbar>
+                </headerToolbar>
+                <columns>
+                    <Column
+                        hAlign="Begin"
+                        width="16rem"
+                    >
+                        <Text text="Email" />
+                    </Column>
+                    <Column hAlign="Begin">
+                        <Text text="Company Code" />
+                    </Column>
+                    <Column hAlign="Begin">
+                        <Text text="User Role" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem vAlign="Middle">
+                        <cells>
+                            <Text text="{FilteredUserReassign>USER_ID}" />
+                            <Text text="{FilteredUserReassign>COMPANY_CODE}" />
+                            <Text
+                                text="{FilteredUserReassign>USER_ROLE}"
+                            />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </VBox>
+
+        <endButton>
+            <Button
+                text="Close"
+                press="onCloseValueHelpDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

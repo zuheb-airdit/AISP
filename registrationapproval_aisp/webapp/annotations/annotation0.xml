@@ -18,7 +18,7 @@
                 <Collection>
                     <Record Type="UI.DataField">
                         <PropertyValue Property="Value" Path="VENDOR_NAME1"/>
-                        <PropertyValue Property="Label" String="Vendor Name"/>
+                        <PropertyValue Property="Label" String="Supplier Name"/>
                     </Record>
                       <Record Type="UI.DataField">
                         <PropertyValue Property="Value" Path="COMPANY_CODE"/>
@@ -26,7 +26,7 @@
                     </Record>
                       <Record Type="UI.DataField">
                         <PropertyValue Property="Value" Path="REGISTERED_ID"/>
-                        <PropertyValue Property="Label" String="Vendor Email"/>
+                        <PropertyValue Property="Label" String="Supplier Email"/>
                     </Record>
                 </Collection>
             </Annotation>
@@ -43,6 +43,19 @@
                 </Collection>
             </Annotation>
         </Annotations>
+
+           <Annotations Target="SAP.RequestInfoWithoutFilter/REQUEST_NO">
+                <Annotation Term="Common.Label" String="Request No" />
+            </Annotations>
+            <Annotations Target="SAP.RequestInfoWithoutFilter/VENDOR_NAME1">
+                <Annotation Term="Common.Label" String="Supplier Name" />
+            </Annotations>
+            <Annotations Target="SAP.RequestInfoWithoutFilter/COMPANY_CODE">
+                <Annotation Term="Common.Label" String="Company Code" />
+            </Annotations>
+            <Annotations Target="SAP.RequestInfoWithoutFilter/BP_TYPE_DESC">
+                <Annotation Term="Common.Label" String="Supplier Type" />
+            </Annotations>
         </Schema>
     </edmx:DataServices>
 </edmx:Edmx>

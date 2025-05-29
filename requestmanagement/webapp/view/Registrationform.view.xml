@@ -4,11 +4,12 @@
     xmlns="sap.m"
     xmlns:layout="sap.ui.layout"
 >
-    <Page title="Create Supplier" >
+    <Page title="Invitation Form" showNavButton="true" navButtonPress="onNavigateReqMang" >
         <content>
             <Wizard
                 id="vendorWizard"
                 complete="onWizardFinish"
+                
             >
                 <WizardStep
                     title="Supplier Information"
@@ -64,7 +65,7 @@
                         width="100%"
                     />
                 </WizardStep>
-                <WizardStep
+                <!-- <WizardStep
                     title="Submission"
                     icon="./Images/Submission.png"
                 >
@@ -72,7 +73,7 @@
                         id="SubmissionFormContainer"
                         width="100%"
                     />
-                </WizardStep>
+                </WizardStep> -->
             </Wizard>
         </content>
         <footer>

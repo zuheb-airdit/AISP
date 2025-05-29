@@ -1,0 +1,224 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="updateFormFieldDialog"
+        title="Edit Form Field"
+        icon="sap-icon://edit"
+        contentWidth="30rem"
+        afterClose="onUpdateFormFieldDialogClose"
+        class="customFormFieldDialogModern"
+    >
+        <content>
+            <VBox
+                class="sapUiMediumMargin sapUiContentPadding"
+                renderType="Bare"
+                alignItems="Stretch"
+            >
+                <!-- Field ID -->
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="Field ID:" />
+                    <Input
+                        id="updateFieldIdInput"
+                        editable="false"
+                        width="100%"
+                        valueHelpIconSrc="sap-icon://key"
+                    />
+                </VBox>
+
+                <!-- Field Label -->
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="Field Label:" />
+                    <!-- <Select
+                        id="updateFieldLabelInput"
+                        width="100%"
+                        items="{ path: 'fieldConfigModel>/results', templateShareable: true }"
+                    >
+                        <core:Item
+                            key="{fieldConfigModel>FIELD_LABEL}"
+                            text="{fieldConfigModel>FIELD_LABEL}"
+                        />
+                    </Select> -->
+                    <Input
+                        id="updateFieldLabelInput"
+                        width="100%"
+                    />
+                </VBox>
+
+                <!-- Description -->
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="Description:" />
+                    <TextArea
+                        id="updateFieldDescInput"
+                        rows="3"
+                        width="100%"
+                        placeholder="Enter description"
+                        maxLength="250"
+                    />
+                </VBox>
+
+                <!-- Placeholder -->
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="Placeholder:" />
+                    <Input
+                        id="updatePlaceholderInput"
+                        width="100%"
+                        placeholder="Enter placeholder text"
+                    />
+                </VBox>
+
+                <!-- Default Value -->
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="Default Value:" />
+                    <Input
+                        id="updateDefaultValueInput"
+                        width="100%"
+                        placeholder="Enter default value"
+                    />
+                </VBox>
+
+                <!-- Field Type -->
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="Field Type:" />
+                    <Select
+                        id="updateFieldTypeSelect"
+                        enabled="false"
+                        width="100%"
+                        items="{ path: 'FormWidget>/results', templateShareable: true }"
+                    >
+                        <core:Item
+                            key="{FormWidget>type}"
+                            text="{FormWidget>text}"
+                        />
+                    </Select>
+                </VBox>
+
+                <!-- Minimum (hidden for select, radio, checkBox) -->
+                <VBox
+                    class="sapUiSmallMarginBottom"
+                    visible="{= !['select', 'radio', 'checkBox'].includes(${EditFieldModel>/type})}"
+                >
+                    <Label text="Minimum:" />
+                    <Input
+                        id="updateMinimumInput"
+                        width="100%"
+                        type="Number"
+                        placeholder="Min value/length"
+                    />
+                </VBox>
+
+                <!-- Maximum (hidden for select, radio, checkBox) -->
+                <VBox
+                    class="sapUiSmallMarginBottom"
+                    visible="{= !['select', 'radio', 'checkBox'].includes(${EditFieldModel>/type})}"
+                >
+                    <Label text="Maximum:" />
+                    <Input
+                        id="updateMaximumInput"
+                        width="100%"
+                        type="Number"
+                        placeholder="Max value/length"
+                    />
+                </VBox>
+
+                <!-- Dropdown Options Section (visible only for select) -->
+                <!-- Update the Dropdown Options Section -->
+                <VBox
+                    id="updateDropdownOptions"
+                    visible="{= ${EditFieldModel>/type} === 'select'}"
+                    class="sapUiSmallMarginTop"
+                >
+                    <Label text="Dropdown Options:" />
+                    <HBox>
+                        <Button
+                            text="Add Option"
+                            icon="sap-icon://add"
+                            press="onAddDropdownOption"
+                            visible="{= ${EditFieldModel>/type} !== 'textBox'}"
+                        />
+                    </HBox>
+                    <VBox
+                        id="updateOptionsContainer"
+                        items="{EditFieldModel>/dropdownOptions}"
+                        class="sapUiTinyMarginTop"
+                    >
+                        <HBox class="sapUiTinyMarginBottom">
+                            <Input
+                                value="{EditFieldModel>displayValue}"
+                                placeholder="Display Value"
+                                width="40%"
+                            />
+                            <Input
+                                value="{EditFieldModel>value}"
+                                placeholder="Value"
+                                width="40%"
+                                class="sapUiTinyMarginBeginEnd"
+                            />
+                            <Button
+                                icon="sap-icon://delete"
+                                type="Transparent"
+                                press="onRemoveDropdownOption"
+                            />
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- Toggles -->
+                <HBox
+                    justifyContent="SpaceBetween"
+                    class="sapUiSmallMarginTop"
+                >
+                    <VBox>
+                        <HBox alignItems="Center">
+                            <core:Icon
+                                src="sap-icon://show"
+                                class="sapUiTinyMarginEnd"
+                            />
+                            <Label text="Visibility" />
+                        </HBox>
+                        <Switch
+                            id="updateVisibleSwitch"
+                            state="true"
+                            change="onToggleVisible"
+                            customTextOn="YES"
+                            customTextOff="NO"
+                            tooltip="Show/Hide Field"
+                        />
+                    </VBox>
+                    <VBox>
+                        <HBox alignItems="Center">
+                            <core:Icon
+                                src="sap-icon://unfavorite"
+                                class="sapUiTinyMarginEnd"
+                            />
+                            <Label text="Mandatory" />
+                        </HBox>
+                        <Switch
+                            id="updateMandatorySwitch"
+                            state="true"
+                            change="onToggleMandatory"
+                            customTextOn="YES"
+                            customTextOff="NO"
+                            tooltip="Toggle Mandatory"
+                        />
+                    </VBox>
+                </HBox>
+            </VBox>
+        </content>
+        <buttons>
+            <Button
+                text="Submit"
+                type="Emphasized"
+                icon="sap-icon://accept"
+                press="onUpdateFormFieldSubmit"
+                class="sapUiTinyMarginEnd"
+            />
+            <Button
+                text="Close"
+                icon="sap-icon://decline"
+                press="onUpdateFormFieldDialogClose"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

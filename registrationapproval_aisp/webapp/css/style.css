@@ -109,3 +109,56 @@
     box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
     outline: none;
 }
+
+
+/* //timeline */
+.customTimeline .sapSuiteUiCommonsTimelineItemWrapper {
+    padding: 1rem 0;
+}
+
+.customTimeline .sapSuiteUiCommonsTimelineItemBox {
+    background-color: #f7f7f7;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.customTimeline .sapSuiteUiCommonsTimelineItemTitle {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1976D2;
+}
+
+.customTimeline .sapSuiteUiCommonsTimelineItemUserName {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 0.25rem;
+}
+
+.customTimeline .sapSuiteUiCommonsTimelineItemDateTime {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 0.25rem;
+}
+
+.customTimeline .sapSuiteUiCommonsTimelineItemIcon {
+    font-size: 1.5rem;
+}
+
+.timelineEmbeddedContent {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.timelineEmbeddedContent .label {
+    font-weight: bold;
+    color: #333;
+    margin-right: 0.5rem;
+    width: 80px; /* Fixed width for alignment */
+}
+
+.timelineEmbeddedContent .value {
+    color: #666;
+    flex: 1; /* Take remaining space */
+}

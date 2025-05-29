@@ -1,0 +1,67 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Dialog
+        id="emailTestDialog"
+        title="Send Test Email"
+        icon="sap-icon://email"
+        class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer"
+        afterClose="onDialogClose"
+        contentWidth="30rem"
+    >
+        <content>
+            <VBox class="sapUiSmallMargin" renderType="Bare">
+                <!-- Use a Label or custom text as a section header OUTSIDE the SimpleForm -->
+                <Label text="Sender &amp; Recipients" design="Bold" class="sapUiTinyMarginBottom"/>
+                <f:SimpleForm
+                    id="emailTestSimpleForm"
+                    editable="true"
+                    layout="ColumnLayout"
+                    columnsM="1"
+                    columnsL="1"
+                    columnsXL="1"
+                >
+                    <f:content>
+                        <Label text="From:" required="true"/>
+                        <Input id="fromEmailInput"
+                            value="{emailConfigModel>/SENDER_EMAIL}"
+                            editable="false"
+                            placeholder="Sender's Email"
+                        />
+
+                        <Label text="To:" required="true"/>
+                        <Input id="toEmailInput" placeholder="Recipient's Email"/>
+
+                        <Label text="Cc:"/>
+                        <MultiInput id="ccEmailInput" placeholder="Add CC Email(s)">
+                            <tokens>
+                                <Token text="example@example.com"/>
+                            </tokens>
+                        </MultiInput>
+
+                        <Label text="Subject:" required="true"/>
+                        <Input id="subjectInput" value="Test Email" placeholder="Email Subject" />
+
+                        <Label text="Message:" required="true"/>
+                        <TextArea
+                            id="messageInput"
+                            value="Test Message."
+                            rows="4"
+                            width="100%"
+                            placeholder="Type your message here..."
+                        />
+                    </f:content>
+                </f:SimpleForm>
+                <Label text="Message Details" design="Bold" class="sapUiTinyMarginTop"/>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button text="Send Email" type="Emphasized" press="onSubmitEmailPress" icon="sap-icon://paper-plane"/>
+        </beginButton>
+        <endButton>
+            <Button text="Close" press="onDialogClose" icon="sap-icon://decline"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

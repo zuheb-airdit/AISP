@@ -18,7 +18,7 @@
                 <f:heading>
                     <Title
                         id="_IDGenTitle"
-                        text="Request Management"
+                        text="Invitation Lifecycle Management"
                     />
                 </f:heading>
             </f:DynamicPageTitle>
@@ -45,7 +45,7 @@
                         />
                         <smartFilterBar:ControlConfiguration
                             key="VENDOR_NAME1"
-                            label="Vendor Name"
+                            label="SupplierName"
                             visibleInAdvancedArea="true"
                         />
                         <smartFilterBar:ControlConfiguration
@@ -56,7 +56,7 @@
 
                         <smartFilterBar:ControlConfiguration
                             key="SUPPL_TYPE"
-                            label="Vendor Type"
+                            label="SupplierType"
                             visibleInAdvancedArea="true"
                         />
 
@@ -150,7 +150,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Name"
+                                            text="SupplierName"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -167,7 +167,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Email"
+                                            text="SupplierEmail"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -201,7 +201,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Type"
+                                            text="SupplierType"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />
@@ -219,7 +219,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Sub-Type"
+                                            text="SupplierSub-Type"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />
@@ -361,7 +361,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Name"
+                                            text="SupplierName"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -378,7 +378,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Email"
+                                            text="SupplierEmail"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -395,7 +395,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Type"
+                                            text="SupplierType"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />
@@ -413,7 +413,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Sub-Type"
+                                            text="SupplierSub-Type"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />
@@ -582,7 +582,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Name"
+                                            text="SupplierName"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -599,7 +599,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Email"
+                                            text="SupplierEmail"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -616,7 +616,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Type"
+                                            text="SupplierType"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />
@@ -634,7 +634,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Sub-Type"
+                                            text="SupplierSub-Type"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />
@@ -802,7 +802,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Name"
+                                            text="SupplierName"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -819,7 +819,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Email"
+                                            text="SupplierEmail"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -836,7 +836,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Type"
+                                            text="SupplierType"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />
@@ -854,7 +854,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Sub-Type"
+                                            text="SupplierSub-Type"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />
@@ -1025,7 +1025,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Name"
+                                            text="SupplierName"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -1042,7 +1042,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Email"
+                                            text="SupplierEmail"
                                             wrapping="true"
                                         />
                                     </Column>
@@ -1059,7 +1059,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Type"
+                                            text="SupplierType"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />
@@ -1077,7 +1077,7 @@
                                             />
                                         </customData>
                                         <Label
-                                            text="Vendor Sub-Type"
+                                            text="SupplierSub-Type"
                                             wrapping="false"
                                             vAlign="Inherit"
                                         />

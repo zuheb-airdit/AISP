@@ -1,0 +1,28 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="userRoleEditDialog"
+        title="Edit User Role"
+        icon="sap-icon://edit"
+        afterClose="onUserRoleEditDialogClose"
+        contentWidth="22rem"
+    >
+        <content>
+            <VBox class="sapUiSmallMargin sapUiContentPadding">
+                <Label text="Code" required="true" labelFor="editUserRoleCodeInput"/>
+                <Input id="editUserRoleCodeInput" editable="false"/>
+
+                <Label text="Description" required="true" labelFor="editUserRoleDescInput"/>
+                <Input id="editUserRoleDescInput"/>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button text="Update" type="Emphasized" press="onEditUserRoleSubmit" icon="sap-icon://accept"/>
+        </beginButton>
+        <endButton>
+            <Button text="Cancel" press="onUserRoleEditDialogClose" icon="sap-icon://decline"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,40 @@
+/* Enter your custom styles here */
+
+.sapFDynamicPageContent{
+    padding: 0px !important;
+}
+
+.sapFDynamicPageContentFitContainer{
+    padding: 0px !important;
+
+}
+
+.previewItemActivity {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.sapMListTblCnt{
+    padding-left:0px !important;
+    padding-right:0px !important;
+}
+
+.previewItem:hover,
+.previewItemActivity:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.customCard {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    
+}
+
+.customSectionText {
+    font-weight: bold; /* Makes the text bold */
+}

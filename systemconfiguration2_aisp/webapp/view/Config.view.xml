@@ -1,0 +1,420 @@
+<mvc:View
+    controllerName="com.sconfig.systemconfiguration2aisp.controller.Config"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:dnd-grid="sap.f.dnd"
+    xmlns:layout="sap.ui.layout"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:table="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:l="sap.ui.layout"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:plugins="sap.m.plugins"
+    xmlns:columnmenu="sap.m.table.columnmenu"
+    xmlns:sap.ui.fl="sap.ui.fl"
+    xmlns:sap.ui.dt="sap.ui.dt"
+    xmlns:vm="sap.ui.fl.variants"
+    xmlns:dnd="sap.ui.core.dnd"
+>
+    <Page
+        class='thin-scrollbar'
+        enableScrolling="false"
+        showHeader="true"
+        titleAlignment="Center"
+        showSubHeader="true"
+        title="Create Fields"
+        titleLevel="H1"
+        floatingFooter="true"
+    >
+        <content>
+            <l:Splitter
+                height="100%"
+                id="mainSplitterFieldDetails"
+                width="100%"
+                class='sapUiSmallMargin'
+            >
+                <Panel
+                    id="panelForGridList"
+                    backgroundDesign="Solid"
+                    height="100%"
+                >
+                    <layoutData>
+                        <l:SplitterLayoutData size="30%" />
+                    </layoutData>
+                    <ScrollContainer
+                        height="100%"
+                        vertical="true"
+                        horizontal="false"
+                        id="scrollContainerWidgets"
+                    >
+                        <Panel
+                            class='sapUiTinyMargin'
+                            height="auto"
+                            expandable="true"
+                            expanded="true"
+                            backgroundDesign="Transparent"
+                        >
+                            <headerToolbar>
+                                <Toolbar>
+                                    <content>
+                                        <core:Icon
+                                            src="sap-icon://multiselect-all"
+                                        />
+                                        <Title text="Form Widgets" />
+                                    </content>
+                                </Toolbar>
+                            </headerToolbar>
+
+                            <f:GridList
+                                id="gridList1"
+                                items="{FormWidget>/results}"
+                            >
+                                <f:dragDropConfig>
+                                    <dnd:DragInfo
+                                        groupName="FirstToSecond"
+                                        sourceAggregation="items"
+                                    />
+                                </f:dragDropConfig>
+
+                                <f:customLayout>
+                                    <grid:GridBoxLayout boxMinWidth="8rem" />
+                                </f:customLayout>
+
+                                <f:GridListItem
+                                    class="sapUiTinyMargin formWidgetHbox"
+                                >
+                                    <VBox height="100%">
+                                        <VBox
+                                            class="sapUiSmallMargin"
+                                            justifyContent="Center"
+                                            alignContent="Center"
+                                            alignItems="Center"
+                                        >
+                                            <layoutData>
+                                                <FlexItemData
+                                                    growFactor="1"
+                                                    shrinkFactor="0"
+                                                />
+                                            </layoutData>
+
+                                            <core:Icon
+                                                src="{FormWidget>icon}"
+                                                class='formWidgetsIcon'
+                                                size="1.4rem"
+                                            />
+                                            <Label
+                                                class='formWidgetsText'
+                                                text="{FormWidget>text}"
+                                                wrapping="true"
+                                            />
+                                        </VBox>
+                                    </VBox>
+                                </f:GridListItem>
+                            </f:GridList>
+                        </Panel>
+                    
+                    </ScrollContainer>
+                </Panel>
+                <Panel
+                    id='splitterWidgets1'
+                    class='splitterWidgets thin-scrollbar'
+                    height="100%"
+                    backgroundDesign="Solid"
+                >
+                    <layoutData>
+                        <l:SplitterLayoutData size="35%" />
+                    </layoutData>
+                    <ScrollContainer
+                        height="100%"
+                        width="100%"
+                        vertical="true"
+                        id="scrollContainerList"
+                    >
+                        <List
+                            items="{ActivityFieldDetails>/results}"
+                            class="previewListActivity sapUiSmallMarginBottom"
+                            id="projectList"
+                        >
+                            <dragDropConfig>
+                                <dnd:DropInfo
+                                    targetAggregation="items"
+                                    dropPosition="On"
+                                    groupName="FirstToSecond"
+                                    drop="onDropToPanel1"
+                                />
+                                <dnd:DragDropInfo
+                                    sourceAggregation="items"
+                                    targetAggregation="items"
+                                    dropPosition="Between"
+                                    drop="onInternalReorder"
+                                />
+                            </dragDropConfig>
+                            <!-- <dragDropConfig>
+                                <dnd:DragDropInfo
+                                    sourceAggregation="items"
+                                    targetAggregation="items"
+                                    dropPosition="Between"
+                                    drop="onInternalReorder"
+                                />
+                            </dragDropConfig> -->
+
+                            <items>
+                                <CustomListItem>
+                                    <HBox
+                                        class='previewItemActivity sapUiTinyMargin'
+                                        justifyContent="SpaceBetween"
+                                        alignItems="Center"
+                                        id="customList"
+                                        visible="{= ${ActivityFieldDetails>type} === 'break' ? false : ${ActivityFieldDetails>type} === 'table' ? false : ${ActivityFieldDetails>type} === 'heading' ?false :true}"
+                                    >
+                                        <HBox
+                                            alignItems="Center"
+                                            width="auto"
+                                        >
+                                            <core:Icon
+                                                src="{path: 'ActivityFieldDetails>type', formatter: '.getIconForType'}"
+                                                class="previewIcon listItemsActivity"
+                                                size="1rem"
+                                            />
+
+                                            <Title
+                                                text="{ActivityFieldDetails>label}"
+                                                class="previewTitle listItemsActivity sapUiTinyMarginTop sapUiTinyMarginBegin"
+                                                wrapping="true"
+                                            />
+                                            <Text
+                                                text="*"
+                                                class="mandatoryField listItemsActivity"
+                                                visible='{= ${ActivityFieldDetails>isRequired} === true ? true : false }'
+                                            />
+                                        </HBox>
+
+                                        <!-- <HBox
+                                            height="100%"
+                                            width="100%"
+                                            visible="{= ${ActivityFieldDetails>type} === 'table' ? true : false }"
+                                        >
+                                            <Title
+                                                text="{ActivityFieldDetails>label}"
+                                            />
+                                        </HBox>
+
+                                        <HBox
+                                            width="auto"
+                                            visible="{= ${ActivityFieldDetails>type} === 'break' ? true : false }"
+                                            justifyContent="Center"
+                                            alignItems="Center"
+                                        >
+                                            <Text
+                                                textAlign="Center"
+                                                class='tableBreakText listItemsActivity'
+                                                text="&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEADER BREAK &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;"
+                                            />
+                                        </HBox>
+
+                                        <HBox
+                                            height="100%"
+                                            width="100%"
+                                            visible="{= ${ActivityFieldDetails>type} === 'heading' ? true : false }"
+                                        >
+                                            <Title
+                                                text="{ActivityFieldDetails>label}"
+                                            />
+                                        </HBox> -->
+
+                                        <HBox
+                                            alignItems="Center"
+                                            width="auto"
+                                            visible="{= ${ActivityFieldDetails>type} === 'break' ? false : true }"
+                                        >
+                                            <Button
+                                                icon="sap-icon://wrench"
+                                                class="actionIcon"
+                                                press="onPressEdit"
+                                            />
+                                            <Button
+                                                icon="sap-icon://delete"
+                                                class="actionIcon sapUiTinyMarginBegin"
+                                                press="onPressDelete"
+                                            />
+                                        </HBox>
+                                    </HBox>
+                                    <!-- <HBox
+                                        class='previewItemActivity sapUiTinyMargin tableHeadingList'
+                                        justifyContent="SpaceBetween"
+                                        alignItems="Center"
+                                        id="customList1"
+                                        visible="{= ${ActivityFieldDetails>type} === 'table' ? true : false }"
+                                        >
+                                        <HBox
+                                            height="100%"
+                                            width="100%"
+                                        >
+                                            <Title
+                                                class='headingTitle'
+                                                text="{ActivityFieldDetails>label}"
+                                            />
+                                        </HBox>
+                                        <HBox
+                                            alignItems="Center"
+                                            width="auto"
+                                        >
+                                            <Button
+                                                icon="sap-icon://wrench"
+                                                class="actionIcon"
+                                                press="onPressEdit"
+                                            />
+                                            <Button
+                                                icon="sap-icon://delete"
+                                                class="actionIcon sapUiTinyMarginBegin"
+                                                press="onPressDelete"
+                                            />
+                                        </HBox>
+                                    </HBox> -->
+                                    <HBox
+                                        class='previewItemActivity sapUiTinyMargin tableBreakList'
+                                        justifyContent="Center"
+                                        alignItems="Center"
+                                        id="customList2"
+                                        visible="{= ${ActivityFieldDetails>type} === 'break' ? true : false }"
+                                    >
+                                        <HBox
+                                            width="auto"
+                                            justifyContent="Center"
+                                            alignItems="Center"
+                                        >
+                                            <Text
+                                                textAlign="Center"
+                                                class='tableBreakText'
+                                                text='{path:"ActivityFieldDetails>isTable",formatter:".formatterIstable"}'
+                                            />
+                                        </HBox>
+                                        <HBox
+                                            alignItems="Center"
+                                            width="auto"
+                                            visible="{= ${ActivityFieldDetails>type} === 'break' ? false : true }"
+                                        >
+                                            <Button
+                                                icon="sap-icon://wrench"
+                                                class="actionIcon"
+                                                press="onPressEdit"
+                                            />
+                                            <Button
+                                                icon="sap-icon://delete"
+                                                class="actionIcon sapUiTinyMarginBegin"
+                                                press="onPressDelete"
+                                            />
+                                        </HBox>
+                                    </HBox>
+                                    <HBox
+                                        class='previewItemActivity sapUiTinyMargin tableHeadingList'
+                                        justifyContent="SpaceBetween"
+                                        alignItems="Center"
+                                        id="customList3"
+                                        visible="{= ${ActivityFieldDetails>type} === 'heading' ? true : false }"
+                                    >
+                                        <HBox
+                                            height="100%"
+                                            width="100%"
+                                        >
+                                            <Title
+                                                class='headingTitle'
+                                                text="{ActivityFieldDetails>label}"
+                                            />
+                                        </HBox>
+
+                                        <HBox
+                                            alignItems="Center"
+                                            width="auto"
+                                        >
+                                            <Button
+                                                icon="sap-icon://wrench"
+                                                class="actionIcon"
+                                                press="onPressEdit"
+                                            />
+                                            <Button
+                                                icon="sap-icon://delete"
+                                                class="actionIcon sapUiTinyMarginBegin"
+                                                press="onPressDelete"
+                                            />
+                                        </HBox>
+                                    </HBox>
+                                </CustomListItem>
+                            </items>
+                            <noData>
+                                <VBox
+                                    id="emptyMessage"
+                                    justifyContent="Center"
+                                    alignItems="Center"
+                                    height="calc(100vh - 210px)"
+                                    class="sapUiSmallMargin sapUiTinyMarginTop sapUiTinyMarginBottom"
+                                >
+                                    <!-- <dragDropConfig>
+                                        <dnd:DropInfo
+                                            targetAggregation="items"
+                                            dropPosition="On"
+                                            groupName="FirstToSecond"
+                                            drop="onDropToPanel1"
+                                        />
+                                        <dnd:DragDropInfo
+                                            sourceAggregation="items"
+                                            targetAggregation="items"
+                                            dropPosition="Between"
+                                            drop="onInternalReorder"
+                                        />
+                                    </dragDropConfig> -->
+
+                                    <core:Icon
+                                        src="sap-icon://document-text"
+                                        size="6rem"
+                                    />
+                                    <Title
+                                        level="H1"
+                                        text="Drag and Drop widgets from the palette"
+                                        class="sapUiMediumMarginTop sapUiTinyMarginBottom"
+                                    />
+                                    <Text
+                                        class='sapUiTinyMarginTop'
+                                        text="(The dragged widgets will be shown here)"
+                                    />
+                                </VBox>
+                            </noData>
+                        </List>
+                    </ScrollContainer>
+                </Panel>
+
+            </l:Splitter>
+        </content>
+        <footer>
+            <Bar class='sapUiSmallMarginBottom'>
+                <contentRight>
+                    <OverflowToolbarButton
+                        press="onPressSave"
+                        type="Attention"
+                        text="Save"
+                        class="sapUiTinyMarginEnd"
+                        tooltip="Submit"
+                        icon="sap-icon://accept"
+                    />
+                    <!-- <OverflowToolbarButton
+                        text="Save and Continue"
+                        type="Attention"
+                        icon="sap-icon://save"
+                        press="onPressSaveAndContinue"
+                        class="sapUiTinyMarginEnd"
+                    /> -->
+                    <OverflowToolbarButton
+                        text="Back"
+                        icon="sap-icon://nav-back"
+                        type="Attention"
+                        press="onPressBack"
+                    />
+                </contentRight>
+            </Bar>
+        </footer>
+    </Page>
+</mvc:View>

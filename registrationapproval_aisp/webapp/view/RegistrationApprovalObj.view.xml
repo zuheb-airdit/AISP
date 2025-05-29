@@ -9,6 +9,7 @@
     xmlns:u="sap.uxap"
     xmlns:g="sap.suite.ui.commons.networkgraph"
     xmlns:html="sap.ui.core"
+    xmlns:tL="sap.suite.ui.commons"
     xmlns:layout="sap.suite.ui.commons.networkgraph.layout"
     controllerName="com.registration.registrationapprovalaisp.controller.RegistrationApprovalObj"
 >
@@ -1508,8 +1509,9 @@
                     navButtonPress="onNavBack"
                     class="sapUiContentPadding"
                     backgroundDesign="Solid"
+                    xmlns:tL="sap.suite.ui.commons"
+                    xmlns:m="sap.m"
                 >
-                    <!-- 🔼 Add header content here -->
                     <headerContent>
                         <Button
                             icon="sap-icon://decline"
@@ -1518,89 +1520,56 @@
                             class="sapUiTinyMarginEnd"
                         />
                     </headerContent>
-
                     <content>
-                        <!-- Approval Graph -->
-                        <g:Graph
-                            id="approvalGraph"
-                            width="100%"
-                            height="800px"
-                            orientation="TopBottom"
-                            nodes="{graphModel>/dData/nodes}"
-                            lines="{graphModel>/dData/lines}"
-                            groups="{graphModel>/dData/groups}"
-                            enableZoom="true"
-                            enableWheelZoom="true"
+                        <tL:Timeline
+                            id="idTimeline"
+                            enableDoubleSided="true"
+                            growingThreshold="10"
+                            sortOldestFirst="true"
+                            content="{graphModel>/logs}"
+                            class="customTimeline"
                         >
-                            <!-- Node Colors -->
-                            <g:statuses>
-                                <g:Status
-                                    key="Create"
-                                    backgroundColor="#2196f3"
-                                />
-                                <g:Status
-                                    key="Approve"
-                                    backgroundColor="#4caf50"
-                                />
-                                <g:Status
-                                    key="SendBack"
-                                    backgroundColor="#ff9800"
-                                />
-                                <g:Status
-                                    key="Reject"
-                                    backgroundColor="#f44336"
-                                />
-                                <g:Status
-                                    key="Default"
-                                    backgroundColor="#9e9e9e"
-                                />
-                            </g:statuses>
-
-                            <g:nodes>
-                                <g:Node
-                                    key="{graphModel>id}"
-                                    title="{graphModel>label}"
-                                    group="{graphModel>group}"
-                                    shape="Box"
+                            <tL:content>
+                                <tL:TimelineItem
+                                    id="idTemplateItem"
+                                    dateTime="{graphModel>rawTimestamp}"
+                                    title="Level {graphModel>level} - {graphModel>action}"
+                                    userName="{graphModel>approver}"
+                                    text="{graphModel>timestamp}"
+                                    userPicture="{graphModel>icon}"
+                                    filterValue="{graphModel>action}"
                                     status="{graphModel>status}"
-                                    icon="sap-icon://activity-individual"
                                 >
-                                    <g:attributes>
-                                        <g:ElementAttribute
-                                            label="Approver"
-                                            value="{graphModel>approver}"
-                                        />
-                                        <g:ElementAttribute
-                                            label="Role"
-                                            value="{graphModel>role}"
-                                        />
-                                        <g:ElementAttribute
-                                            label="Comment"
-                                            value="{graphModel>comment}"
-                                        />
-                                        <g:ElementAttribute
-                                            label="Timestamp"
-                                            value="{graphModel>timestamp}"
-                                        />
-                                    </g:attributes>
-                                </g:Node>
-                            </g:nodes>
-
-                            <g:lines>
-                                <g:Line
-                                    from="{graphModel>from}"
-                                    to="{graphModel>to}"
-                                    label="{graphModel>label}"
-                                />
-                            </g:lines>
-
-                            <g:groups>
-                                <g:Group
-                                    key="Flow"
-                                    title="Approval Flow"
-                                />
-                            </g:groups>
-                        </g:Graph>
+                                    <tL:embeddedControl>
+                                        <m:VBox class="timelineEmbeddedContent">
+                                            <m:items>
+                                                <m:HBox>
+                                                    <m:Label
+                                                        text="Role:"
+                                                        class="label"
+                                                    />
+                                                    <m:Text
+                                                        text="{graphModel>role}"
+                                                        class="value"
+                                                    />
+                                                </m:HBox>
+                                                <m:HBox>
+                                                    <m:Label
+                                                        text="Comment:"
+                                                        class="label"
+                                                    />
+                                                    <m:Text
+                                                        text="{graphModel>comment}"
+                                                        class="value"
+                                                        wrapping="true"
+                                                    />
+                                                </m:HBox>
+                                            </m:items>
+                                        </m:VBox>
+                                    </tL:embeddedControl>
+                                </tL:TimelineItem>
+                            </tL:content>
+                        </tL:Timeline>
                     </content>
                 </Page>
             </l:Splitter>

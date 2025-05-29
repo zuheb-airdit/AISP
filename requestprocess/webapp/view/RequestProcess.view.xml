@@ -12,7 +12,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Request Approval" />
+                    <Title text="Invitation Approval" />
                 </f:heading>
             </f:DynamicPageTitle>
         </f:title>

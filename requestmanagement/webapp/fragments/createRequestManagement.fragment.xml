@@ -49,7 +49,7 @@
                     </MultiComboBox>
 
                     <!-- Second Row -->
-                    <Label text="Vendor Name" />
+                    <Label text="Supplier Name" />
                     <Input
                         id="idVendorName"
                         required="true"
@@ -62,14 +62,14 @@
                     /> -->
 
                     <!-- Third Row -->
-                    <Label text="Vendor Email" />
+                    <Label text="Supplier Email" />
                     <Input
                         id="idVendorEmail"
                         required="true"
                         editable="true"
                     />
 
-                    <Label text="Vendor Type" />
+                    <Label text="Supplier Type" />
                     <Input
                         id="idVendorTypes"
                         editable="true"
@@ -86,7 +86,7 @@
                             />
                         </suggestionItems>
                     </Input>
-                    <Label text="Vendor Sub-Type" />
+                    <Label text="Supplier Sub-Type" />
                     <Input
                         id="idSubVendorTypes"
                         editable="true"

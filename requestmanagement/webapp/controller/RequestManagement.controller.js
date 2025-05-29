@@ -291,7 +291,7 @@ sap.ui.define([
                     oView.addDependent(this._oValueHelpDialog1);
 
                     // Bind data after dialog is loaded
-                    this._bindVendorTypeData1(oDialog);
+                    this._bindVendorTypeData(oDialog);
 
                     oDialog.open();
                 }.bind(this));
@@ -352,12 +352,12 @@ sap.ui.define([
                     oView.addDependent(this._oValueHelpDialog);
 
                     // Bind data after dialog is loaded
-                    this._bindVendorTypeData(oDialog);
+                    this._bindVendorTypeData1(oDialog);
 
                     oDialog.open();
                 }.bind(this));
             } else {
-                this._bindVendorTypeData(this._oValueHelpDialog);
+                this._bindVendorTypeData1(this._oValueHelpDialog);
                 this._oValueHelpDialog.open();
             }
         },

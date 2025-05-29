@@ -46,18 +46,20 @@ sap.ui.define([
                 "ISP": "Insp. Manager",
                 "PM": "Proc. Manager"
             };
+        
+            // Process USER_ROLE column (MultiInput for roles)
             aItems.forEach(function (oItem) {
                 var oCtx = oItem.getBindingContext();
                 if (oCtx) {
                     var sUserRole = oCtx.getProperty("USER_ROLE");
-                    var oMultiInput = oItem.getCells()[2].getItems()[0];
+                    var oMultiInput = oItem.getCells()[2].getItems()[0]; // MultiInput for USER_ROLE (column 3)
                     if (sUserRole && oMultiInput) {
                         oMultiInput.removeAllTokens();
                         var aRoles = sUserRole.split(",");
                         aRoles.forEach(function (role) {
                             var sFullRole = oRoleMapping[role.trim()] || role.trim();
                             var oToken = new sap.m.Token({
-                                text: role.trim() + " - " + sFullRole,
+                                text: sFullRole,
                                 key: role.trim(),
                                 editable: false
                             });
@@ -66,17 +68,33 @@ sap.ui.define([
                     }
                 }
             });
+        
+            // Process COMPANY_CODE and COMPANY_DESC column (MultiInput for company codes and descriptions)
             aItems1.forEach(function (oItem) {
                 var oCtx1 = oItem.getBindingContext();
                 if (oCtx1) {
                     var sCompany = oCtx1.getProperty("COMPANY_CODE");
-                    var oMultiInput1 = oItem.getCells()[3].getItems()[0];
+                    var sCompanyDesc = oCtx1.getProperty("COMPANY_DESC");
+                    var oMultiInput1 = oItem.getCells()[3].getItems()[0]; // MultiInput for COMPANY_CODE (column 4)
+        
                     if (sCompany && oMultiInput1) {
                         oMultiInput1.removeAllTokens();
-                        var aCode = sCompany.split(",");
-                        aCode.forEach(function (code) {
-                            var oToken = new sap.m.Token({ text: code.trim(), key: code.trim(), editable: false });
+                        var aCode = sCompany.split(","); // Split COMPANY_CODE into array: ["2000", "4000", "5673"]
+                        var aDesc = sCompanyDesc ? sCompanyDesc.split(",") : []; // Split COMPANY_DESC into array: ["Fiserv", "TCS", "Head Office"]
+        
+                        aCode.forEach(function (code, index) {
+                            var trimmedCode = code.trim();
+                            // Get the corresponding description by index, or use empty string if not available
+                            var desc = aDesc[index] ? aDesc[index].trim() : "";
+                            // Create token in the format "code-description"
+                            var tokenText = desc ? `${trimmedCode}-${desc}` : trimmedCode;
+                            var oToken = new sap.m.Token({
+                                text: tokenText,
+                                key: trimmedCode, // Keep the key as just the COMPANY_CODE
+                                editable: false
+                            });
                             oMultiInput1.addToken(oToken);
+                            console.log(`Added token: ${tokenText} with key: ${trimmedCode}`);
                         });
                     }
                 }

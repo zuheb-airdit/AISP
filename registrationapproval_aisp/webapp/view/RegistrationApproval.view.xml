@@ -11,12 +11,12 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Registration Approval" />
+                    <Title text="Registration Empanelment" />
                 </f:heading>
             </f:DynamicPageTitle>
         </f:title>
         <f:header>
-            <f:DynamicPageHeader>
+            <f:DynamicPageHeader pinnable="true">
                 <smartFilterBar:SmartFilterBar
                     id="idSmartFilterRqgApp"
                     smartVariant="pageVariantId"
@@ -24,7 +24,6 @@
                     entitySet="RequestInfoWithoutFilter"
                     useToolbar="false"
                     basicSearch="true"
-                    class="sapUiTinyMarginTop sapUiMediumMarginBottom"
                 >
                     <smartFilterBar:controlConfiguration>
                         <!-- <smartFilterBar:ControlConfiguration
@@ -103,7 +102,7 @@
                                 />
                             </customData>
                             <Label
-                                text="Vendor Name"
+                                text="Supplier Name"
                                 wrapping="true"
                             />
                         </Column>
@@ -139,7 +138,7 @@
                                 />
                             </customData>
                             <Label
-                                text="Vendor Email"
+                                text="Supplier Email"
                                 wrapping="true"
                             />
                         </Column>
@@ -157,7 +156,7 @@
                                 />
                             </customData>
                             <Label
-                                text="Vendor Type"
+                                text="Supplier Type"
                                 wrapping="false"
                                 vAlign="Inherit"
                             />
@@ -176,7 +175,7 @@
                                 />
                             </customData>
                             <Label
-                                text="Vendor Sub-Type"
+                                text="Supplier Sub-Type"
                                 wrapping="true"
                                 vAlign="Inherit"
                             />
