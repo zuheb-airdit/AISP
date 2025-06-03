@@ -23,6 +23,10 @@ sap.ui.define([
                     return "Rejected"
                 case 7:
                     return "SendBack"
+                case 1:
+                    return "Drafted"
+                case 5:
+                    return "Registered"
                 default:
                     return "No Data"
             }
@@ -38,6 +42,10 @@ sap.ui.define([
                     return "Indication11"
                 case 7:
                     return "Indication15"
+                case 1:
+                    return "Indication19"
+                  case 5:
+                    return "Indication14"
                 default:
                     return "None"
             }
@@ -243,6 +251,18 @@ sap.ui.define([
         onRebindSmartTableReject: function (oEvent) {
             let oBindingParams = oEvent.getParameter("bindingParams");
             var filter = new sap.ui.model.Filter("STATUS", "EQ", "3")
+            oBindingParams.filters.push(filter);
+            oBindingParams.events = {
+                dataReceived: function (oData) {
+                    var iCount = oData.getParameter("data").results.length;
+                    // this.getView().getModel("countsModel").setProperty("/rejectedCount", iCount);
+                }.bind(this)
+            };
+        },
+
+        onRebindDrft: function (oEvent) {
+            let oBindingParams = oEvent.getParameter("bindingParams");
+            var filter = new sap.ui.model.Filter("STATUS", "EQ", "1")
             oBindingParams.filters.push(filter);
             oBindingParams.events = {
                 dataReceived: function (oData) {
@@ -558,6 +578,10 @@ sap.ui.define([
                     break;
                 case "Registered":
                     oSmartTable = this.byId("idSmartTableReqManagementRegisterd");
+                    oSmartTable.rebindTable();
+                    break;
+                case "Drafts":
+                    oSmartTable = this.byId("idSmartTableReqManagemenDraft");
                     oSmartTable.rebindTable();
                     break;
                 default:

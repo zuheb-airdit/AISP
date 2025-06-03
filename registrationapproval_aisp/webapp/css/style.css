@@ -162,3 +162,7 @@
     color: #666;
     flex: 1; /* Take remaining space */
 }
+
+.noSplitterGrip .sapUiLoSplitterBarGrip {
+    display: none !important;
+}

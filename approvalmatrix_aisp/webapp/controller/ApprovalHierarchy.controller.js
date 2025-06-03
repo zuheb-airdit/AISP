@@ -7,9 +7,22 @@ sap.ui.define([
 
     return Controller.extend("com.approvalmatrix.approvalmatrixaisp.controller.ApprovalHierarchy", {
         onInit() {
+            this.editableData = false;
             this.getOwnerComponent().getRouter().getRoute("RouteHierarchyid").attachPatternMatched(this._onRouteMatched, this);
             this.getOwnerComponent().getRouter().getRoute("RouteHierarchu").attachPatternMatched(this._onRouteMatchedwithoutid, this);
 
+        },
+        onBeforeRendering: function () {
+            this.editableData = false;
+            let oButton = this.byId("idEditBtn");
+            if (oButton) {
+                oButton.setText("Edit");
+            }
+            let submitBtn = this.byId("idCreateFooterButton");
+            if (submitBtn) {
+                submitBtn.setText("Create");
+                submitBtn.setEnabled(false);
+            }
         },
 
         _onRouteMatchedwithoutid: function () {
@@ -17,7 +30,8 @@ sap.ui.define([
             let apptypeIdField = this.byId("idCompoBoxReq");
             apptypeIdField.setValue("")
             apptypeIdField.setEditable(true)
-            this.byId("entityFilter").getInnerControls()[0].setValue("")            // const oSmart = this.byId("entityFilter");
+            this.byId("entityFilter").getInnerControls()[0].setValue("").setEditable(true)
+            // const oSmart = this.byId("entityFilter");
             // oSmart.setVisible(true);
             // oSmart.getInnerControls()[0].setValue("")
             // const oInput = this.byId("entityFilter_readonly");
@@ -28,9 +42,12 @@ sap.ui.define([
             this.byId("idEditBtn").setVisible(false)
             this.byId("idCreateMassRequest").setEnabled(true)
             this.byId("idDeleteBtmApprovalRow").setEnabled(true)
+
+
         },
 
         _onRouteMatched: function (oEvent) {
+            debugger;
             var oArgs = oEvent.getParameter("arguments");
             var id = oArgs.id;
             var appType = oArgs.appType;
@@ -42,17 +59,18 @@ sap.ui.define([
             this.getView().getModel().read("/CompanyCodeType", {
                 filters: [
                     new sap.ui.model.Filter("APPR_TYPE", sap.ui.model.FilterOperator.EQ, appType),
-                    new sap.ui.model.Filter("COMPANY_CODE", sap.ui.model.FilterOperator.EQ, id)
+                    new sap.ui.model.Filter("COMPANY_CODE", sap.ui.model.FilterOperator.EQ, id),
                 ],
                 success: function (res) {
                     debugger;
                     let apptypeIdField = this.byId("idCompoBoxReq");
                     let apprType = res.results[0].APPR_TYPE;
                     let companyCode = res.results[0].COMPANY_CODE;
+                    let desc = res.results[0].TO_APPR_TYPE.DESC;
                     let title = res.results[0].TO_COMPANY_CODE.BUTXT;
                     this.byId("idTitle").setText(title)
 
-                    this.byId("entityFilter").getInnerControls()[0].setValue(companyCode)
+                    this.byId("entityFilter").getInnerControls()[0].setValue(companyCode).setEditable(false)
 
                     // const oSmartField = this.byId("entityFilter");
                     // const oParent = oSmartField.getParent();
@@ -71,13 +89,14 @@ sap.ui.define([
                     // this._oEntityInput.setValue(companyCode);
 
                     let updBtn = this.byId("idSubmtUpdate");
-                    apptypeIdField.setValue(apprType);
+                    apptypeIdField.setValue(apprType + `-` + desc);
                     apptypeIdField.setEditable(false)
                     // this.byId("idText").setText(res.results[0].TO_COMPANY_CODE.BUTXT)
                     // if (apprType == "R1") {
                     //     updBtn.setVisible(true)
                     // }
                     // this.byId("idSubBtn").setVisible(false)
+
                     let oModel = this.getView().getModel("hierarchydata");
                     oModel.setData({ jsonObjects: [] })
                     let oData = oModel.getData();
@@ -90,9 +109,11 @@ sap.ui.define([
                             "selected": false,
                             "checkboxVisible": true,
                             "editCheckboxVisible": item.APPR_TYPE == "R1" ? true : false,
-                            "approveCheckboxVisible": item.APPR_TYPE == "FIC" || item.APPR_TYPE == "FIC_NonPo" || item.APPR_TYPE == "R1" ? true : false,
+                            // "approveCheckboxVisible": item.APPR_TYPE == "FIC" || item.APPR_TYPE == "FIC_NonPo" || item.APPR_TYPE == "R1" ? true : false,
+                            "approveCheckboxVisible": true,
                             "sendBackCheckboxVisible": item.APPR_TYPE == "R1" ? true : false,
-                            "rejectCheckboxVisible": item.APPR_TYPE == "FIC" || item.APPR_TYPE == "FIC_NonPo" || item.APPR_TYPE == "R1" ? true : false,
+                            // "rejectCheckboxVisible": item.APPR_TYPE == "FIC" || item.APPR_TYPE == "FIC_NonPo" || item.APPR_TYPE == "R1" ? true : false,
+                            "rejectCheckboxVisible": true,
                             "editCheckboxSelected": item.ACCESS_EDIT,
                             "approveCheckboxSelected": item.ACCESS_APPROVE,
                             "sendBackCheckboxSelected": item.ACCESS_SENDBACK,
@@ -120,8 +141,9 @@ sap.ui.define([
         },
 
         onPressCreateMassApprovalInputs: function () {
+            debugger;
             var sCompanyCode = this.byId("entityFilter").getInnerControls()[0].getValue();
-            var sApprovalType = this.byId("idCompoBoxReq").getSelectedKey();
+            var sApprovalType = this.byId("idCompoBoxReq").getValue().split('-')[0]?.trim();
             var sApprovalTypeText = this.byId("idCompoBoxReq").getValue();
 
             var approvalType = (sApprovalType !== "" ? sApprovalType : sApprovalTypeText)
@@ -150,15 +172,20 @@ sap.ui.define([
 
             const state = { ...defaultState };
 
-            if (approvalType === "Finance Po Based" ||
-                approvalType === "Finance NonPO Based" || approvalType === "FIC" || approvalType === "FIC_NonPo") {
-                state.approveCheckboxVisible = true;
-                state.rejectCheckboxVisible = true;
+            if (approvalType === "Request" ||
+                approvalType === "R0") {
+                state.approveCheckboxVisible = false;
+                state.rejectCheckboxVisible = false;
+                state.editCheckboxVisible = false;
+                state.sendBackCheckboxVisible = false;
             } else if (approvalType === "Registration" || approvalType === "R1") {
                 state.approveCheckboxVisible = true;
                 state.rejectCheckboxVisible = true;
                 state.editCheckboxVisible = true;
                 state.sendBackCheckboxVisible = true;
+            } else {
+                state.approveCheckboxVisible = true;
+                state.rejectCheckboxVisible = true;
             }
 
             oData.jsonObjects.push({
@@ -241,12 +268,15 @@ sap.ui.define([
                     row.approveCheckboxVisible = true;
                     row.sendBackCheckboxVisible = true;
                     row.rejectCheckboxVisible = true;
-
-                } else if (approvalType === "Finance Po Based" ||
-                    approvalType === "Finance NonPO Based" || approvalType === "FIC" || approvalType === "FIC_NonPo") {
+                } else if (approvalType === "R0") {
+                    row.editCheckboxVisible = false;
+                    row.approveCheckboxVisible = false;
+                    row.sendBackCheckboxVisible = false;
+                    row.rejectCheckboxVisible = false;
+                }
+                else {
                     row.approveCheckboxVisible = true;
                     row.rejectCheckboxVisible = true;
-
                 }
             });
 
@@ -257,6 +287,7 @@ sap.ui.define([
         },
 
         onValueHelpRequested: function (oEvent) {
+            debugger;
             var oInput = oEvent.getSource();
             this._inputFieldUser = oInput;
             var oRowContext = oInput.getBindingContext("hierarchydata");
@@ -353,8 +384,8 @@ sap.ui.define([
             }
         },
 
-
         onValueHelpOkPress: function (oEvent) {
+            debugger;
             var aTokens = oEvent.getParameter("tokens");
             var sPath = this._inputFieldRole.getBindingContext("hierarchydata").getPath();
             if (aTokens.length > 0) {
@@ -362,6 +393,15 @@ sap.ui.define([
                 this.getView().byId("idRoleInput").setValue(sSelectedUser); // Set value in input field
                 this.getView().getModel("hierarchydata").setProperty(sPath + "/role", sSelectedUser);
 
+                // clear the second input field 
+                var sUserValue = this.getView().getModel("hierarchydata").getProperty(sPath + "/user"); // to get inputfiled
+                if (sUserValue) {
+                    // Clear user from model
+                    this.getView().getModel("hierarchydata").setProperty(sPath + "/user", "");
+                    if (this._inputFieldUser) {
+                        this._inputFieldUser.setValue("");
+                    }
+                }
             }
             this._oValueHelpDialog.close();
         },
@@ -452,7 +492,7 @@ sap.ui.define([
             debugger;
             var oView = this.getView();
             var oModel = oView.getModel(); // Get default OData v4 model
-            var sApprovalType = oView.byId("idCompoBoxReq").getSelectedKey();
+            var sApprovalType = oView.byId("idCompoBoxReq").getValue().split('-')[0]?.trim();
             var sApprovalTypeText = oView.byId("idCompoBoxReq").getValue();
             var sCompanyCode = this.byId("entityFilter").getInnerControls()[0].getValue();
             var approvalType = (sApprovalType !== "" ? sApprovalType : sApprovalTypeText)
@@ -479,7 +519,7 @@ sap.ui.define([
             // Construct payload
             var aFormattedData = aApprovalData.map(function (item) {
                 var oPayload = {
-                    "APPR_TYPE": sApprovalType ?? sApprovalTypeText,
+                    "APPR_TYPE": sApprovalType,
                     "COMPANY_CODE": sCompanyCode,
                     "USER_ID": item.user,
                     "USER_ROLE": item.role,
@@ -557,9 +597,8 @@ sap.ui.define([
             }
         },
 
-
-
         onPressDeleteSelectedRows: function (oEvent) {
+            debugger;
             let oTable = this.byId("idProductsTable"); // Get the Table reference
             let oModel = this.getView().getModel("hierarchydata"); // Get the JSON model
             let aSelectedContexts = oTable.getSelectedContexts(); // Get selected rows
@@ -573,7 +612,7 @@ sap.ui.define([
             // Extract data from the selected row
             let oSelectedData = aSelectedContexts[0].getObject();
             let sCompanyCode = this.byId("entityFilter").getInnerControls()[0].getValue();
-            let sApprovalType = this.byId("idCompoBoxReq").getValue();
+            let sApprovalType = this.byId("idCompoBoxReq").getValue().split('-')[0]?.trim();
 
             // Construct payload for deletion API
             let oPayload = {
@@ -582,53 +621,105 @@ sap.ui.define([
                 "COMPANY_CODE": sCompanyCode,
                 "APPROVER_LEVEL": oSelectedData.approvalLevel
             };
-
-            // Set busy state before API call
             oTable.setBusy(true);
-
-            oDataModel.create("/DeleteApprovalHierarchy", oPayload, {
-                success: function (res) {
-                    let successMessage = "User Deleted Successfully!";
-                    MessageBox.success(res.DeleteApprovalHierarchy ?? successMessage);
-                    oModel.updateBindings(true);
-
-                    // Remove selections after delete
-                    oTable.removeSelections();
-
-                    // Ensure UI updates
-                    let oBinding = oTable.getBinding("items");
-                    if (oBinding) {
-                        oBinding.refresh(true);  // Refresh data
-                    }
-
-                    // Remove busy state
-                    oTable.setBusy(false);
-                    this.getOwnerComponent().getRouter().navTo("RouteApprovalMatrix")
-
-                }.bind(this),
-                error: function (err) {
-                    MessageBox.error("Unable to delete User!");
-                    oTable.setBusy(false);
+            if (oSelectedData.user.length === 0 || oSelectedData.role.length === 0) {
+                oTable.removeSelections();
+                let successMessage = "Deleted Successfully!";
+                MessageBox.success(successMessage);
+                oModel.updateBindings(true);
+                let oBinding = oTable.getBinding("items");
+                if (oBinding) {
+                    oBinding.refresh(true);
                 }
-            });
+                oTable.setBusy(false);
+                this.getOwnerComponent().getRouter().navTo("RouteApprovalMatrix");
+
+            } else {
+                oDataModel.create("/DeleteApprovalHierarchy", oPayload, {
+                    success: function (res) {
+                        let successMessage = "User Deleted Successfully!";
+                        MessageBox.success(res.DeleteApprovalHierarchy ?? successMessage);
+                        oModel.updateBindings(true);
+                        oTable.removeSelections();
+                        let oBinding = oTable.getBinding("items");
+                        if (oBinding) {
+                            oBinding.refresh(true);
+                        }
+                        oTable.setBusy(false);
+                        this.getOwnerComponent().getRouter().navTo("RouteApprovalMatrix")
+
+                    }.bind(this),
+                    error: function (err) {
+                        MessageBox.error("Unable to delete User!");
+                        oTable.setBusy(false);
+                    }
+                });
+            }
+
         },
 
+        // onEditApproval: function (oEvent) {
+        //     debugger;
+        //     var oButton = this.byId("idEditBtn");
+        //     var currentText = oButton.getText();
+
+        //     if (currentText === "Edit") {
+        //         oButton.setText("Cancel");
+        //     } else {
+        //         oButton.setText("Edit");
+        //     }
+        //     this.editableData = !this.editableData;
+        //     let oModel = this.getOwnerComponent().getModel("hierarchydata")
+        //     if (this.editableData === false) {
+        //         const data = oModel.getProperty("/jsonObjects");
+        //         const filteredData = data.filter(item => !(item.user === "" && item.role === ""));
+        //         oModel.setProperty("/jsonObjects", filteredData);
+        //     }
+        //     let submitBtn = this.getView().byId("idCreateFooterButton");
+        //     //let oModel = this.getOwnerComponent().getModel("hierarchydata");
+        //     let data = oModel.getData();
+        //     data?.jsonObjects.forEach((ele) => {
+        //         ele.editablechk = !ele.editablechk;
+        //     });
+
+        //     oModel.setData(data);
+        //     this.byId("idCreateMassRequest").setEnabled(true)
+        //     this.byId("idDeleteBtmApprovalRow").setEnabled(true)
+
+        //     submitBtn.setText(this.editableData ? "Submit" : "Create");
+        //     submitBtn.setEnabled(this.editableData);
+        // }
         onEditApproval: function (oEvent) {
             debugger;
+            let oButton = this.byId("idEditBtn");
+            let currentText = oButton.getText();
+            if (currentText === "Edit") {
+                oButton.setText("Cancel");
+            } else {
+                oButton.setText("Edit");
+            }
             this.editableData = !this.editableData;
-            let submitBtn = this.getView().byId("idCreateFooterButton");
             let oModel = this.getOwnerComponent().getModel("hierarchydata");
-            let data = oModel.getData();
-            data?.jsonObjects.forEach((ele) => {
-                ele.editablechk = !ele.editablechk;
-            });
+            if (!this.editableData) {
+                const data = oModel.getProperty("/jsonObjects") || [];
+                const filteredData = data.filter(item => !(item.user === "" && item.role === ""));
+                oModel.setProperty("/jsonObjects", filteredData);
+            }
+            let modelData = oModel.getData();
+            if (modelData?.jsonObjects) {
+                modelData.jsonObjects.forEach((ele) => {
+                    ele.editablechk = this.editableData;
+                });
+                oModel.setData(modelData);
+            }
+            const submitBtn = this.byId("idCreateFooterButton");
+            if (submitBtn) {
+                submitBtn.setText(this.editableData ? "Submit" : "Create");
+                submitBtn.setEnabled(this.editableData);
+            }
+            this.byId("idCreateMassRequest").setEnabled(true);
+            this.byId("idDeleteBtmApprovalRow").setEnabled(true);
 
-            oModel.setData(data);
-            this.byId("idCreateMassRequest").setEnabled(true)
-            this.byId("idDeleteBtmApprovalRow").setEnabled(true)
-
-            submitBtn.setText(this.editableData ? "Submit" : "Create");
-            submitBtn.setEnabled(this.editableData);
         }
     });
 });

@@ -1184,6 +1184,206 @@
                             </Table>
                         </smartTable:SmartTable>
                     </IconTabFilter>
+                       <IconTabFilter
+                        icon="./Images/draft.png"
+                        key="Drafts"
+                        iconColor="NonInteractive"
+                        text="Drafts"
+                        tooltip="Drafts"
+                        count="{countsModel>/notInvitedCount}"
+                    >
+                        <smartTable:SmartTable
+                            entitySet="RequestInfo"
+                            id="idSmartTableReqManagemenDraft"
+                            showRowCount="true"
+                            tableType="ResponsiveTable"
+                            enableAutoBinding="true"
+                            enableAutoColumnWidth="true"
+                            enableCopy="false"
+                            beforeRebindTable="onRebindDrft"
+                            class="sapUiResponsiveContentPadding"
+                        >
+                            <Table selectionChange="selectionChangeHandler">
+                                <columns>
+                                    <Column
+                                        hAlign="Begin"
+                                        demandPopin="true"
+                                        minScreenWidth="Tablet"
+                                        popinDisplay="Inline"
+                                    >
+                                        <customData>
+                                            <core:CustomData
+                                                key="p13nData"
+                                                value='\{"columnKey": "REQUEST_NO","leadingProperty": "REQUEST_NO", "sortProperty": "REQUEST_NO", "filterProperty": "REQUEST_NO", "columnIndex": "0" }'
+                                            />
+                                        </customData>
+                                        <Label
+                                            text="Requested Number"
+                                            wrapping="true"
+                                        />
+                                    </Column>
+                                    <Column
+                                        hAlign="Begin"
+                                        demandPopin="true"
+                                        minScreenWidth="Tablet"
+                                        popinDisplay="Inline"
+                                    >
+                                        <customData>
+                                            <core:CustomData
+                                                key="p13nData"
+                                                value='\{"columnKey": "VENDOR_NAME1","leadingProperty": "VENDOR_NAME1", "sortProperty": "VENDOR_NAME1", "filterProperty": "VENDOR_NAME1", "columnIndex": "1" }'
+                                            />
+                                        </customData>
+                                        <Label
+                                            text="SupplierName"
+                                            wrapping="true"
+                                        />
+                                    </Column>
+                                    <Column
+                                        hAlign="Begin"
+                                        demandPopin="true"
+                                        minScreenWidth="Desktop"
+                                        popinDisplay="Inline"
+                                    >
+                                        <customData>
+                                            <core:CustomData
+                                                key="p13nData"
+                                                value='\{"columnKey": "REGISTERED_ID","leadingProperty": "REGISTERED_ID", "sortProperty": "REGISTERED_ID", "filterProperty": "REGISTERED_ID", "columnIndex": "2" }'
+                                            />
+                                        </customData>
+                                        <Label
+                                            text="SupplierEmail"
+                                            wrapping="true"
+                                        />
+                                    </Column>
+                                    <Column
+                                        hAlign="Begin"
+                                        demandPopin="true"
+                                        minScreenWidth="Tablet"
+                                        popinDisplay="Inline"
+                                    >
+                                        <customData>
+                                            <core:CustomData
+                                                key="p13nData"
+                                                value='\{"columnKey": "STATUS","leadingProperty": "STATUS", "sortProperty": "STATUS", "filterProperty": "STATUS", "columnIndex": "5"}'
+                                            />
+                                        </customData>
+                                        <Label
+                                            text="Status"
+                                            wrapping="false"
+                                        />
+                                    </Column>
+                                    <Column
+                                        hAlign="Begin"
+                                        demandPopin="true"
+                                        minScreenWidth="Desktop"
+                                        popinDisplay="Inline"
+                                    >
+                                        <customData>
+                                            <core:CustomData
+                                                key="p13nData"
+                                                value='\{"columnKey": "SUPPL_TYPE","leadingProperty": "SUPPL_TYPE", "sortProperty": "SUPPL_TYPE", "filterProperty": "SUPPL_TYPE", "columnIndex": "3"}'
+                                            />
+                                        </customData>
+                                        <Label
+                                            text="SupplierType"
+                                            wrapping="false"
+                                            vAlign="Inherit"
+                                        />
+                                    </Column>
+                                    <Column
+                                        hAlign="Begin"
+                                        demandPopin="true"
+                                        minScreenWidth="Desktop"
+                                        popinDisplay="Inline"
+                                    >
+                                        <customData>
+                                            <core:CustomData
+                                                key="p13nData"
+                                                value='\{"columnKey": "BP_TYPE_CODE","leadingProperty": "BP_TYPE_CODE", "sortProperty": "BP_TYPE_CODE", "filterProperty": "BP_TYPE_CODE", "columnIndex": "4"}'
+                                            />
+                                        </customData>
+                                        <Label
+                                            text="SupplierSub-Type"
+                                            wrapping="false"
+                                            vAlign="Inherit"
+                                        />
+                                    </Column>
+                                    <Column
+                                        hAlign="Left"
+                                        demandPopin="true"
+                                        minScreenWidth="Tablet"
+                                        popinDisplay="Inline"
+                                    >
+                                        <customData>
+                                            <core:CustomData
+                                                key="p13nData"
+                                                value='\{"columnKey": "created","leadingProperty": "created", "sortProperty": "createdTime", "filterProperty": "createdTime", "columnIndex": "6"}'
+                                            />
+                                        </customData>
+                                        <Label
+                                            text="Action"
+                                            wrapping="false"
+                                        />
+                                    </Column>
+                                </columns>
+
+                                <items>
+                                    <ColumnListItem vAlign="Middle" press="handleRowClick" type="Navigation">
+                                        <cells>
+                                            <VBox>
+                                                <Text
+                                                    text="{REQUEST_NO}"
+                                                    class="usermasterColo"
+                                                />
+                                                <Text
+                                                    text="{REQUEST_TYPE}"
+                                                    class="blackText"
+                                                />
+                                            </VBox>
+                                            <Text text="{VENDOR_NAME1}" />
+                                            <Text text="{REGISTERED_ID}" />
+                                            <ObjectStatus
+                                                text="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusFormatter'
+    }"
+                                                state="{
+        parts : [
+            { path : 'STATUS'        },
+            { path : 'APPROVER_ROLE' }
+        ],
+        formatter : '.statusColorFormatter'
+    }"
+                                                inverted="true"
+                                                class="noWrapText"
+                                            />
+                                            <VBox>
+                                                <Text text="{SUPPL_TYPE}" />
+                                                <Text
+                                                    text="{SUPPL_TYPE_DESC}"
+                                                />
+                                            </VBox>
+                                            <VBox>
+                                                <Text text="{BP_TYPE_CODE}" />
+                                                <Text text="{BP_TYPE_DESC}" />
+                                            </VBox>
+                                            <HBox>
+                                                <Button
+                                                    icon="sap-icon://delete"
+                                                    type="Transparent"
+                                                    press="onDeleteReq"
+                                                />
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </smartTable:SmartTable>
+                    </IconTabFilter>
                 </items>
             </IconTabBar>
         </f:content>

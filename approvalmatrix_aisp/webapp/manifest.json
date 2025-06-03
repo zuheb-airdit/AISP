@@ -48,7 +48,7 @@
                 }
             },
             "hierarchysource":{
-                "uri": "model/hierarchyModel",
+                "uri": "model/hierarchyModel.json",
                 "type": "JSON"
             }
         }

@@ -432,7 +432,7 @@
                                     <Button
                                         text="Create"
                                         type="Emphasized"
-                                        icon="sap-icon://add"
+                                        icon="sap-icon://add-product"
                                         press="onNavigateNew"
                                         class="customButton customCreateButton"
                                         enabled="{fieldConfigModel>/buttonsEnabled}"
@@ -440,7 +440,7 @@
                                     <Button
                                         text="Copy"
                                         type="Emphasized"
-                                        icon="sap-icon://add"
+                                        icon="sap-icon://copy"
                                         press="onCreateFieldPress"
                                         class="customButton customCreateButton"
                                         enabled="{fieldConfigModel>/buttonsEnabled}"

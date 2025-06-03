@@ -82,6 +82,13 @@
                     <Button
                         text="Cancel"
                         press="onCancel"
+                        type="Back"
+                    />
+                      <Button
+                        text="Draft Save"
+                        press="onDraftSave"
+                        type="Transparent"
+                        icon="sap-icon://save"
                     />
                     <Button
                         text="Submit"

@@ -19,12 +19,13 @@ sap.ui.define([
         },
 
         onColumnListItemPress: function (oEvent) {
+            debugger;
             let companyCode = oEvent.getSource().getBindingContext().getObject().COMPANY_CODE;
             let apprType = oEvent.getSource().getBindingContext().getObject().APPR_TYPE;
             this.getOwnerComponent().getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
             this.getOwnerComponent().getRouter().navTo("RouteHierarchyid", {
                 id: companyCode,
-                appType: apprType
+                appType: apprType,
             });
         },
 

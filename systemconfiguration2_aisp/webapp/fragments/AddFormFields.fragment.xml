@@ -5,8 +5,8 @@
 >
     <Dialog
         id="addFormFieldsDialog"
-        title="Add Form Fields"
-        icon="sap-icon://add"
+        title="Copy form fields"
+        icon="sap-icon://copy"
         contentWidth="21rem"
         afterClose="onAddFormFieldsDialogClose"
         class="addFormFieldsDialogFiori"
@@ -19,7 +19,7 @@
             >
                 <!-- Request Type Selection -->
                 <Label
-                    text="Request Type:"
+                    text="Target Request Type:"
                     required="true"
                 />
                 <ComboBox
@@ -39,7 +39,7 @@
 
                 <!-- Entity Selection (SmartField or ComboBox) -->
                 <Label
-                    text="Entity:"
+                    text="Target Company:"
                     required="true"
                     class="sapUiSmallMarginTop"
                 />
