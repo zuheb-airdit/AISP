@@ -11,6 +11,7 @@
     xmlns:html="sap.ui.core"
     xmlns:tL="sap.suite.ui.commons"
     xmlns:layout="sap.suite.ui.commons.networkgraph.layout"
+    xmlns:lyt="sap.ui.layout"
     controllerName="com.registration.registrationapprovalaisp.controller.RegistrationApprovalObj"
 >
     <Page
@@ -117,7 +118,7 @@
                                             >
                                                 <Label
                                                     text="Company:"
-                                                    class="sapUiSmallMarginEnd customLabel"
+                                                    class="sapUiSmallMarginEnd customLabelBold"
                                                 />
                                                 <Text
                                                     text="{requestInfo>/COMPANY_CODE}"
@@ -137,7 +138,7 @@
                                             >
                                                 <Label
                                                     text="Created By:"
-                                                    class="sapUiSmallMarginEnd customLabel"
+                                                    class="sapUiSmallMarginEnd customLabelBold"
                                                 />
                                                 <Text
                                                     text="{requestInfo>/REQUESTER_ID}"
@@ -156,7 +157,7 @@
                                             >
                                                 <Label
                                                     text="Created On:"
-                                                    class="sapUiSmallMarginEnd customLabel"
+                                                    class="sapUiSmallMarginEnd customLabelBold"
                                                 />
                                                 <Text
                                                     text="{path: 'requestInfo>/CREATED_ON', formatter: '.formatDate'}"
@@ -171,512 +172,18 @@
                             <u:sections>
                                 <u:ObjectPageSection
                                     titleUppercase="false"
-                                    title="General Information"
+                                    title="Supplier Information"
                                 >
                                     <u:subSections>
                                         <u:ObjectPageSubSection
                                             title="Supplier Information"
                                             titleUppercase="false"
-                                            class="customSubSection"
                                         >
                                             <u:blocks>
-                                                <VBox class="customVBox">
-                                                    <HBox>
-                                                        <Label
-                                                            text="Supplier Name:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/VENDOR_NAME1}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/VENDOR_NAME1}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Registered Email ID:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/REGISTERED_ID}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/REGISTERED_ID}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="Company Code:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/COMPANY_CODE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/COMPANY_CODE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Website:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/WEBSITE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/WEBSITE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                </VBox>
-                                            </u:blocks>
-                                        </u:ObjectPageSubSection>
-                                        <u:ObjectPageSubSection
-                                            title="Supplier Address"
-                                            titleUppercase="false"
-                                            class="customSubSection"
-                                        >
-                                            <u:blocks>
-                                                <VBox class="customVBox">
-                                                    <HBox>
-                                                        <Label
-                                                            text="Street:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/STREET}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/STREET}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Street 1:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/STREET1}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/STREET1}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="Street 2:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/STREET2}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/STREET2}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Street 3:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/STREET3}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/STREET3}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="Street 4:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/STREET4}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/STREET4}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Country:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/COUNTRY}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/COUNTRY}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="State:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/STATE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/STATE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="City:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/CITY}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/CITY}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="Postal Code:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/POSTAL_CODE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/POSTAL_CODE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Email:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/EMAIL}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/EMAIL}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="Contact No:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/CONTACT_NO}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/CONTACT_NO}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Address Type:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_ADDRESS/results/0/ADDRESS_TYPE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_ADDRESS/results/0/ADDRESS_TYPE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                </VBox>
-                                            </u:blocks>
-                                        </u:ObjectPageSubSection>
-
-                                        <u:ObjectPageSubSection
-                                            title="Supplier Primary Contact"
-                                            titleUppercase="false"
-                                            class="customSubSection"
-                                        >
-                                            <u:blocks>
-                                                <VBox class="customVBox">
-                                                    <HBox>
-                                                        <Label
-                                                            text="First Name:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_CONTACTS/results/0/FIRST_NAME}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_CONTACTS/results/0/FIRST_NAME}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Last Name:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_CONTACTS/results/0/LAST_NAME}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_CONTACTS/results/0/LAST_NAME}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="City:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_CONTACTS/results/0/CITY}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_CONTACTS/results/0/CITY}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="State:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_CONTACTS/results/0/STATE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_CONTACTS/results/0/STATE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="Country:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_CONTACTS/results/0/COUNTRY}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_CONTACTS/results/0/COUNTRY}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Postal Code:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_CONTACTS/results/0/POSTAL_CODE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_CONTACTS/results/0/POSTAL_CODE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="Email:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_CONTACTS/results/0/EMAIL}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_CONTACTS/results/0/EMAIL}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Contact No:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_CONTACTS/results/0/CONTACT_NO}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_CONTACTS/results/0/CONTACT_NO}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
-                                                            text="Mobile No:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_CONTACTS/results/0/MOBILE_NO}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_CONTACTS/results/0/MOBILE_NO}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text=""
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text=""
-                                                            width="20rem"
-                                                            class="customText_obj"
-                                                        />
-                                                    </HBox>
-                                                </VBox>
+                                                <lyt:VerticalLayout
+                                                    id="SupplierInformationFormContainer"
+                                                    width="100%"
+                                                />
                                             </u:blocks>
                                         </u:ObjectPageSubSection>
                                     </u:subSections>
@@ -685,16 +192,14 @@
                                 <u:ObjectPageSection
                                     titleUppercase="false"
                                     title="Bank Information"
-                                    class="customSubSection"
                                 >
                                     <u:subSections>
                                         <u:ObjectPageSubSection
                                             title="Bank Information"
                                             titleUppercase="false"
-                                            class="customSubSection"
                                         >
                                             <u:blocks>
-                                                <VBox class="customVBox">
+                                                <!-- <VBox class="customVBox">
                                                     <HBox>
                                                         <Label
                                                             text="Account Number:"
@@ -947,7 +452,11 @@
                                                             class="customText_obj"
                                                         />
                                                     </HBox>
-                                                </VBox>
+                                                </VBox> -->
+                                                <lyt:VerticalLayout
+                                                    id="FinanceInformationFormContainer"
+                                                    width="100%"
+                                                />
                                             </u:blocks>
                                         </u:ObjectPageSubSection>
                                     </u:subSections>
@@ -956,177 +465,18 @@
                                 <u:ObjectPageSection
                                     titleUppercase="false"
                                     title="Operational Information"
-                                    showTitle="false"
+                                    showTitle="true"
                                 >
                                     <u:subSections>
                                         <u:ObjectPageSubSection
-                                            title="Product-Service Description"
+                                            title="Operational Information"
                                             titleUppercase="false"
-                                            class="customSubSection"
                                         >
                                             <u:blocks>
-                                                <VBox class="customVBox">
-                                                    <HBox>
-                                                        <Label
-                                                            text="Product Name:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_REG_PRODUCT_SERVICE/results/0/PROD_NAME}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_REG_PRODUCT_SERVICE/results/0/PROD_NAME}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Product Description:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_REG_PRODUCT_SERVICE/results/0/PROD_DESCRIPTION}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_REG_PRODUCT_SERVICE/results/0/PROD_DESCRIPTION}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-
-                                                    <HBox>
-                                                        <Label
-                                                            text="Product Type:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_REG_PRODUCT_SERVICE/results/0/PROD_TYPE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_REG_PRODUCT_SERVICE/results/0/PROD_TYPE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Product Category:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_REG_PRODUCT_SERVICE/results/0/PROD_CATEGORY}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_REG_PRODUCT_SERVICE/results/0/PROD_CATEGORY}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                </VBox>
-                                            </u:blocks>
-                                        </u:ObjectPageSubSection>
-                                        <u:ObjectPageSubSection
-                                            title="Operational Capacity"
-                                            titleUppercase="false"
-                                            class="customSubSection"
-                                        >
-                                            <u:blocks>
-                                                <VBox class="customVBox">
-                                                    <HBox>
-                                                        <Label
-                                                            text="Total Production Capacity:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_REG_CAPACITY/results/0/TOTAL_PROD_CAPACITY}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_REG_CAPACITY/results/0/TOTAL_PROD_CAPACITY}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="Minimum Order Size:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_REG_CAPACITY/results/0/MINIMUM_ORDER_SIZE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_REG_CAPACITY/results/0/MINIMUM_ORDER_SIZE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-
-                                                    <HBox>
-                                                        <Label
-                                                            text="Maximum Order Size:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_REG_CAPACITY/results/0/MAXMIMUM_ORDER_SIZE}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_REG_CAPACITY/results/0/MAXMIMUM_ORDER_SIZE}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
-                                                            text="City:"
-                                                            width="12rem"
-                                                            class="customLabel_obj"
-                                                        />
-                                                        <Text
-                                                            text="{requestInfo>/TO_REG_CAPACITY/results/0/CITY}"
-                                                            width="20rem"
-                                                            visible="{= !${requestInfo>/editable} }"
-                                                            class="customText_obj"
-                                                        />
-                                                        <Input
-                                                            value="{requestInfo>/TO_REG_CAPACITY/results/0/CITY}"
-                                                            width="20rem"
-                                                            visible="{requestInfo>/editable}"
-                                                            class="customInput"
-                                                        />
-                                                    </HBox>
-                                                </VBox>
+                                                <lyt:VerticalLayout
+                                                    id="OperationalInformationFormContainer"
+                                                    width="100%"
+                                                />
                                             </u:blocks>
                                         </u:ObjectPageSubSection>
                                     </u:subSections>
@@ -1138,83 +488,12 @@
                                     titleUppercase="false"
                                 >
                                     <u:ObjectPageSubSection>
-                                        <VBox class="sapUiSmallMargin">
-                                            <HBox>
-                                                <Label
-                                                    text="Interest Conflict:"
-                                                    width="12rem"
-                                                    class="customLabel_obj"
+                                        <u:blocks>
+                                                <lyt:VerticalLayout
+                                                    id="DisclosureFormContainer"
+                                                    width="100%"
                                                 />
-                                                <Text
-                                                    text="{requestInfo>/TO_DISCLOSURE_FIELDS/results/0/INTEREST_CONFLICT}"
-                                                    width="20rem"
-                                                    visible="{= !${requestInfo>/editable} }"
-                                                    class="customText_obj"
-                                                />
-                                                <Input
-                                                    value="{requestInfo>/TO_DISCLOSURE_FIELDS/results/0/INTEREST_CONFLICT}"
-                                                    width="20rem"
-                                                    visible="{requestInfo>/editable}"
-                                                    class="customInput"
-                                                />
-                                                <VBox width="2rem" />
-                                                <Label
-                                                    text="Any Legal Cases:"
-                                                    width="12rem"
-                                                    class="customLabel_obj"
-                                                />
-                                                <Text
-                                                    text="{requestInfo>/TO_DISCLOSURE_FIELDS/results/0/ANY_LEGAL_CASES}"
-                                                    width="20rem"
-                                                    visible="{= !${requestInfo>/editable} }"
-                                                    class="customText_obj"
-                                                />
-                                                <Input
-                                                    value="{requestInfo>/TO_DISCLOSURE_FIELDS/results/0/ANY_LEGAL_CASES}"
-                                                    width="20rem"
-                                                    visible="{requestInfo>/editable}"
-                                                    class="customInput"
-                                                />
-                                            </HBox>
-
-                                            <HBox>
-                                                <Label
-                                                    text="ABAC Registration:"
-                                                    width="12rem"
-                                                    class="customLabel_obj"
-                                                />
-                                                <Text
-                                                    text="{requestInfo>/TO_DISCLOSURE_FIELDS/results/0/ABAC_REG}"
-                                                    width="20rem"
-                                                    visible="{= !${requestInfo>/editable} }"
-                                                    class="customText_obj"
-                                                />
-                                                <Input
-                                                    value="{requestInfo>/TO_DISCLOSURE_FIELDS/results/0/ABAC_REG}"
-                                                    width="20rem"
-                                                    visible="{requestInfo>/editable}"
-                                                    class="customInput"
-                                                />
-                                                <VBox width="2rem" />
-                                                <Label
-                                                    text="Control Regulation:"
-                                                    width="12rem"
-                                                    class="customLabel_obj"
-                                                />
-                                                <Text
-                                                    text="{requestInfo>/TO_DISCLOSURE_FIELDS/results/0/CONTROL_REGULATION}"
-                                                    width="20rem"
-                                                    visible="{= !${requestInfo>/editable} }"
-                                                    class="customText_obj"
-                                                />
-                                                <Input
-                                                    value="{requestInfo>/TO_DISCLOSURE_FIELDS/results/0/CONTROL_REGULATION}"
-                                                    width="20rem"
-                                                    visible="{requestInfo>/editable}"
-                                                    class="customInput"
-                                                />
-                                            </HBox>
-                                        </VBox>
+                                            </u:blocks>
                                     </u:ObjectPageSubSection>
                                 </u:ObjectPageSection>
                                 <u:ObjectPageSection
@@ -1309,6 +588,9 @@
                                                         <Column>
                                                             <Text text="Name" />
                                                         </Column>
+                                                         <Column>
+                                                            <Text text="Description" />
+                                                        </Column>
                                                         <Column>
                                                             <Text
                                                                 text="Preview"
@@ -1322,6 +604,9 @@
                                                             <cells>
                                                                 <Text
                                                                     text="{requestInfo>IMAGE_FILE_NAME}"
+                                                                />
+                                                                <Text
+                                                                    text="{requestInfo>DESCRIPTION}"
                                                                 />
                                                                 <Button
                                                                     press="onPreviewAttachment"
@@ -1352,79 +637,13 @@
                                         <u:ObjectPageSubSection
                                             title="Submission"
                                             titleUppercase="false"
+                                            visible="{= ${requestInfo>/REQUEST_TYPE} !== 'Create User'}"
                                         >
                                             <u:blocks>
-                                                <VBox class="sapUiSmallMargin">
-                                                    <HBox
-                                                        justifyContent="SpaceBetween"
-                                                    >
-                                                        <!-- Completed By -->
-                                                        <VBox>
-                                                            <HBox
-                                                                alignItems="Center"
-                                                            >
-                                                                <Label
-                                                                    text="Completed By:"
-                                                                    class="customLabel_obj sapUiTinyMarginBottom"
-                                                                />
-                                                                <Text
-                                                                    text="{requestInfo>/COMPLETED_BY}"
-                                                                    visible="{= !${requestInfo>/editable} }"
-                                                                    class="customText_obj sapUiTinyMarginBegin sapUiTinyMarginBottom"
-                                                                />
-                                                                <Input
-                                                                    value="{requestInfo>/COMPLETED_BY}"
-                                                                    visible="{requestInfo>/editable}"
-                                                                    class="customInput sapUiTinyMarginBegin"
-                                                                />
-                                                            </HBox>
-                                                        </VBox>
-
-                                                        <!-- Designation -->
-                                                        <VBox>
-                                                            <HBox
-                                                                alignItems="Center"
-                                                            >
-                                                                <Label
-                                                                    text="Designation:"
-                                                                    class="customLabel_obj"
-                                                                />
-                                                                <Text
-                                                                    text="{requestInfo>/DESIGNATION}"
-                                                                    visible="{= !${requestInfo>/editable} }"
-                                                                    class="customText_obj sapUiTinyMarginBegin sapUiTinyMarginBottom"
-                                                                />
-                                                                <Input
-                                                                    value="{requestInfo>/DESIGNATION}"
-                                                                    visible="{requestInfo>/editable}"
-                                                                    class="customInput sapUiTinyMarginBegin"
-                                                                />
-                                                            </HBox>
-                                                        </VBox>
-
-                                                        <!-- Date -->
-                                                        <VBox>
-                                                            <HBox
-                                                                alignItems="Center"
-                                                            >
-                                                                <Label
-                                                                    text="Date:"
-                                                                    class="customLabel_obj"
-                                                                />
-                                                                <Text
-                                                                    text="{path: 'requestInfo>/CREATED_ON', formatter: '.formatDate'}"
-                                                                    visible="{= !${requestInfo>/editable} }"
-                                                                    class="customText_obj sapUiTinyMarginBegin sapUiTinyMarginBottom"
-                                                                />
-                                                                <Input
-                                                                    value="{path: 'requestInfo>/CREATED_ON', formatter: '.formatDate'}"
-                                                                    visible="{requestInfo>/editable}"
-                                                                    class="customInput sapUiTinyMarginBegin"
-                                                                />
-                                                            </HBox>
-                                                        </VBox>
-                                                    </HBox>
-                                                </VBox>
+                                              <lyt:VerticalLayout
+                                                    id="SubmissionFormContainer"
+                                                    width="100%"
+                                                />
                                             </u:blocks>
                                         </u:ObjectPageSubSection>
                                     </u:subSections>

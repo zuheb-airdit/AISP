@@ -28,6 +28,77 @@
                 </Collection>
             </Annotation>
         </Annotations>
+
+        <Annotations Target="SAP.RequestInfo/REQUEST_NO">
+             <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="RequestInfo" />
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="REQUEST_NO" />
+                                    <PropertyValue Property="ValueListProperty" String="REQUEST_NO" />
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+        </Annotations>
+
+        <Annotations Target="SAP.RequestInfo/VENDOR_NAME1">
+             <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="RequestInfo" />
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="VENDOR_NAME1" />
+                                    <PropertyValue Property="ValueListProperty" String="VENDOR_NAME1" />
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+        </Annotations>
+
+        <Annotations Target="SAP.RequestInfo/COMPANY_CODE">
+             <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="CompanyCode" />
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="COMPANY_CODE" />
+                                    <PropertyValue Property="ValueListProperty" String="BUKRS" />
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BUTXT"/>
+                                </Record>
+
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+        </Annotations>
+
+        <Annotations Target="SAP.RequestInfo/SUPPL_TYPE">
+             <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="Vendor_Type" />
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="SUPPL_TYPE" />
+                                    <PropertyValue Property="ValueListProperty" String="SPRAS" />
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TXT30"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+        </Annotations>
         </Schema>
     </edmx:DataServices>
 </edmx:Edmx>

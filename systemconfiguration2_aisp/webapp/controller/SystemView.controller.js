@@ -8,7 +8,7 @@ sap.ui.define([
     "sap/ui/model/Sorter",
     "sap/ui/export/Spreadsheet",
     "sap/ui/export/library"
-], (Controller, JSONModel, Fragment, MessageBox, Filter, FilterOperator,Sorter,Spreadsheet,library) => {
+], (Controller, JSONModel, Fragment, MessageBox, Filter, FilterOperator, Sorter, Spreadsheet, library) => {
     "use strict";
 
     return Controller.extend("com.sconfig.systemconfiguration2aisp.controller.SystemView", {
@@ -320,6 +320,7 @@ sap.ui.define([
 
                             let mastJson = new sap.ui.model.json.JSONModel();
                             mastJson.setData({ results: aCountry }); // ✅ important
+                            mastJson.refresh(true);
                             this.getView().setModel(mastJson, "mastJsonModel");
                             this.getView().byId("idCreateButton").setText("Country");
                         }.bind(this),
@@ -349,6 +350,7 @@ sap.ui.define([
                             };
 
                             mastJsonCurrency.setData(data);
+                            mastJsonCurrency.refresh(true);
                             this.getView().setModel(mastJsonCurrency, "mastJsonModel");
                             this.getView().byId("idCreateButton").setText("Currency");
                         }.bind(this),
@@ -372,12 +374,12 @@ sap.ui.define([
                                     return {
                                         CODE: item.CODE,
                                         DESCRIPTION: item.DESC,
-                                        SHORTTEXT: "-"
                                     };
                                 }),
                             };
 
                             mastJsonApproval.setData(data);
+                            mastJsonApproval.refresh(true);
                             this.getView().setModel(mastJsonApproval, "mastJsonModel");
                             this.getView().byId("idCreateButton").setText("Approval Type");
                         }.bind(this),
@@ -400,13 +402,13 @@ sap.ui.define([
                                 results: res.results.map(function (item) {
                                     return {
                                         CODE: item.CODE,
-                                        DESCRIPTION: item.DESCRIPTION,
-                                        SHORTTEXT: "-"
+                                        DESCRIPTION: item.DESCRIPTION
                                     };
                                 }),
                             };
 
                             mastJsonUserRole.setData(data);
+                            mastJsonUserRole.refresh(true);
                             this.getView().setModel(mastJsonUserRole, "mastJsonModel");
                             this.getView().byId("idCreateButton").setText("User Role");
                         }.bind(this),
@@ -437,6 +439,7 @@ sap.ui.define([
                             };
 
                             mastJsonCC.setData(data);
+                            mastJsonCC.refresh(true);
                             this.getView().setModel(mastJsonCC, "mastJsonModel");
                             this.getView().byId("idCreateButton").setText("Company Code");
                         }.bind(this),
@@ -445,8 +448,39 @@ sap.ui.define([
                         },
                     });
                     break;
-
+                    case "RequestType":
+                        let mastJsonRT = this.getView().getModel("mastJsonModel");
+                        if (mastJsonRT) {
+                            mastJsonRT.setData(null); // Clear model data
+                        } else {
+                            mastJsonRT = new sap.ui.model.json.JSONModel();
+                        }
+                        debugger;
+                        oModel.read("/RequestType", {
+                            success: function (res) {
+                                let data = {
+                                    results: res.results.map(function (item) {
+                                        return {
+                                            CODE: item.CODE,
+                                            DESCRIPTION: item.DESCRIPTION,
+                                            SHORTTEXT: item.SUPPLIER_TYPE
+                                        };
+                                    }),
+                                };
+                    
+                                mastJsonRT.setData(data);
+                                mastJsonRT.refresh(true);
+                                this.getView().setModel(mastJsonRT, "mastJsonModel");
+                                
+                                this.getView().byId("idCreateButton").setText("Request Type");
+                            }.bind(this),
+                            error: function (err) {
+                                console.error("Failed to load request type data", err);
+                            },
+                        });
+                        break;                    
                 default:
+                    debugger;
                     sap.m.MessageToast.show("Unknown selection");
             }
         },
@@ -503,31 +537,28 @@ sap.ui.define([
 
             // Open the fragment based on the selected key
             switch (sSelectedKey) {
-                case "userRole":
-                    this._openCreateRoleDialog();
-                    break;
-
-                case "country":
-                    this._openCreateCountryDialog();
-                    break;
-
-                case "gaType":
-                    this._openCreateGATypeDialog();
-                    break;
-
-                case "companyCode":
-                    this._openCreateCompanyCodeDialog();
-                    break;
-
-                case "currency":
-                    this._openCreateCuurency();
-                    break;
-
                 case "approvalType":
                     this._openApprovalCurency();
                     break;
-
-
+                case "companyCode":
+                    this._openCreateCompanyCodeDialog();
+                    break;
+                case "currency":
+                    this._openCreateCuurency();
+                    break;
+                case "country":
+                    this._openCreateCountryDialog();
+                    break;
+                case "gaType":
+                    this._openCreateGATypeDialog();
+                    break;
+                case "userRole":
+                    this._openCreateRoleDialog();
+                    break;
+                case "RequestType":
+                    debugger;
+                    this._openCreateRequestTypeDialog();
+                    break;
                 default:
                     sap.m.MessageToast.show("Please select a valid option.");
             }
@@ -583,6 +614,7 @@ sap.ui.define([
             this._approvalTypeCreateDialog.open();
         },
 
+
         _openCreateCuurency: function () {
             if (!this._oCreateCurrencyDialog) {
                 Fragment.load({
@@ -599,6 +631,16 @@ sap.ui.define([
             } else {
                 this._oCreateCurrencyDialog.open();
             }
+        },
+        _openCreateRequestTypeDialog: function () {
+            debugger;
+            if (!this._RequestTypeCreateDialog) {
+                this._RequestTypeCreateDialog = sap.ui.xmlfragment(
+                    `${this.appId}.fragments.RequestTypeCreate`, this
+                );
+                this.getView().addDependent(this._RequestTypeCreateDialog);
+            }
+            this._RequestTypeCreateDialog.open();
         },
 
         onCreateCountrySubmit: async function () {
@@ -668,6 +710,7 @@ sap.ui.define([
                     this._editUserDialog.close();
                     MessageBox.success("Country Edited Sucessfully!")
                     this.getMastertabledata("country")
+
                 }.bind(this),
                 error: function (err) {
                     this._editUserDialog.close();
@@ -797,8 +840,19 @@ sap.ui.define([
                     this._userRoleEditDialog.open();
                     break;
 
-
-
+                case "RequestType":
+                    if (!this._RequestTypeEditDialog) {
+                        this._RequestTypeEditDialog = sap.ui.xmlfragment(
+                            `${this.appId}.fragments.RequestTypeEdit`,
+                            this
+                        );
+                        this.getView().addDependent(this._RequestTypeEditDialog);
+                    }
+                    sap.ui.getCore().byId("editRequestTypeCodeInput").setValue(index.CODE);
+                    sap.ui.getCore().byId("editRequestTypeDescInput").setValue(index.DESCRIPTION);
+                    sap.ui.getCore().byId("editRequestTypeSuppInput").setValue(index.SHORTTEXT);
+                    this._RequestTypeEditDialog.open();
+                    break;
 
                 default:
                     sap.m.MessageBox.error("Please select a valid option.");
@@ -865,6 +919,7 @@ sap.ui.define([
                                             "Country deleted successfully."
                                         );
                                         sap.ui.core.BusyIndicator.hide(); // Hide busy indicator after success
+
                                     },
                                     error: function (err) {
                                         MessageBox.error("Failed to delete User Role.");
@@ -886,6 +941,7 @@ sap.ui.define([
                                             "Department deleted successfully."
                                         );
                                         sap.ui.core.BusyIndicator.hide(); // Hide busy indicator after success
+
                                     },
                                     error: function (err) {
                                         sap.m.MessageBox.error("Failed to delete Department.");
@@ -908,6 +964,7 @@ sap.ui.define([
                                             "Geographical Area deleted successfully."
                                         );
                                         sap.ui.core.BusyIndicator.hide(); // Hide busy indicator after success
+
                                     },
                                     error: function (err) {
                                         sap.m.MessageBox.error(
@@ -948,6 +1005,7 @@ sap.ui.define([
                                         that.getMastertabledata("currency")
                                         sap.m.MessageBox.success("Currency deleted successfully.");
                                         sap.ui.core.BusyIndicator.hide();
+
                                     },
                                     error: function () {
                                         sap.m.MessageBox.error("Failed to delete Currency.");
@@ -963,6 +1021,7 @@ sap.ui.define([
                                         that.getMastertabledata("approvalType")
                                         sap.m.MessageBox.success("Approval Type deleted successfully.");
                                         sap.ui.core.BusyIndicator.hide();
+
                                     },
                                     error: function () {
                                         sap.m.MessageBox.error("Failed to delete Approval Type.");
@@ -996,9 +1055,26 @@ sap.ui.define([
 
                                         sap.m.MessageBox.success("User Role deleted successfully.");
                                         sap.ui.core.BusyIndicator.hide();
+
                                     },
                                     error: function () {
                                         sap.m.MessageBox.error("Failed to delete User Role.");
+                                        sap.ui.core.BusyIndicator.hide();
+                                    },
+                                });
+                                break;
+
+                            case "RequestType":
+                                let RTPayload = { CODE: oSelectedItem.CODE };
+                                oModel.create(`/deleteRequestType`, RTPayload, {
+                                    success: function () {
+                                        that.getMastertabledata("RequestType")
+                                        sap.m.MessageBox.success("Request Type deleted successfully.");
+                                        sap.ui.core.BusyIndicator.hide();
+
+                                    },
+                                    error: function () {
+                                        sap.m.MessageBox.error("Failed to delete Request Type.");
                                         sap.ui.core.BusyIndicator.hide();
                                     },
                                 });
@@ -1046,6 +1122,7 @@ sap.ui.define([
                     this.byId("currencyCreateDialog").close();
                     this.getMastertabledata("currency")
                     // Optionally refresh your table/grid here
+
                 }.bind(this),
                 error: function (oError) {
                     this.getView().setBusy(false)
@@ -1077,6 +1154,7 @@ sap.ui.define([
                     this.getMastertabledata("currency")
                     sap.m.MessageBox.success("Currency updated successfully!");
                     sap.ui.getCore().byId("currencyEditDialog").close();
+
                 }.bind(this),
                 error: function () {
                     sap.ui.getCore().byId("currencyEditDialog").close();
@@ -1109,17 +1187,93 @@ sap.ui.define([
 
                     sap.ui.getCore().byId("approvalTypeCreateDialog").close();
                     // Optionally refresh your master table data
+
                 }.bind(this),
                 error: function () {
                     sap.m.MessageBox.error("Failed to create Approval Type.");
                 }
             });
         },
+        onCreateRequestTypeSubmit: function () {
+            debugger;
+            var supType = sap.ui.getCore().byId("createRequestTypeSuppInput").getValue().trim();
+            var sDesc = sap.ui.getCore().byId("createRequestTypeDescInput").getValue().trim();
+            if (!supType || !sDesc) {
+                sap.m.MessageBox.error("All fields are required.");
+                return;
+            }
+            var oPayload = {
+                SUPPLIER_TYPE: supType,
+                DESCRIPTION: sDesc
+            };
 
+            var oModel = this.getView().getModel();
+
+            oModel.create("/createRequestType", oPayload, {
+                success: function () {
+                    sap.m.MessageBox.success(" Request Type created successfully!");
+                    this.getMastertabledata("RequestType")
+
+                    sap.ui.getCore().byId("RequestTypeCreateDialog").close();
+                    // Optionally refresh your master table data
+
+                }.bind(this),
+                error: function () {
+                    sap.m.MessageBox.error("Failed to Request Approval Type.");
+                }
+            });
+        },
         onApprovalTypeCreateDialogClose: function () {
             sap.ui.getCore().byId("approvalTypeCreateDialog").close();
         },
+        onRequestTypeCreateDialogClose: function () {
+            sap.ui.getCore().byId("RequestTypeCreateDialog").close();
+        },
+        onRequestTypeCreateDialogClose: function () {
+            sap.ui.getCore().byId("RequestTypeCreateDialog").close();
+        },
+        onRequestTypeEditDialogClose: function () {
+            sap.ui.getCore().byId("RequestTypeEditDialog").close();
+        },
+        onEditRequestTypeSubmit: function () {
+            var sCode = sap.ui.getCore().byId("editRequestTypeCodeInput").getValue().trim();
+            var sDesc = sap.ui.getCore().byId("editRequestTypeDescInput").getValue().trim();
+            var supType = sap.ui.getCore().byId("editRequestTypeSuppInput").getValue().trim();
 
+            if (!sCode || !sDesc || !supType) {
+                sap.m.MessageBox.error("All fields are required.");
+                return;
+            }
+
+            var oPayload = {
+                CODE: sCode,
+                SUPPLIER_TYPE: supType,
+                DESCRIPTION: sDesc
+            };
+            debugger;
+            var oModel = this.getView().getModel();
+
+            oModel.create("/updateRequestType", oPayload, {
+                success: function () {
+                    sap.m.MessageBox.success("Request Type updated successfully!");
+                    this.getMastertabledata("RequestType")
+
+                    sap.ui.getCore().byId("RequestTypeEditDialog").close();
+                    // Optionally refresh your master table data
+
+                }.bind(this),
+                error: function () {
+                    sap.m.MessageBox.error("Failed to Request Approval Type.");
+                }
+            });
+        },
+
+        onApprovalTypeEditDialogClose: function () {
+            sap.ui.getCore().byId("approvalTypeEditDialog").close();
+        },
+        onRequestlTypeEditDialogClose: function () {
+            sap.ui.getCore().byId("RequestTypeEditDialog").close();
+        },
         onEditApprovalTypeSubmit: function () {
             var sCode = sap.ui.getCore().byId("editApprovalTypeCodeInput").getValue().trim();
             var sDesc = sap.ui.getCore().byId("editApprovalTypeDescInput").getValue().trim();
@@ -1179,7 +1333,6 @@ sap.ui.define([
                     sap.m.MessageBox.success("Company Code created successfully!");
                     sap.ui.getCore().byId("companyCodeCreateDialog").close();
                     this.getMastertabledata("companyCode")
-
                 }.bind(this),
                 error: function () {
                     sap.m.MessageBox.error("Failed to create Company Code.");
@@ -1208,7 +1361,6 @@ sap.ui.define([
                     sap.m.MessageBox.success("User Role created successfully!");
                     sap.ui.getCore().byId("userRoleCreateDialog").close();
                     this.getMastertabledata("userRole")
-
                 }.bind(this),
                 error: function () {
                     sap.m.MessageBox.error("Failed to create User Role.");
@@ -1277,8 +1429,7 @@ sap.ui.define([
                 success: function () {
                     sap.m.MessageBox.success("User Role updated successfully!");
                     sap.ui.getCore().byId("userRoleEditDialog").close();
-                    this.getMastertabledata("userRole")
-
+                    this.getMastertabledata("userRole");
                 }.bind(this),
                 error: function () {
                     sap.m.MessageBox.error("Failed to update User Role.");
@@ -1294,11 +1445,11 @@ sap.ui.define([
             sap.ui.getCore().byId("companyCodeEditDialog").close();
         },
 
-        onEditFieldPress: function(oEvent) {
+        onEditFieldPress: function (oEvent) {
             var oContext = oEvent.getSource().getParent().getBindingContext("fieldConfigModel");
             var oField = oContext.getObject();
             this._currentFieldConfig = oField;
-        
+
             if (!this._editFormFieldDialog) {
                 this._editFormFieldDialog = sap.ui.xmlfragment(
                     `${this.appId}.fragments.UpdateFormField`,
@@ -1306,7 +1457,7 @@ sap.ui.define([
                 );
                 this.getView().addDependent(this._editFormFieldDialog);
             }
-        
+
             sap.ui.getCore().byId("updateFieldIdInput").setValue(oField.FIELD_ID || "");
             sap.ui.getCore().byId("updateFieldLabelInput").setValue(oField.FIELD_LABEL || "");
             sap.ui.getCore().byId("updateFieldDescInput").setValue(oField.DESCRIPTION || "");
@@ -1317,7 +1468,7 @@ sap.ui.define([
             sap.ui.getCore().byId("updateVisibleSwitch").setState(!!oField.IS_VISIBLE);
             sap.ui.getCore().byId("updateMandatorySwitch").setState(!!oField.IS_MANDATORY);
             sap.ui.getCore().byId("updateFieldTypeSelect").setSelectedKey(oField.FIELD_TYPE || "");
-        
+
             var mTypeMapping = {
                 Input: "textBox",
                 Dropdown: "select",
@@ -1329,15 +1480,15 @@ sap.ui.define([
                 TextArea: "textArea"
             };
             var sDialogFieldType = mTypeMapping[oField.FIELD_TYPE] || oField.FIELD_TYPE;
-        
+
             // Parse DROPDOWN_VALUES string into options array
             var aOptions = [];
             if (oField.DROPDOWN_VALUES && typeof oField.DROPDOWN_VALUES === "string") {
-                aOptions = oField.DROPDOWN_VALUES.split(",").map(function(sValue) {
+                aOptions = oField.DROPDOWN_VALUES.split(",").map(function (sValue) {
                     return { displayValue: sValue.trim(), value: sValue.trim() };
                 });
             }
-        
+
             var oEditFieldModel = this.getView().getModel("EditFieldModel");
             oEditFieldModel.setData({
                 type: sDialogFieldType,
@@ -1351,7 +1502,7 @@ sap.ui.define([
                 isVisible: !!oField.IS_VISIBLE,
                 dropdownOptions: aOptions
             });
-        
+
             this._editFormFieldDialog.open();
         },
 
@@ -1359,11 +1510,11 @@ sap.ui.define([
             this._editFormFieldDialog.close();
         },
 
-        onUpdateFormFieldSubmit: function() {
+        onUpdateFormFieldSubmit: function () {
             var oView = this.getView();
             var oDialog = sap.ui.getCore().byId("updateFormFieldDialog");
             var oStored = this._currentFieldConfig || {};
-        
+
             var sFieldId = sap.ui.getCore().byId("updateFieldIdInput").getValue().trim();
             var sFieldLabel = sap.ui.getCore().byId("updateFieldLabelInput").getValue().trim();
             var sDesc = sap.ui.getCore().byId("updateFieldDescInput").getValue().trim();
@@ -1374,7 +1525,7 @@ sap.ui.define([
             var sFieldType = sap.ui.getCore().byId("updateFieldTypeSelect").getSelectedKey();
             var bVisible = sap.ui.getCore().byId("updateVisibleSwitch").getState();
             var bMandatory = sap.ui.getCore().byId("updateMandatorySwitch").getState();
-        
+
             if (!sFieldId) {
                 sap.m.MessageBox.error("Field ID is required.");
                 return;
@@ -1383,7 +1534,7 @@ sap.ui.define([
                 sap.m.MessageBox.error("Field Label is required.");
                 return;
             }
-        
+
             var aOptions = [];
             var sDropdownValues = "";
             if (sFieldType === "select" || sFieldType === "Dropdown") {
@@ -1394,14 +1545,14 @@ sap.ui.define([
                     return;
                 }
                 // Convert options back to comma-separated string for DROPDOWN_VALUES
-                sDropdownValues = aOptions.map(function(oOption) {
+                sDropdownValues = aOptions.map(function (oOption) {
                     return oOption.displayValue;
                 }).join(",");
             }
-        
+
             let sCompanyCode = this.byId("idSourceCC").getSelectedKey();
             let sRequestType = this.byId("requestTypeCombo").getSelectedKey();
-        
+
             var oPayload = {
                 data: {
                     FIELD_ID: sFieldId,
@@ -1419,15 +1570,16 @@ sap.ui.define([
                     DROPDOWN_VALUES: sDropdownValues
                 }
             };
-        
+
             var oModel = this.getView().getModel();
             oModel.create("/UpdateFieldConfig", oPayload, {
-                success: function() {
+                success: function () {
                     sap.m.MessageBox.success("Field updated successfully!");
                     oDialog.close();
                     this._refreshFieldConfigModel();
+
                 }.bind(this),
-                error: function(err) {
+                error: function (err) {
                     oDialog.close();
                     sap.m.MessageBox.error("Failed to update field: " + (err.message || "Unknown error."));
                 }.bind(this)
@@ -1449,39 +1601,39 @@ sap.ui.define([
             this._createFieldDialog.open();
         },
 
-        _refreshFieldConfigModel: function() {
+        _refreshFieldConfigModel: function () {
             var oView = this.getView();
             var sRequestType = this.byId("requestTypeCombo").getSelectedKey();
             var sEntityCode = this.byId("idSourceCC").getSelectedKey();
-        
+
             if (!sRequestType || !sEntityCode) {
                 return;
             }
-        
+
             var aFilters = [
                 new sap.ui.model.Filter("COMPANY_CODE", sap.ui.model.FilterOperator.EQ, sEntityCode),
                 new sap.ui.model.Filter("REQUEST_TYPE", sap.ui.model.FilterOperator.EQ, sRequestType)
             ];
-        
+
             var oModel = oView.getModel();
             oView.setBusy(true);
-        
+
             oModel.read("/FieldConfig", {
                 filters: aFilters,
-                success: function(res) {
+                success: function (res) {
                     var oFieldConfigModel = oView.getModel("fieldConfigModel");
                     oFieldConfigModel.setProperty("/results", res.results || []);
                     oFieldConfigModel.setProperty("/buttonsEnabled", res.results && res.results.length > 0);
                     oView.setBusy(false);
                 }.bind(this),
-                error: function() {
+                error: function () {
                     oView.setBusy(false);
                     sap.m.MessageBox.error("Failed to refresh field configuration.");
                 }.bind(this)
             });
         },
 
-        onRemoveDropdownOption: function(oEvent) {
+        onRemoveDropdownOption: function (oEvent) {
             var oItem = oEvent.getSource().getParent();
             var sPath = oItem.getBindingContext("EditFieldModel").getPath();
             var oEditFieldModel = this.getView().getModel("EditFieldModel");
@@ -1491,7 +1643,7 @@ sap.ui.define([
             oEditFieldModel.setProperty("/dropdownOptions", aOptions);
         },
 
-        onAddDropdownOption: function() {
+        onAddDropdownOption: function () {
             var oEditFieldModel = this.getView().getModel("EditFieldModel");
             var aOptions = oEditFieldModel.getProperty("/dropdownOptions") || [];
             aOptions.push({ displayValue: "", value: "" });
@@ -1600,7 +1752,7 @@ sap.ui.define([
             });
         },
 
-        onSearchFields: function(oEvent) {
+        onSearchFields: function (oEvent) {
             var sQuery = oEvent.getParameter("query").toLowerCase();
             var oTable = this.byId("fieldConfigTable");
             var oBinding = oTable.getBinding("items");
@@ -1620,7 +1772,7 @@ sap.ui.define([
             }
         },
 
-        onOpenFilterDialog: function() {
+        onOpenFilterDialog: function () {
             if (!this._filterDialog) {
                 this._filterDialog = sap.ui.xmlfragment(
                     `${this.appId}.fragments.FilterFieldsDialog`,
@@ -1631,7 +1783,7 @@ sap.ui.define([
             this._filterDialog.open();
         },
 
-        onApplyFilters: function() {
+        onApplyFilters: function () {
             var oTable = this.byId("fieldConfigTable");
             var oBinding = oTable.getBinding("items");
             var aFilters = [];
@@ -1664,27 +1816,27 @@ sap.ui.define([
             this._filterDialog.close();
         },
 
-        onClearFilters: function() {
+        onClearFilters: function () {
             sap.ui.getCore().byId("filterSectionSelect").setSelectedKey("");
             sap.ui.getCore().byId("filterCategorySelect").setSelectedKey("");
             sap.ui.getCore().byId("filterFieldTypeSelect").setSelectedKey("");
             this.onApplyFilters();
         },
 
-        onFilterDialogClose: function() {
+        onFilterDialogClose: function () {
             if (this._filterDialog) {
                 this._filterDialog.close();
             }
         },
 
-        onSortTable: function() {
+        onSortTable: function () {
             var oTable = this.byId("fieldConfigTable");
             var oBinding = oTable.getBinding("items");
             var oSorter = new Sorter("SECTION", false); // Sort by SECTION ascending
             oBinding.sort(oSorter);
         },
 
-        onExportToCSV: function() {
+        onExportToCSV: function () {
             var oTable = this.byId("fieldConfigTable");
             var oRowBinding = oTable.getBinding("items");
             var aCols = [
@@ -1692,8 +1844,8 @@ sap.ui.define([
                 { label: "Category", property: "CATEGORY" },
                 { label: "Field ID", property: "FIELD_ID" },
                 { label: "Description", property: "DESCRIPTION" },
-                { label: "Visibility", property: "IS_VISIBLE", formatter: function(bVisible) { return bVisible ? "Yes" : "No"; } },
-                { label: "Mandatory", property: "IS_MANDATORY", formatter: function(bMandatory) { return bMandatory ? "Yes" : "No"; } }
+                { label: "Visibility", property: "IS_VISIBLE", formatter: function (bVisible) { return bVisible ? "Yes" : "No"; } },
+                { label: "Mandatory", property: "IS_MANDATORY", formatter: function (bMandatory) { return bMandatory ? "Yes" : "No"; } }
             ];
 
             var oSettings = {
@@ -1703,7 +1855,7 @@ sap.ui.define([
             };
 
             var oSheet = new Spreadsheet(oSettings);
-            oSheet.build().finally(function() {
+            oSheet.build().finally(function () {
                 oSheet.destroy();
             });
         },

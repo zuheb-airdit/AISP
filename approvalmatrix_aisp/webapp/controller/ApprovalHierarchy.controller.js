@@ -31,19 +31,10 @@ sap.ui.define([
             apptypeIdField.setValue("")
             apptypeIdField.setEditable(true)
             this.byId("entityFilter").getInnerControls()[0].setValue("").setEditable(true)
-            // const oSmart = this.byId("entityFilter");
-            // oSmart.setVisible(true);
-            // oSmart.getInnerControls()[0].setValue("")
-            // const oInput = this.byId("entityFilter_readonly");
-            // if (oInput) {
-            //     oInput.destroy();
-            // }
             this.byId("idCreateFooterButton").setEnabled(true)
             this.byId("idEditBtn").setVisible(false)
             this.byId("idCreateMassRequest").setEnabled(true)
             this.byId("idDeleteBtmApprovalRow").setEnabled(true)
-
-
         },
 
         _onRouteMatched: function (oEvent) {
@@ -207,29 +198,6 @@ sap.ui.define([
             });
             oModel.setData(oData);
         },
-
-        // onSelectofApproval: function (oEvent) {
-        //     debugger;
-        //     this.ApprovalType = true;
-        //     var sKey = oEvent.getSource().getSelectedKey();
-        //     let oModel = this.getOwnerComponent().getModel("hierarchydata");
-        //     let data = oModel?.getData();
-        //     if (this.companyCode) {
-        //         this.byId("idCreateMassRequest").setEnabled(true)
-        //     }
-        //     var sKey = oEvent.getSource().getSelectedKey();
-        //     var oTable = this.byId("idProductsTable");
-        //     var tModel = oTable.getModel();
-        //     var aData = oModel.getProperty("/jsonObjects");
-        //     data?.jsonObjects?.forEach(function (item) {
-        //         if (sKey === "R0") {
-        //             item.checkboxVisible = false;
-        //         } else {
-        //             item.checkboxVisible = true;
-        //         }
-        //     });
-        //     oModel.setData(data)
-        // },
 
         onSelectofApproval: function (oEvent) {
             // 1. what did the user pick?
@@ -658,37 +626,6 @@ sap.ui.define([
 
         },
 
-        // onEditApproval: function (oEvent) {
-        //     debugger;
-        //     var oButton = this.byId("idEditBtn");
-        //     var currentText = oButton.getText();
-
-        //     if (currentText === "Edit") {
-        //         oButton.setText("Cancel");
-        //     } else {
-        //         oButton.setText("Edit");
-        //     }
-        //     this.editableData = !this.editableData;
-        //     let oModel = this.getOwnerComponent().getModel("hierarchydata")
-        //     if (this.editableData === false) {
-        //         const data = oModel.getProperty("/jsonObjects");
-        //         const filteredData = data.filter(item => !(item.user === "" && item.role === ""));
-        //         oModel.setProperty("/jsonObjects", filteredData);
-        //     }
-        //     let submitBtn = this.getView().byId("idCreateFooterButton");
-        //     //let oModel = this.getOwnerComponent().getModel("hierarchydata");
-        //     let data = oModel.getData();
-        //     data?.jsonObjects.forEach((ele) => {
-        //         ele.editablechk = !ele.editablechk;
-        //     });
-
-        //     oModel.setData(data);
-        //     this.byId("idCreateMassRequest").setEnabled(true)
-        //     this.byId("idDeleteBtmApprovalRow").setEnabled(true)
-
-        //     submitBtn.setText(this.editableData ? "Submit" : "Create");
-        //     submitBtn.setEnabled(this.editableData);
-        // }
         onEditApproval: function (oEvent) {
             debugger;
             let oButton = this.byId("idEditBtn");

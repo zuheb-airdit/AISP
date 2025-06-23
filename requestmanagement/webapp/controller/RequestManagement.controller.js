@@ -31,6 +31,7 @@ sap.ui.define([
                     return "No Data"
             }
         },
+
         statusColorFormatter: function (status, role) {
             switch (status) {
                 case 15:
@@ -51,21 +52,12 @@ sap.ui.define([
             }
         },
 
-        // onCreateRquestManagement: function () {
-        //     if (!this.vhFragmentReqManagement) {
-        //         this.vhFragmentReqManagement = sap.ui.xmlfragment("com.requestmanagement.requestmanagement.fragments.createRequestManagement", this);
-        //         this.getView().addDependent(this.vhFragmentReqManagement);
-        //     }
-        //     this.vhFragmentReqManagement.open();
-        // },
-
         onCloseReqManagement: function () {
             this.vhFragmentReqManagement.close();
         },
 
         onCreateRquestManagement: function () {
             var oModel = this.getOwnerComponent().getModel();
-
             // Fetch CompanyCode data
             oModel.read("/CompanyCode", {
                 success: function (oData) {
@@ -96,41 +88,6 @@ sap.ui.define([
                 }
             });
         },
-
-        // onInviteRquestManagement: function () {
-        //     var oModel = this.getOwnerComponent().getModel(); // OData model
-
-        //     // Fetch CompanyCode data
-        //     oModel.read("/CompanyCode", {
-        //         success: function (oData) {
-        //             var oCompanyModel = new JSONModel(oData.results);
-        //             this.getView().setModel(oCompanyModel, "companyModel");
-
-        //             // Load the fragment
-        //             if (!this._oDialog) {
-        //                 Fragment.load({
-        //                     id: this.getView().getId(),
-        //                     name: "com.requestmanagement.requestmanagement.fragments.CompanyCodeRequestTypeDialog",
-        //                     controller: this
-        //                 }).then(function (oDialog) {
-        //                     this._oDialog = oDialog;
-        //                     this.getView().addDependent(this._oDialog);
-        //                     this._oDialog.bindElement({
-        //                         path: "/CompanyCode"
-        //                     });
-        //                     this._oDialog.open();
-        //                 }.bind(this));
-        //             } else {
-        //                 this._oDialog.open();
-        //             }
-        //         }.bind(this),
-        //         error: function (oError) {
-        //             console.error("Error fetching CompanyCode data:", oError);
-        //             MessageBox.error("Failed to load company codes. Please try again.");
-        //         }
-        //     });
-
-        // },
 
         onInviteRquestManagement: function () {
             if (!this.vhFragmentReqManagement) {
@@ -432,7 +389,6 @@ sap.ui.define([
             this._oValueHelpDialog1.close();
         },
 
-
         onValueHelpOkPressRoles: function (oEvent) {
             // debugger;
             let aSelectedContexts = oEvent.getParameter("tokens");
@@ -472,14 +428,10 @@ sap.ui.define([
         },
 
         onSubmitReqManagement: function (oEvent) {
-            // debugger;
-
-            // Create busy dialog
             const oBusyDialog = new BusyDialog({
                 text: "Submitting request...",
                 title: "Processing"
             });
-
             const sRequestType = sap.ui.getCore().byId("idReqType").getSelectedKey();
             const aCompanyCodes = sap.ui.getCore().byId("idVendorEntity").getSelectedKeys();
             const sVendorName = sap.ui.getCore().byId("idVendorName").getValue();

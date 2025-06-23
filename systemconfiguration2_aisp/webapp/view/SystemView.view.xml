@@ -239,6 +239,10 @@
                                         id="selectControl"
                                         change="onComboBoxChangeMaster"
                                     >
+                                    <core:Item
+                                            key="approvalType"
+                                            text="Approval Types"
+                                        />
                                         <core:Item
                                             key="country"
                                             text="Country"
@@ -247,13 +251,14 @@
                                             key="currency"
                                             text="Currency"
                                         />
-                                        <core:Item
-                                            key="approvalType"
-                                            text="Approval Types"
-                                        />
+                                        
                                         <core:Item
                                             key="companyCode"
                                             text="Company Code"
+                                        />
+                                        <core:Item
+                                            key="RequestType"
+                                            text="Request Type"
                                         />
                                         <core:Item
                                             key="userRole"
@@ -277,7 +282,7 @@
                                     <Text text="Description" />
                                 </Column>
                                 <Column>
-                                    <Text text="Short Text" />
+                                    <Text class ="textControl" text="Short Text" />
                                 </Column>
                                 <Column>
                                     <Text text="Action" />
@@ -346,19 +351,17 @@
                             <Label text="Request Type" />
                             <ComboBox
                                 id="requestTypeCombo"
-                                selectedKey="Create Normal"
+                                selectedKey="{RequestType>SUPPLIER_TYPE}"
+                                items="{path:'/RequestType'}"
                             >
                                 <core:Item
-                                    key="Create Supplier"
-                                    text="Create Supplier"
+                                    key="{SUPPLIER_TYPE}"
+                                    text="{SUPPLIER_TYPE}"
                                 />
-                                <core:Item
-                                    key="Create User"
-                                    text="Create User"
-                                />
+                                
                             </ComboBox>
 
-                            <Label text="Entity Code" />
+                            <Label text="Company Code" />
                             <ComboBox
                                 id="idSourceCC"
                                 selectedKey="{CompanyCode>BUKRS}"

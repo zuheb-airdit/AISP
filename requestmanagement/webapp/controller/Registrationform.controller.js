@@ -53,68 +53,6 @@ sap.ui.define(
                 this._bAttachmentSectionCreated = false;
             },
 
-
-            // _onRouteMatchedwithreqsendback: function (oEvent) {
-            //     var oArguments = oEvent.getParameter("arguments");
-            //     this.REQUEST_NO = oArguments.requestNumber;
-            //     this.REQUEST_TYPE = oArguments.requestType;
-
-            //     let oModel = this.getView().getModel("registration-manage");
-
-
-            //     new Promise((resolve, reject) => {
-            //         oModel.read(`/RequestInfo(${this.REQUEST_NO})`, {
-            //             success: resolve,
-            //             error: reject
-            //         });
-            //     })
-            //         .then(res => {
-            //             // console.log(res);
-            //             sap.m.MessageToast.show("Received data");
-            //             this.responseData = res;
-
-            //             // optional: expose to the view for binding
-            //             // new sap.ui.model.json.JSONModel(res)
-            //         })
-            //         .catch(err => {
-            //             console.error(err);
-            //             sap.m.MessageToast.show("Failed to load data");
-            //         }).finally(() => console.log(this.responseData.COMPANY_CODE))
-
-            //     var aFilters = [
-            //         new sap.ui.model.Filter("COMPANY_CODE", sap.ui.model.FilterOperator.EQ, this.responseData.COMPANY_CODE),
-            //         new sap.ui.model.Filter("REQUEST_TYPE", sap.ui.model.FilterOperator.EQ, that.REQUEST_TYPE)
-            //     ];
-
-            //     oModel.read("/FieldConfig", {
-            //         filters: aFilters,
-            //         success: function (res) {
-            //             console.log("FieldConfig response:", res);
-            //             var fieldConfig = res.results || res.value || res;
-
-            //             if (!fieldConfig || (Array.isArray(fieldConfig) && fieldConfig.length === 0)) {
-            //                 console.error("No field configuration data received");
-            //                 MessageBox.error("No field configuration data available for Selected Company Code.");
-            //                 return;
-            //             }
-
-
-            //             var formDataModel = this.buildFormDataBySectionCategory(fieldConfig, "sendback");
-
-            //             // console.log("Form data model:", formDataModel);
-
-            //             // var oFormDataModel = new JSONModel(formDataModel);
-            //             // this.getView().setModel(oFormDataModel, "formDataModel");
-            //             // let data = oFormDataModel.getData();
-            //             // this.createDynamicForm(data);
-            //         }.bind(this),
-            //         error: function (err) {
-            //             console.error("Error fetching FieldConfig:", err);
-            //             MessageBox.error("Failed to load field configuration: " + err.message);
-            //         }.bind(this)
-            //     });
-            // },
-
             _onRouteMatchedwithreqsendback: async function (oEvent) {
                 const args = oEvent.getParameter("arguments");
                 this.REQUEST_NO = args.requestNumber;
@@ -129,29 +67,20 @@ sap.ui.define(
                     const reqInfo = await new Promise((resolve, reject) => {
                         oModel.read(`/RequestInfo(${this.REQUEST_NO})`, { success: resolve, error: reject });
                     });
-
                     this.responseData = { ...reqInfo };
-
-
                     console.log(this.responseData);// plain object copy
-
-                    /* ── 2. FieldConfig (now we have COMPANY_CODE) ──── */
                     const aFilters = [
                         new sap.ui.model.Filter("COMPANY_CODE", sap.ui.model.FilterOperator.EQ, this.responseData.COMPANY_CODE),
                         new sap.ui.model.Filter("REQUEST_TYPE", sap.ui.model.FilterOperator.EQ, this.REQUEST_TYPE)
                     ];
-
                     const fieldCfgRes = await new Promise((resolve, reject) => {
                         anotherModel.read("/FieldConfig", { filters: aFilters, success: resolve, error: reject });
                     });
-
                     const fieldConfig = fieldCfgRes.results || fieldCfgRes.value || fieldCfgRes;
-
                     if (!fieldConfig || (Array.isArray(fieldConfig) && fieldConfig.length === 0)) {
-                        sap.m.MessageBox.error("No field configuration data available for selected company code.");
+                        MessageBox.error("No field configuration data available for selected company code.");
                         return;
                     }
-
                     const formDataModel = this.buildFormDataBySectionCategory(fieldConfig, "sendback");
                     debugger;
                     console.log(formDataModel);
@@ -228,7 +157,6 @@ sap.ui.define(
                 });
             },
 
-
             buildFormDataBySectionCategory: function (fields, type) {
                 this.currentType = type;
                 const model = {
@@ -297,72 +225,72 @@ sap.ui.define(
                     model["Supplier Information"]["Supplier Information"]["COMPANY_CODE"].value = this.COMPANY_CODE;
 
                     //filling Dummy data for Testing
-                    // if (model["Supplier Information"]) {
-                    //     if (model["Supplier Information"]["Supplier Information"]) {
-                    //         model["Supplier Information"]["Supplier Information"]["VENDOR_NAME1"].value = "Innovent Solutions Pvt. Ltd.";
-                    //         model["Supplier Information"]["Supplier Information"]["WEBSITE"].value = "https://innoventsolutions.in";
-                    //         model["Supplier Information"]["Supplier Information"]["REGISTERED_ID"].value = "REG123456789";
-                    //         model["Supplier Information"]["Supplier Information"]["COMPANY_CODE"].value = this.COMPANY_CODE;
-                    //     }
+                    if (model["Supplier Information"]) {
+                        if (model["Supplier Information"]["Supplier Information"]) {
+                            model["Supplier Information"]["Supplier Information"]["VENDOR_NAME1"].value = "Innovent Solutions Pvt. Ltd.";
+                            model["Supplier Information"]["Supplier Information"]["WEBSITE"].value = "https://innoventsolutions.in";
+                            model["Supplier Information"]["Supplier Information"]["REGISTERED_ID"].value = "REG123456789";
+                            model["Supplier Information"]["Supplier Information"]["COMPANY_CODE"].value = this.COMPANY_CODE;
+                        }
 
-                    //     if (model["Supplier Information"]["Address"]) {
-                    //         model["Supplier Information"]["Address"][0]["HOUSE_NUM1"].value = "456";
-                    //         model["Supplier Information"]["Address"][0]["STREET1"].value = "Innovation Tower";
-                    //         model["Supplier Information"]["Address"][0]["STREET2"].value = "Sector 5";
-                    //         model["Supplier Information"]["Address"][0]["STREET3"].value = "Technocity";
-                    //         model["Supplier Information"]["Address"][0]["STREET4"].value = "Bangalore";
-                    //         model["Supplier Information"]["Address"][0]["COUNTRY"].value = "India";
-                    //         model["Supplier Information"]["Address"][0]["STATE"].value = "Karnataka";
-                    //         model["Supplier Information"]["Address"][0]["CITY"].value = "Bangalore";
-                    //         model["Supplier Information"]["Address"][0]["POSTAL_CODE"].value = "560103";
-                    //         model["Supplier Information"]["Address"][0]["EMAIL"].value = "contact@innoventsolutions.in";
-                    //         model["Supplier Information"]["Address"][0]["CONTACT_NO"].value = "08012345678";
-                    //     }
+                        if (model["Supplier Information"]["Address"]) {
+                            model["Supplier Information"]["Address"][0]["HOUSE_NUM1"].value = "456";
+                            model["Supplier Information"]["Address"][0]["STREET1"].value = "Innovation Tower";
+                            model["Supplier Information"]["Address"][0]["STREET2"].value = "Sector 5";
+                            model["Supplier Information"]["Address"][0]["STREET3"].value = "Technocity";
+                            model["Supplier Information"]["Address"][0]["STREET4"].value = "Bangalore";
+                            model["Supplier Information"]["Address"][0]["COUNTRY"].value = "India";
+                            model["Supplier Information"]["Address"][0]["STATE"].value = "Karnataka";
+                            model["Supplier Information"]["Address"][0]["CITY"].value = "Bangalore";
+                            model["Supplier Information"]["Address"][0]["POSTAL_CODE"].value = "560103";
+                            model["Supplier Information"]["Address"][0]["EMAIL"].value = "contact@innoventsolutions.in";
+                            model["Supplier Information"]["Address"][0]["CONTACT_NO"].value = "08012345678";
+                        }
 
-                    //     if (model["Supplier Information"]["Primary Contact"]) {
-                    //         model["Supplier Information"]["Primary Contact"]["FIRST_NAME"].value = "Rahul Verma";
-                    //         model["Supplier Information"]["Primary Contact"]["LAST_NAME"].value = "";
-                    //         model["Supplier Information"]["Primary Contact"]["CITY"].value = "Bangalore";
-                    //         model["Supplier Information"]["Primary Contact"]["STATE"].value = "Karnataka";
-                    //         model["Supplier Information"]["Primary Contact"]["COUNTRY"].value = "India";
-                    //         model["Supplier Information"]["Primary Contact"]["POSTAL_CODE"].value = "560103";
-                    //         model["Supplier Information"]["Primary Contact"]["DESIGNATION"].value = "Vendor Manager";
-                    //         model["Supplier Information"]["Primary Contact"]["EMAIL"].value = "rahul.verma@innoventsolutions.in";
-                    //         model["Supplier Information"]["Primary Contact"]["CONTACT_NUMBER"].value = "+918061234567";
-                    //         model["Supplier Information"]["Primary Contact"]["MOBILE"].value = "+919876543210";
-                    //     }
-                    // }
+                        if (model["Supplier Information"]["Primary Contact"]) {
+                            model["Supplier Information"]["Primary Contact"]["FIRST_NAME"].value = "Rahul Verma";
+                            model["Supplier Information"]["Primary Contact"]["LAST_NAME"].value = "";
+                            model["Supplier Information"]["Primary Contact"]["CITY"].value = "Bangalore";
+                            model["Supplier Information"]["Primary Contact"]["STATE"].value = "Karnataka";
+                            model["Supplier Information"]["Primary Contact"]["COUNTRY"].value = "India";
+                            model["Supplier Information"]["Primary Contact"]["POSTAL_CODE"].value = "560103";
+                            model["Supplier Information"]["Primary Contact"]["DESIGNATION"].value = "Vendor Manager";
+                            model["Supplier Information"]["Primary Contact"]["EMAIL"].value = "rahul.verma@innoventsolutions.in";
+                            model["Supplier Information"]["Primary Contact"]["CONTACT_NUMBER"].value = "+918061234567";
+                            model["Supplier Information"]["Primary Contact"]["MOBILE"].value = "+919876543210";
+                        }
+                    }
 
-                    // if (model["Finance Information"]) {
-                    //     if (model["Finance Information"]["Primary Bank details"]) {
-                    //         model["Finance Information"]["Primary Bank details"][0]["SWIFT_CODE"].value = "HDFCINBBXXX";
-                    //         model["Finance Information"]["Primary Bank details"][0]["BRANCH_NAME"].value = "HDFC Koramangala Branch";
-                    //         model["Finance Information"]["Primary Bank details"][0]["BANK_COUNTRY"].value = "India";
-                    //         model["Finance Information"]["Primary Bank details"][0]["BANK_NAME"].value = "HDFC Bank";
-                    //         model["Finance Information"]["Primary Bank details"][0]["BENEFICIARY"].value = "Innovent Solutions Pvt. Ltd.";
-                    //         model["Finance Information"]["Primary Bank details"][0]["ACCOUNT_NO"].value = "987654321001";
-                    //         model["Finance Information"]["Primary Bank details"][0]["IBAN_NUMBER"].value = "IN91HDFC000987654321001";
-                    //         model["Finance Information"]["Primary Bank details"][0]["ROUTING_CODE"].value = "HDFC0000987";
-                    //         model["Finance Information"]["Primary Bank details"][0]["BANK_CURRENCY"].value = "INR";
-                    //         model["Finance Information"]["TAX-VAT-GST"].GST_NO.value = "29AACCI1234M1Z5";
-                    //     }
-                    // }
+                    if (model["Finance Information"]) {
+                        if (model["Finance Information"]["Primary Bank details"]) {
+                            model["Finance Information"]["Primary Bank details"][0]["SWIFT_CODE"].value = "HDFCINBBXXX";
+                            model["Finance Information"]["Primary Bank details"][0]["BRANCH_NAME"].value = "HDFC Koramangala Branch";
+                            model["Finance Information"]["Primary Bank details"][0]["BANK_COUNTRY"].value = "India";
+                            model["Finance Information"]["Primary Bank details"][0]["BANK_NAME"].value = "HDFC Bank";
+                            model["Finance Information"]["Primary Bank details"][0]["BENEFICIARY"].value = "Innovent Solutions Pvt. Ltd.";
+                            model["Finance Information"]["Primary Bank details"][0]["ACCOUNT_NO"].value = "987654321001";
+                            model["Finance Information"]["Primary Bank details"][0]["IBAN_NUMBER"].value = "IN91HDFC000987654321001";
+                            model["Finance Information"]["Primary Bank details"][0]["ROUTING_CODE"].value = "HDFC0000987";
+                            model["Finance Information"]["Primary Bank details"][0]["BANK_CURRENCY"].value = "INR";
+                            model["Finance Information"]["TAX-VAT-GST"].GST_NO.value = "29AACCI1234M1Z5";
+                        }
+                    }
 
-                    // if (model["Operational Information"]) {
-                    //     if (model["Operational Information"]["Product-Service Description"]) {
-                    //         model["Operational Information"]["Product-Service Description"]["PRODUCT_NAME"].value = "Smart Sensor Kits";
-                    //         model["Operational Information"]["Product-Service Description"]["PRODUCT_DESCRIPTION"].value = "IoT-based smart sensors for industrial automation";
-                    //         model["Operational Information"]["Product-Service Description"]["PRODUCT_TYPE"].value = "Electronics";
-                    //         model["Operational Information"]["Product-Service Description"]["PRODUCT_CATEGORY"].value = "Sensors & Automation";
-                    //     }
+                    if (model["Operational Information"]) {
+                        if (model["Operational Information"]["Product-Service Description"]) {
+                            model["Operational Information"]["Product-Service Description"]["PRODUCT_NAME"].value = "Smart Sensor Kits";
+                            model["Operational Information"]["Product-Service Description"]["PRODUCT_DESCRIPTION"].value = "IoT-based smart sensors for industrial automation";
+                            model["Operational Information"]["Product-Service Description"]["PRODUCT_TYPE"].value = "Electronics";
+                            model["Operational Information"]["Product-Service Description"]["PRODUCT_CATEGORY"].value = "Sensors & Automation";
+                        }
 
-                    //     if (model["Operational Information"]["Operational Capacity"]) {
-                    //         model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MIN"].value = "100 Units";
-                    //         model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MAX"].value = "10000 Units";
-                    //         model["Operational Information"]["Operational Capacity"]["PRODUCTION_CAPACITY"].value = "50000 Units/Year";
-                    //         model["Operational Information"]["Operational Capacity"]["PRODUCTION_LOCATION"].value = "Bangalore Industrial Estate";
-                    //     }
-                    // }
+                        if (model["Operational Information"]["Operational Capacity"]) {
+                            model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MIN"].value = "100 Units";
+                            model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MAX"].value = "10000 Units";
+                            model["Operational Information"]["Operational Capacity"]["PRODUCTION_CAPACITY"].value = "50000 Units/Year";
+                            model["Operational Information"]["Operational Capacity"]["PRODUCTION_LOCATION"].value = "Bangalore Industrial Estate";
+                        }
+                    }
 
                     // if (model["Quality Certificates"]) {
                     //     if (model["Quality Certificates"]["Standard Certifications"]) {
@@ -770,18 +698,18 @@ sap.ui.define(
                     if (sectionName === "Address") {
                         sectionData.forEach(function (address, index) {
                             const addressType = address.ADDRESS_TYPE;
-                            const oVBox = new sap.m.VBox({ class: "sapUiSmallMarginBottom" });
+                            const oVBox = new VBox({ class: "sapUiSmallMarginBottom" });
 
                             const showAddBtn =
                                 pageType === "registration" &&
                                 addressType === "Primary" &&
                                 !sectionData.some(a => a.ADDRESS_TYPE === "Other Office Address");
 
-                            const oTitleBar = new sap.m.Toolbar({
+                            const oTitleBar = new Toolbar({
                                 content: [
-                                    new sap.m.Title({ text: `${addressType} Address`, level: "H3" }),
-                                    new sap.m.ToolbarSpacer(),
-                                    showAddBtn ? new sap.m.Button({
+                                    new Title({ text: `${addressType} Address`, level: "H3" }),
+                                    new ToolbarSpacer(),
+                                    showAddBtn ? new Button({
                                         text: "Add Other Office Address",
                                         icon: "sap-icon://add",
                                         type: "Emphasized",
@@ -790,7 +718,7 @@ sap.ui.define(
                                 ].filter(Boolean)
                             });
 
-                            const oForm = new sap.ui.layout.form.SimpleForm({
+                            const oForm = new SimpleForm({
                                 editable: true,
                                 layout: "ColumnLayout",
                                 labelSpanXL: 3,
@@ -809,7 +737,7 @@ sap.ui.define(
                                 const field = address[fieldKey];
                                 if (!field.visible) return;
 
-                                const oLabel = new sap.m.Label({ text: field.label, required: field.mandatory });
+                                const oLabel = new Label({ text: field.label, required: field.mandatory });
                                 let oField;
 
                                 switch (field.type.toLowerCase()) {
@@ -834,7 +762,7 @@ sap.ui.define(
                                             }.bind(this);
                                         }
 
-                                        oField = new sap.m.Input({
+                                        oField = new Input({
                                             value: `{formDataModel>/Supplier Information/Address/${index}/${fieldKey}/value}`,
                                             // id: this.createId(`input_${this._sanitizeId(sectionName)}_${fieldKey}_${index}`),
                                             showValueHelp: true,
@@ -913,11 +841,11 @@ sap.ui.define(
                                         break;
 
                                     case "radio":
-                                        oField = new sap.m.RadioButtonGroup({
+                                        oField = new RadioButtonGroup({
                                             selectedIndex: field.value === "Yes" ? 0 : field.value === "No" ? 1 : -1,
                                             buttons: [
-                                                new sap.m.RadioButton({ text: "Yes" }),
-                                                new sap.m.RadioButton({ text: "No" })
+                                                new RadioButton({ text: "Yes" }),
+                                                new RadioButton({ text: "No" })
                                             ],
                                             select: function (oEvent) {
                                                 const selectedIndex = oEvent.getSource().getSelectedIndex();
@@ -930,7 +858,7 @@ sap.ui.define(
                                         break;
 
                                     case "number":
-                                        oField = new sap.m.Input({
+                                        oField = new Input({
                                             value: field.value,
                                             type: "Number",
                                             required: field.mandatory,
@@ -966,12 +894,13 @@ sap.ui.define(
 
                                     case "text":
                                     default:
-                                        oField = new sap.m.Input({
+                                        oField = new Input({
                                             value: field.value,
                                             type: field.label.toLowerCase().includes("email") ? "Email" :
                                                 field.label.toLowerCase().includes("contact") ? "Tel" : "Text",
                                             required: field.mandatory,
                                             visible: field.visible,
+                                            valueState: "None",
                                             minLength: field.minimum ? parseInt(field.minimum) : undefined,
                                             maxLength: field.maximum ? parseInt(field.maximum) : undefined,
                                             placeholder: field.placeholder || "",
@@ -995,15 +924,15 @@ sap.ui.define(
                             oContainer.addContent(oVBox);
                         }.bind(this));
                     } else {
-                        const oVBox = new sap.m.VBox({ class: "sapUiSmallMarginBottom" });
+                        const oVBox = new VBox({ class: "sapUiSmallMarginBottom" });
 
-                        const oTitleBar = new sap.m.Toolbar({
+                        const oTitleBar = new Toolbar({
                             content: [
-                                new sap.m.Title({ text: sectionName, level: "H3" })
+                                new Title({ text: sectionName, level: "H3" })
                             ]
                         });
 
-                        const oForm = new sap.ui.layout.form.SimpleForm({
+                        const oForm = new SimpleForm({
                             editable: true,
                             layout: "ColumnLayout",
                             labelSpanXL: 3,
@@ -1021,7 +950,7 @@ sap.ui.define(
                             const field = sectionData[fieldKey];
                             if (!field.visible) return;
 
-                            const oLabel = new sap.m.Label({ text: field.label, required: field.mandatory });
+                            const oLabel = new Label({ text: field.label, required: field.mandatory });
                             let oField;
 
                             switch (field.type.toLowerCase()) {
@@ -1077,7 +1006,7 @@ sap.ui.define(
                                         inputProps.suggestionItemSelected = this.onSuggestionItemSelected.bind(this);
                                     }
 
-                                    oField = new sap.m.Input(inputProps);
+                                    oField = new Input(inputProps);
                                     break;
 
                                 case "dropdown":
@@ -1112,11 +1041,11 @@ sap.ui.define(
                                     break;
 
                                 case "radio":
-                                    oField = new sap.m.RadioButtonGroup({
+                                    oField = new RadioButtonGroup({
                                         selectedIndex: field.value === "Yes" ? 0 : field.value === "No" ? 1 : -1,
                                         buttons: [
-                                            new sap.m.RadioButton({ text: "Yes" }),
-                                            new sap.m.RadioButton({ text: "No" })
+                                            new RadioButton({ text: "Yes" }),
+                                            new RadioButton({ text: "No" })
                                         ],
                                         select: function (oEvent) {
                                             const selectedIndex = oEvent.getSource().getSelectedIndex();
@@ -1129,7 +1058,7 @@ sap.ui.define(
                                     break;
 
                                 case "number":
-                                    oField = new sap.m.Input({
+                                    oField = new Input({
                                         value: field.value,
                                         type: "Number",
                                         required: field.mandatory,
@@ -1165,12 +1094,13 @@ sap.ui.define(
 
                                 case "text":
                                 default:
-                                    oField = new sap.m.Input({
+                                    oField = new Input({
                                         value: field.value,
                                         type: field.label.toLowerCase().includes("email") ? "Email" :
                                             field.label.toLowerCase().includes("contact") ? "Tel" : "Text",
                                         required: field.mandatory,
                                         visible: field.visible,
+                                        valueState: "None",
                                         minLength: field.minimum ? parseInt(field.minimum) : undefined,
                                         maxLength: field.maximum ? parseInt(field.maximum) : undefined,
                                         placeholder: field.placeholder || "",
@@ -1202,7 +1132,7 @@ sap.ui.define(
                 // Validate input parameters
                 if (!sectionName || !fieldKey) {
                     console.error("Invalid parameters in onValueHelpVendorFrag:", { oInput, sectionName, fieldKey, index });
-                    sap.m.MessageBox.error("Invalid form field configuration. Please contact support.");
+                    MessageBox.error("Invalid form field configuration. Please contact support.");
                     return;
                 }
 
@@ -1227,7 +1157,7 @@ sap.ui.define(
                             console.log("OK event triggered in ValueHelpDialog1 with context:", this._oInputContext);
                             if (!this._oInputContext) {
                                 console.error("Context is undefined in OK event handler");
-                                sap.m.MessageBox.error("Invalid context. Please contact support.");
+                                MessageBox.error("Invalid context. Please contact support.");
                                 return;
                             }
                             this.onValueHelpOkPressRolesVendor(oEvent, this._oInputContext);
@@ -1236,7 +1166,7 @@ sap.ui.define(
                         this._oValueHelpDialog1.open();
                     }.bind(this)).catch(function (oError) {
                         console.error("Failed to load vendorType fragment:", oError);
-                        sap.m.MessageBox.error("Unable to load the vendor type selection. Please try again.");
+                        MessageBox.error("Unable to load the vendor type selection. Please try again.");
                     }.bind(this));
                 } else {
                     // Reassign context before reopening
@@ -1253,7 +1183,7 @@ sap.ui.define(
                 // Validate input parameters
                 if (!sectionName || !fieldKey) {
                     console.error("Invalid parameters in onValueHelpSubVendorFrag:", { oInput, sectionName, fieldKey, index });
-                    sap.m.MessageBox.error("Invalid form field configuration. Please contact support.");
+                    MessageBox.error("Invalid form field configuration. Please contact support.");
                     return;
                 }
 
@@ -1278,7 +1208,7 @@ sap.ui.define(
                             console.log("OK event triggered in ValueHelpDialog with context:", this._oInputContext);
                             if (!this._oInputContext) {
                                 console.error("Context is undefined in OK event handler for SubvendorType");
-                                sap.m.MessageBox.error("Form configuration error. Please contact support.");
+                                MessageBox.error("Form configuration error. Please contact support.");
                                 return;
                             }
                             this.onValueHelpOkPressRoles(oEvent, this._oInputContext);
@@ -1287,7 +1217,7 @@ sap.ui.define(
                         this._oValueHelpDialog.open();
                     }.bind(this)).catch(function (oError) {
                         console.error("Failed to load SubvendorType fragment:", oError);
-                        sap.m.MessageBox.error("Unable to load the sub-vendor type selection dialog. Please try again.");
+                        MessageBox.error("Unable to load the sub-vendor type selection dialog. Please try again.");
                     }.bind(this));
                 } else {
                     // Reassign context before reopening
@@ -1311,7 +1241,7 @@ sap.ui.define(
                             events: {
                                 dataReceived: function (oEvent) {
                                     if (!oEvent.getParameter("data")) {
-                                        sap.m.MessageBox.warning("No vendor type data available.");
+                                        MessageBox.warning("No vendor type data available.");
                                     }
                                     oDialog.update();
                                 }
@@ -1320,13 +1250,13 @@ sap.ui.define(
 
                         if (oTable.getColumns().length === 0) {
                             oTable.addColumn(new sap.ui.table.Column({
-                                label: new sap.m.Label({ text: "Language (SPRAS)" }),
-                                template: new sap.m.Text({ text: "{SPRAS}" })
+                                label: new Label({ text: "Language (SPRAS)" }),
+                                template: new Text({ text: "{SPRAS}" })
                             }));
 
                             oTable.addColumn(new sap.ui.table.Column({
-                                label: new sap.m.Label({ text: "Description (TXT30)" }),
-                                template: new sap.m.Text({ text: "{TXT30}" })
+                                label: new Label({ text: "Description (TXT30)" }),
+                                template: new Text({ text: "{TXT30}" })
                             }));
                         }
                     }
@@ -1348,7 +1278,7 @@ sap.ui.define(
                             events: {
                                 dataReceived: function (oEvent) {
                                     if (!oEvent.getParameter("data")) {
-                                        sap.m.MessageBox.warning("No sub-vendor type data available.");
+                                        MessageBox.warning("No sub-vendor type data available.");
                                     }
                                     oDialog.update();
                                 }
@@ -1357,13 +1287,13 @@ sap.ui.define(
 
                         if (oTable.getColumns().length === 0) {
                             oTable.addColumn(new sap.ui.table.Column({
-                                label: new sap.m.Label({ text: "Language (SPRAS)" }),
-                                template: new sap.m.Text({ text: "{SPRAS}" })
+                                label: new Label({ text: "Language (SPRAS)" }),
+                                template: new Text({ text: "{SPRAS}" })
                             }));
 
                             oTable.addColumn(new sap.ui.table.Column({
-                                label: new sap.m.Label({ text: "Description (TEXT40)" }),
-                                template: new sap.m.Text({ text: "{TEXT40}" })
+                                label: new Label({ text: "Description (TEXT40)" }),
+                                template: new Text({ text: "{TEXT40}" })
                             }));
                         }
                     }
@@ -1378,7 +1308,7 @@ sap.ui.define(
                 // Validate context
                 if (!oContext) {
                     console.error("oContext is undefined in onValueHelpOkPressRolesVendor");
-                    // sap.m.MessageBox.error("Form configuration error. Please contact support.");
+                    // MessageBox.error("Form configuration error. Please contact support.");
                     return;
                 }
 
@@ -1386,14 +1316,14 @@ sap.ui.define(
 
                 if (!sectionName || !fieldKey) {
                     console.error("Invalid context properties:", { sectionName, fieldKey, index });
-                    sap.m.MessageBox.error("Invalid form field configuration. Please contact support.");
+                    MessageBox.error("Invalid form field configuration. Please contact support.");
                     return;
                 }
 
                 // Get selected tokens
                 const aTokens = oEvent.getParameter("tokens");
                 if (!aTokens || aTokens.length === 0) {
-                    sap.m.MessageBox.warning("No vendor type selected.");
+                    MessageBox.warning("No vendor type selected.");
                     return;
                 }
 
@@ -1403,7 +1333,7 @@ sap.ui.define(
                 // Validate selection data
                 if (!oSelectedData || !oSelectedData.row || !oSelectedData.row.SPRAS || !oSelectedData.row.TXT30) {
                     console.error("Invalid selection data:", oSelectedData);
-                    sap.m.MessageBox.error("Invalid selection data. Please try again.");
+                    MessageBox.error("Invalid selection data. Please try again.");
                     return;
                 }
 
@@ -1423,7 +1353,7 @@ sap.ui.define(
                             console.log(`Updated model: Supplier Information/Address/${index}/${fieldKey} = ${sDisplayValue}`);
                         } else {
                             console.warn(`Invalid model path for Address: Supplier Information/Address/${index}/${fieldKey}`);
-                            sap.m.MessageBox.error("Unable to update vendor type. Invalid form configuration.");
+                            MessageBox.error("Unable to update vendor type. Invalid form configuration.");
                         }
                     } else {
                         if (oData["Supplier Information"] && oData["Supplier Information"][sectionName] &&
@@ -1432,13 +1362,13 @@ sap.ui.define(
                             console.log(`Updated model: Supplier Information/${sectionName}/${fieldKey} = ${sDisplayValue}`);
                         } else {
                             console.warn(`Invalid model path: Supplier Information/${sectionName}/${fieldKey}`);
-                            sap.m.MessageBox.error("Unable to update vendor type. Invalid form configuration.");
+                            MessageBox.error("Unable to update vendor type. Invalid form configuration.");
                         }
                     }
                     oModel.refresh(); // Ensure UI updates
                 } else {
                     console.warn("formDataModel not found.");
-                    sap.m.MessageBox.error("Data model not found. Please try again.");
+                    MessageBox.error("Data model not found. Please try again.");
                     return;
                 }
 
@@ -1457,7 +1387,7 @@ sap.ui.define(
                 // Validate context
                 if (!oContext) {
                     console.error("oContext is undefined in onValueHelpOkPressRoles");
-                    // sap.m.MessageBox.error("Form configuration error. Please contact support.");
+                    // MessageBox.error("Form configuration error. Please contact support.");
                     return;
                 }
 
@@ -1465,14 +1395,14 @@ sap.ui.define(
 
                 if (!sectionName || !fieldKey) {
                     console.error("Invalid context properties:", { sectionName, fieldKey, index });
-                    sap.m.MessageBox.error("Invalid form field configuration. Please contact support.");
+                    MessageBox.error("Invalid form field configuration. Please contact support.");
                     return;
                 }
 
                 // Get selected tokens
                 const aTokens = oEvent.getParameter("tokens");
                 if (!aTokens || aTokens.length === 0) {
-                    sap.m.MessageBox.warning("No sub-vendor type selected.");
+                    MessageBox.warning("No sub-vendor type selected.");
                     return;
                 }
 
@@ -1482,7 +1412,7 @@ sap.ui.define(
                 // Validate selection data
                 if (!oSelectedData || !oSelectedData.row || !oSelectedData.row.SPRAS || !oSelectedData.row.TEXT40) {
                     console.error("Invalid selection data in onValueHelpOkPressRoles:", oSelectedData);
-                    sap.m.MessageBox.error("Invalid sub-vendor type selection data. Please try again.");
+                    MessageBox.error("Invalid sub-vendor type selection data. Please try again.");
                     return;
                 }
 
@@ -1502,7 +1432,7 @@ sap.ui.define(
                             console.log(`Updated model: Supplier Information/Address/${index}/${fieldKey} = ${sDisplayValue}`);
                         } else {
                             console.warn(`Invalid model path for Address: Supplier Information/Address/${index}/${fieldKey}`);
-                            sap.m.MessageBox.error("Unable to update sub-vendor type. Invalid form configuration.");
+                            MessageBox.error("Unable to update sub-vendor type. Invalid form configuration.");
                         }
                     } else {
                         if (oData["Supplier Information"] && oData["Supplier Information"][sectionName] &&
@@ -1511,13 +1441,13 @@ sap.ui.define(
                             console.log(`Updated model: Supplier Information/${sectionName}/${fieldKey} = ${sDisplayValue}`);
                         } else {
                             console.warn(`Invalid model path: Supplier Information/${sectionName}/${fieldKey}`);
-                            sap.m.MessageBox.error("Unable to update sub-vendor type. Invalid form configuration.");
+                            MessageBox.error("Unable to update sub-vendor type. Invalid form configuration.");
                         }
                     }
                     oModel.refresh(); // Ensure UI updates
                 } else {
                     console.warn("formDataModel not found.");
-                    sap.m.MessageBox.error("Data model not found. Please try again.");
+                    MessageBox.error("Data model not found. Please try again.");
                     return;
                 }
 
@@ -1559,123 +1489,6 @@ sap.ui.define(
                 }
             },
 
-            // createSupplierFormPage: function (supplierData) {
-            //     var oContainer = this.getView().byId("SupplierInformationFormContainer");
-            //     if (!oContainer) {
-            //         console.error("SupplierInformationFormContainer not found");
-            //         MessageBox.error("Form container not found.");
-            //         return;
-            //     }
-            //     oContainer.removeAllContent();
-            //     console.log("Container cleared:", oContainer);
-
-            //     var sections = {
-            //         "Supplier Information": supplierData["Supplier Information"],
-            //         "Address": supplierData["Address"],
-            //         "Primary Contact": supplierData["Primary Contact"]
-            //     };
-
-            //     Object.keys(sections).forEach(function (sectionName) {
-            //         var sectionData = sections[sectionName];
-            //         if (!sectionData) {
-            //             console.warn(`No data for section: ${sectionName}`);
-            //             return;
-            //         }
-            //         console.log(`Processing section: ${sectionName}`, sectionData);
-
-            //         if (sectionName === "Address") {
-            //             sectionData.forEach(function (address, index) {
-            //                 var addressType = address.ADDRESS_TYPE;
-            //                 var oForm = new SimpleForm({
-            //                     editable: true,
-            //                     layout: "ColumnLayout",
-            //                     title: addressType + " Address",
-            //                     labelSpanL: 4,
-            //                     labelSpanM: 4,
-            //                     labelSpanS: 12,
-            //                     emptySpanL: 1,
-            //                     emptySpanM: 1,
-            //                     emptySpanS: 0,
-            //                     columnsL: 2,
-            //                     columnsM: 2
-            //                 });
-
-            //                 if (addressType === "Primary" && !sectionData.some(addr => addr.ADDRESS_TYPE === "Other Office Address")) {
-            //                     var oToolbar = new Toolbar({
-            //                         content: [
-            //                             new Title({ text: "Address" }),
-            //                             new ToolbarSpacer(),
-            //                             new Button({
-            //                                 text: "Add Other Office Address",
-            //                                 press: this.onAddOtherOfficeAddress.bind(this)
-            //                             })
-            //                         ]
-            //                     });
-            //                     oForm.setToolbar(oToolbar);
-            //                     console.log("Added toolbar with title 'Address' and button to Primary Address header");
-            //                 }
-
-            //                 Object.keys(address).forEach(function (fieldKey) {
-            //                     if (fieldKey === "ADDRESS_TYPE") return;
-            //                     var field = address[fieldKey];
-            //                     if (field.visible) {
-            //                         var oLabel = new Label({ text: field.label, required: field.mandatory });
-            //                         var oInput = new Input({
-            //                             value: field.value,
-            //                             required: field.mandatory,
-            //                             visible: field.visible,
-            //                             valueStateText: field.mandatory ? `${field.label} is required` : ""
-            //                         }).bindValue({
-            //                             path: `formDataModel>/Supplier Information/Address/${index}/${fieldKey}/value`
-            //                         });
-            //                         oForm.addContent(oLabel);
-            //                         oForm.addContent(oInput);
-            //                         console.log(`Added field: ${field.label} in ${addressType}`);
-            //                     }
-            //                 });
-
-            //                 oContainer.addContent(oForm);
-            //                 console.log(`Added form for ${addressType} Address`);
-            //             }.bind(this));
-            //         } else {
-            //             var oForm = new SimpleForm({
-            //                 editable: true,
-            //                 layout: "ColumnLayout",
-            //                 title: sectionName,
-            //                 labelSpanL: 4,
-            //                 labelSpanM: 4,
-            //                 labelSpanS: 12,
-            //                 emptySpanL: 1,
-            //                 emptySpanM: 1,
-            //                 emptySpanS: 0,
-            //                 columnsL: 2,
-            //                 columnsM: 2
-            //             });
-
-            //             Object.keys(sectionData).forEach(function (fieldKey) {
-            //                 var field = sectionData[fieldKey];
-            //                 if (field.visible) {
-            //                     var oLabel = new Label({ text: field.label, required: field.mandatory });
-            //                     var oInput = new Input({
-            //                         value: field.value,
-            //                         required: field.mandatory,
-            //                         visible: field.visible,
-            //                         valueStateText: field.mandatory ? `${field.label} is required` : ""
-            //                     }).bindValue({
-            //                         path: `formDataModel>/Supplier Information/${sectionName}/${fieldKey}/value`
-            //                     });
-            //                     oForm.addContent(oLabel);
-            //                     oForm.addContent(oInput);
-            //                     console.log(`Added field: ${field.label} in ${sectionName}`);
-            //                 }
-            //             });
-
-            //             oContainer.addContent(oForm);
-            //             console.log(`Added form for section: ${sectionName}`);
-            //         }
-            //     }.bind(this));
-            // },
-
             createFinanceFormPage: function (financeData) {
                 var oContainer = this.getView().byId("FinanceInformationFormContainer");
                 if (!oContainer) {
@@ -1700,7 +1513,7 @@ sap.ui.define(
 
                     categoryData.forEach(function (bank, index) {
                         var bankType = bank.BANK_TYPE;
-                        var oForm = new sap.ui.layout.form.SimpleForm({
+                        var oForm = new SimpleForm({
                             editable: true,
                             layout: "ColumnLayout",
                             title: bankType + " Bank Details",
@@ -1715,11 +1528,11 @@ sap.ui.define(
                         });
 
                         if (bankType === "Primary" && !categoryData.some(b => b.BANK_TYPE === "Other Bank Details")) {
-                            var oToolbar = new sap.m.Toolbar({
+                            var oToolbar = new Toolbar({
                                 content: [
-                                    new sap.m.Title({ text: "Bank Details" }),
-                                    new sap.m.ToolbarSpacer(),
-                                    new sap.m.Button({
+                                    new Title({ text: "Bank Details" }),
+                                    new ToolbarSpacer(),
+                                    new Button({
                                         text: "Add More Bank Details",
                                         press: this.onAddOtherBankDetails.bind(this)
                                     })
@@ -1735,7 +1548,7 @@ sap.ui.define(
                             console.log(`Processing field: ${fieldKey} in ${bankType}`, field);
 
                             if (field.visible) {
-                                var oLabel = new sap.m.Label({ text: field.label, required: field.mandatory });
+                                var oLabel = new Label({ text: field.label, required: field.mandatory });
                                 var oControl;
 
                                 switch (field.type.toLowerCase()) {
@@ -1755,7 +1568,7 @@ sap.ui.define(
                                                     new sap.ui.core.ListItem({ text: "USD", key: "USD" }),
                                                     new sap.ui.core.ListItem({ text: "GBP", key: "GBP" })
                                                 ] : []);
-                                            oControl = new sap.m.ComboBox({
+                                            oControl = new ComboBox({
                                                 required: field.mandatory,
                                                 visible: field.visible,
                                                 selectedKey: field.defaultValue || field.value || "",
@@ -1763,7 +1576,7 @@ sap.ui.define(
                                                 change: function (oEvent) {
                                                     const selectedKey = oEvent.getSource().getSelectedKey();
                                                     const oModel = this.getView().getModel("formDataModel");
-                                                    const path = `formDataModel>/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
+                                                    const path = `/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
                                                     oModel.setProperty(path, selectedKey);
                                                 }.bind(this)
                                             });
@@ -1780,7 +1593,7 @@ sap.ui.define(
                                                 change: function (oEvent) {
                                                     const selectedKey = oEvent.getSource().getSelectedKey();
                                                     const oModel = this.getView().getModel("formDataModel");
-                                                    const path = `formDataModel>/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
+                                                    const path = `/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
                                                     oModel.setProperty(path, selectedKey);
                                                 }.bind(this)
                                             });
@@ -1794,32 +1607,32 @@ sap.ui.define(
                                             select: function (oEvent) {
                                                 const selected = oEvent.getSource().getSelected();
                                                 const oModel = this.getView().getModel("formDataModel");
-                                                const path = `formDataModel>/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
+                                                const path = `/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
                                                 oModel.setProperty(path, selected);
                                             }.bind(this)
                                         });
                                         break;
 
                                     case "radio":
-                                        oControl = new sap.m.RadioButtonGroup({
+                                        oControl = new RadioButtonGroup({
                                             selectedIndex: field.value === "Yes" ? 0 : field.value === "No" ? 1 : -1,
                                             visible: field.visible,
                                             buttons: [
-                                                new sap.m.RadioButton({ text: "Yes" }),
-                                                new sap.m.RadioButton({ text: "No" })
+                                                new RadioButton({ text: "Yes" }),
+                                                new RadioButton({ text: "No" })
                                             ],
                                             select: function (oEvent) {
                                                 const selectedIndex = oEvent.getSource().getSelectedIndex();
                                                 const value = selectedIndex === 0 ? "Yes" : "No";
                                                 const oModel = this.getView().getModel("formDataModel");
-                                                const path = `formDataModel>/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
+                                                const path = `/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
                                                 oModel.setProperty(path, value);
                                             }.bind(this)
                                         });
                                         break;
 
                                     case "number":
-                                        oControl = new sap.m.Input({
+                                        oControl = new Input({
                                             value: field.value,
                                             type: "Number",
                                             required: field.mandatory,
@@ -1831,7 +1644,7 @@ sap.ui.define(
                                             change: function (oEvent) {
                                                 const value = oEvent.getSource().getValue();
                                                 const oModel = this.getView().getModel("formDataModel");
-                                                const path = `formDataModel>/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
+                                                const path = `/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
                                                 oModel.setProperty(path, value);
                                             }.bind(this)
                                         });
@@ -1847,7 +1660,7 @@ sap.ui.define(
                                             change: function (oEvent) {
                                                 const value = oEvent.getSource().getValue();
                                                 const oModel = this.getView().getModel("formDataModel");
-                                                const path = `formDataModel>/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
+                                                const path = `/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
                                                 oModel.setProperty(path, value);
                                             }.bind(this)
                                         });
@@ -1855,20 +1668,22 @@ sap.ui.define(
 
                                     case "text":
                                     default:
-                                        oControl = new sap.m.Input({
+                                        oControl = new Input({
                                             value: field.value,
                                             type: field.label.toLowerCase().includes("email") ? "Email" :
                                                 field.label.toLowerCase().includes("contact") ? "Tel" : "Text",
                                             required: field.mandatory,
                                             visible: field.visible,
+                                            valueState: "None",
                                             minLength: field.minimum ? parseInt(field.minimum) : undefined,
                                             maxLength: field.maximum ? parseInt(field.maximum) : undefined,
                                             placeholder: field.placeholder || "",
                                             valueStateText: field.mandatory ? `${field.label} is required` : "",
                                             change: function (oEvent) {
+                                                debugger;
                                                 const value = oEvent.getSource().getValue();
                                                 const oModel = this.getView().getModel("formDataModel");
-                                                const path = `formDataModel>/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
+                                                const path = `/Finance Information/Primary Bank details/${index}/${fieldKey}/value`;
                                                 oModel.setProperty(path, value);
                                             }.bind(this)
                                         });
@@ -1888,7 +1703,7 @@ sap.ui.define(
 
                 var taxData = financeData["TAX-VAT-GST"];
                 if (taxData) {
-                    var oTaxForm = new sap.ui.layout.form.SimpleForm({
+                    var oTaxForm = new SimpleForm({
                         editable: true,
                         layout: "ColumnLayout",
                         title: "TAX/VAT/GST",
@@ -1905,7 +1720,7 @@ sap.ui.define(
                     Object.keys(taxData).forEach(function (fieldKey) {
                         var field = taxData[fieldKey];
                         if (field.visible) {
-                            var oLabel = new sap.m.Label({ text: field.label, required: field.mandatory });
+                            var oLabel = new Label({ text: field.label, required: field.mandatory });
                             var oControl;
 
                             switch (field.type.toLowerCase()) {
@@ -1935,33 +1750,33 @@ sap.ui.define(
                                         select: function (oEvent) {
                                             const selected = oEvent.getSource().getSelected();
                                             const oModel = this.getView().getModel("formDataModel");
-                                            const path = `formDataModel>/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
+                                            const path = `/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
                                             oModel.setProperty(path, selected);
                                         }.bind(this)
                                     });
                                     break;
 
                                 case "radio":
-                                    oControl = new sap.m.RadioButtonGroup({
+                                    oControl = new RadioButtonGroup({
                                         selectedIndex: field.value === "Yes" ? 0 : field.value === "No" ? 1 : -1,
                                         visible: field.visible,
                                         columns: 2, // Set to 2 for horizontal arrangement
                                         buttons: [
-                                            new sap.m.RadioButton({ text: "Yes" }),
-                                            new sap.m.RadioButton({ text: "No" })
+                                            new RadioButton({ text: "Yes" }),
+                                            new RadioButton({ text: "No" })
                                         ],
                                         select: function (oEvent) {
                                             const selectedIndex = oEvent.getSource().getSelectedIndex();
                                             const value = selectedIndex === 0 ? "Yes" : "No";
                                             const oModel = this.getView().getModel("formDataModel");
-                                            const path = `formDataModel>/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
+                                            const path = `/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
                                             oModel.setProperty(path, value);
                                         }.bind(this)
                                     });
                                     break;
 
                                 case "number":
-                                    oControl = new sap.m.Input({
+                                    oControl = new Input({
                                         value: field.value,
                                         type: "Number",
                                         required: field.mandatory,
@@ -1973,7 +1788,7 @@ sap.ui.define(
                                         change: function (oEvent) {
                                             const value = oEvent.getSource().getValue();
                                             const oModel = this.getView().getModel("formDataModel");
-                                            const path = `formDataModel>/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
+                                            const path = `/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
                                             oModel.setProperty(path, value);
                                         }.bind(this)
                                     });
@@ -1989,7 +1804,7 @@ sap.ui.define(
                                         change: function (oEvent) {
                                             const value = oEvent.getSource().getValue();
                                             const oModel = this.getView().getModel("formDataModel");
-                                            const path = `formDataModel>/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
+                                            const path = `/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
                                             oModel.setProperty(path, value);
                                         }.bind(this)
                                     });
@@ -1997,12 +1812,13 @@ sap.ui.define(
 
                                 case "text":
                                 default:
-                                    oControl = new sap.m.Input({
+                                    oControl = new Input({
                                         value: field.value,
                                         type: field.label.toLowerCase().includes("email") ? "Email" :
-                                            field.label.toLowerCase().includes("contact") ? "Tel" : "Text",
+                                        field.label.toLowerCase().includes("contact") ? "Tel" : "Text",
                                         required: field.mandatory,
                                         visible: field.visible,
+                                        valueState: "None",
                                         minLength: field.minimum ? parseInt(field.minimum) : undefined,
                                         maxLength: field.maximum ? parseInt(field.maximum) : undefined,
                                         placeholder: field.placeholder || "",
@@ -2010,7 +1826,7 @@ sap.ui.define(
                                         change: function (oEvent) {
                                             const value = oEvent.getSource().getValue();
                                             const oModel = this.getView().getModel("formDataModel");
-                                            const path = `formDataModel>/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
+                                            const path = `/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
                                             oModel.setProperty(path, value);
                                         }.bind(this)
                                     });
@@ -2051,7 +1867,7 @@ sap.ui.define(
                     }
                     console.log(`Processing category: ${categoryName}`, categoryData);
 
-                    var oForm = new sap.ui.layout.form.SimpleForm({
+                    var oForm = new SimpleForm({
                         editable: true,
                         layout: "ColumnLayout",
                         title: categoryName,
@@ -2068,7 +1884,7 @@ sap.ui.define(
                     Object.keys(categoryData).forEach(function (fieldKey) {
                         var field = categoryData[fieldKey];
                         if (field.visible) {
-                            var oLabel = new sap.m.Label({ text: field.label, required: field.mandatory });
+                            var oLabel = new Label({ text: field.label, required: field.mandatory });
                             var oControl;
 
                             switch (field.type.toLowerCase()) {
@@ -2084,7 +1900,7 @@ sap.ui.define(
                                                 new sap.ui.core.ListItem({ text: "Mechanical Parts", key: "MP" }),
                                                 new sap.ui.core.ListItem({ text: "Raw Materials", key: "RM" })
                                             ];
-                                        oControl = new sap.m.ComboBox({
+                                        oControl = new ComboBox({
                                             required: field.mandatory,
                                             visible: field.visible,
                                             selectedKey: field.defaultValue || field.value || "",
@@ -2130,13 +1946,13 @@ sap.ui.define(
                                     break;
 
                                 case "radio":
-                                    oControl = new sap.m.RadioButtonGroup({
+                                    oControl = new RadioButtonGroup({
                                         selectedIndex: field.value === "Yes" ? 0 : field.value === "No" ? 1 : -1,
                                         visible: true,
                                         columns: 2, // Horizontal arrangement
                                         buttons: [
-                                            new sap.m.RadioButton({ text: "Yes" }),
-                                            new sap.m.RadioButton({ text: "No" })
+                                            new RadioButton({ text: "Yes" }),
+                                            new RadioButton({ text: "No" })
                                         ],
                                         select: function (oEvent) {
                                             const selectedIndex = oEvent.getSource().getSelectedIndex();
@@ -2149,7 +1965,7 @@ sap.ui.define(
                                     break;
 
                                 case "number":
-                                    oControl = new sap.m.Input({
+                                    oControl = new Input({
                                         value: field.value,
                                         type: "Number",
                                         required: field.mandatory,
@@ -2185,7 +2001,7 @@ sap.ui.define(
 
                                 case "text":
                                 default:
-                                    oControl = new sap.m.Input({
+                                    oControl = new Input({
                                         value: field.value,
                                         type: field.label.toLowerCase().includes("email") ? "Email" :
                                             field.label.toLowerCase().includes("contact") ? "Tel" : "Text",
@@ -2231,7 +2047,7 @@ sap.ui.define(
                     }
 
                     // Main VBox for the entire form
-                    var oMainVBox = new sap.m.VBox({
+                    var oMainVBox = new VBox({
                         width: "100%"
                     }).addStyleClass("disclosureContainer");
 
@@ -2283,25 +2099,25 @@ sap.ui.define(
                         Object.keys(categoryData).forEach(function (fieldKey) {
                             var field = categoryData[fieldKey];
                             if (field.visible) {
-                                var oFieldVBox = new sap.m.VBox({
+                                var oFieldVBox = new VBox({
                                     fitContainer: true
                                 }).addStyleClass("sapUiMediumMarginBottom");
 
                                 // Label
-                                var oLabel = new sap.m.Label({
+                                var oLabel = new Label({
                                     text: field.label,
                                     required: field.mandatory,
                                     wrapping: true
                                 });
 
                                 // Description
-                                var oDescription = new sap.m.Text({
+                                var oDescription = new Text({
                                     text: field.description || "No description available.",
                                     wrapping: true
                                 }).addStyleClass("sapUiSmallMarginBottom");
 
                                 // Radio Button Group
-                                var oRadioButtonGroup = new sap.m.RadioButtonGroup({
+                                var oRadioButtonGroup = new RadioButtonGroup({
                                     columns: 3,
                                     selectedIndex: {
                                         path: "disclosureModel>" + propertyMap[field.label],
@@ -2323,9 +2139,9 @@ sap.ui.define(
                                     }.bind(this)
                                 });
 
-                                oRadioButtonGroup.addButton(new sap.m.RadioButton({ text: "Yes" }));
-                                oRadioButtonGroup.addButton(new sap.m.RadioButton({ text: "No" }));
-                                oRadioButtonGroup.addButton(new sap.m.RadioButton({ text: "NA" }));
+                                oRadioButtonGroup.addButton(new RadioButton({ text: "Yes" }));
+                                oRadioButtonGroup.addButton(new RadioButton({ text: "No" }));
+                                oRadioButtonGroup.addButton(new RadioButton({ text: "NA" }));
 
                                 // Add items to field VBox
                                 oFieldVBox.addItem(oLabel);
@@ -2347,84 +2163,6 @@ sap.ui.define(
                     console.log("Initial Disclosure Model:", oModel.getData());
                 }
             },
-
-            // createQualityCertificatesForm: function (qualityCertificatesData) {
-            //     if (!qualityCertificatesData || typeof qualityCertificatesData !== "object" || Object.keys(qualityCertificatesData).length === 0) {
-            //         console.error("No fields found for Quality Certificates or invalid object. Check qualityCertificatesData:", qualityCertificatesData);
-            //         return;
-            //     }
-
-            //     var oContainer = this.getView().byId(this.getView().createId("QualityCertificatesFormContainer"));
-            //     if (!oContainer) {
-            //         console.error("QualityCertificatesFormContainer not found. Check your view XML.");
-            //         return;
-            //     }
-
-            //     // Main Table for Quality Certificates
-            //     var oTable = new Table({
-            //         width: "100%"
-            //     }).addStyleClass("qualityCertificatesTable");
-
-            //     // Add Columns
-            //     oTable.addColumn(new Column({
-            //         header: new Label({ text: "Description" })
-            //     }));
-            //     oTable.addColumn(new Column({
-            //         header: new Label({ text: "Action" })
-            //     }));
-            //     oTable.addColumn(new Column({
-            //         header: new Label({ text: "Done By" })
-            //     }));
-
-            //     // Iterate over categories (e.g., "Standard Certifications")
-            //     Object.keys(qualityCertificatesData).forEach(function (category) {
-            //         var categoryData = qualityCertificatesData[category];
-            //         Object.keys(categoryData).forEach(function (fieldKey) {
-            //             var field = categoryData[fieldKey];
-            //             if (field.visible) {
-            //                 var descriptionText = field.label.replace(" - Done By", ""); // Extract certification name
-            //                 var oRow = new sap.m.ColumnListItem();
-
-            //                 // Description Cell
-            //                 oRow.addCell(new Text({ text: descriptionText }));
-
-            //                 // Action Cell (ComboBox)
-            //                 var oComboBox = new ComboBox({
-            //                     selectedKey: field.isCertified,
-            //                     items: [
-            //                         new sap.ui.core.ListItem({ key: "Yes", text: "Yes" }),
-            //                         new sap.ui.core.ListItem({ key: "No", text: "No" })
-            //                     ]
-            //                 }).bindProperty("selectedKey", {
-            //                     path: `formDataModel>/Quality Certificates/${category}/${fieldKey}/isCertified`
-            //                 });
-            //                 oRow.addCell(oComboBox);
-
-            //                 // Done By Cell (Input)
-            //                 var oInput = new Input({
-            //                     value: field.value,
-            //                     required: field.mandatory,
-            //                     visible: field.visible,
-            //                     valueStateText: field.mandatory ? `${field.label} is required` : "",
-            //                     placeholder: "Enter name"
-            //                 }).bindValue({
-            //                     path: `formDataModel>/Quality Certificates/${category}/${fieldKey}/value`
-            //                 });
-            //                 oRow.addCell(oInput);
-
-            //                 oTable.addItem(oRow);
-            //                 console.log(`Added row for: ${field.label} in ${category}`);
-            //             }
-            //         });
-            //     });
-
-            //     // Clear and add content to container
-            //     oContainer.removeAllContent();
-            //     oContainer.addContent(oTable);
-
-            //     // Debugging: Log the table structure
-            //     console.log("Table Content:", oTable.getItems());
-            // },
 
             createAttachmentsForm: function (oAttachmentFields, bForceRecreate = false) {
                 // Check if the attachment section has already been created
@@ -2449,7 +2187,7 @@ sap.ui.define(
                     oContainer.removeAllContent();
                 }
 
-                var oMainVBox = new sap.m.VBox().addStyleClass("subSectionSpacing");
+                var oMainVBox = new VBox().addStyleClass("subSectionSpacing");
                 this._oMainVBox = oMainVBox;
 
                 var oFormDataModel = this.getView().getModel("formDataModel");
@@ -2570,24 +2308,24 @@ sap.ui.define(
 
                     // Check if a VBox for this title already exists
                     var oExistingVBox = this._oMainVBox.getItems().find(item => {
-                        return item instanceof sap.m.VBox &&
-                            item.getItems()[0] instanceof sap.m.HBox &&
-                            item.getItems()[0].getItems()[0] instanceof sap.m.Title &&
+                        return item instanceof VBox &&
+                            item.getItems()[0] instanceof HBox &&
+                            item.getItems()[0].getItems()[0] instanceof Title &&
                             item.getItems()[0].getItems()[0].getText() === sNewTitle;
                     });
 
                     if (!oExistingVBox) {
-                        var oNewTable = new sap.m.Table({
+                        var oNewTable = new Table({
                             growing: true,
                             columns: [
-                                new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
-                                new sap.m.Column({ header: new sap.m.Label({ text: "Upload" }) }),
-                                new sap.m.Column({ header: new sap.m.Label({ text: "File Name" }) }),
-                                new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
+                                new Column({ header: new Label({ text: "Description" }) }),
+                                new Column({ header: new Label({ text: "Upload" }) }),
+                                new Column({ header: new Label({ text: "File Name" }) }),
+                                new Column({ header: new Label({ text: "Actions" }) })
                             ]
                         });
 
-                        var oFileUploader = new sap.ui.unified.FileUploader({
+                        var oFileUploader = new FileUploader({
                             name: "myFileUpload",
                             uploadUrl: "upload/",
                             tooltip: "Upload your file to the local server",
@@ -2600,13 +2338,13 @@ sap.ui.define(
                             visible: true
                         });
 
-                        var oItemTemplate = new sap.m.ColumnListItem({
+                        var oItemTemplate = new ColumnListItem({
                             cells: [
-                                new sap.m.Input({
+                                new Input({
                                     value: "{formDataModel>description}",
                                     change: this.onDescriptionChange.bind(this)
                                 }),
-                                new sap.m.Button({
+                                new Button({
                                     text: "Upload",
                                     press: function (oEvent) {
                                         var oButton = oEvent.getSource();
@@ -2632,13 +2370,13 @@ sap.ui.define(
                                         }
                                     }
                                 }),
-                                new sap.m.Text({
+                                new Text({
                                     text: "{formDataModel>fileName}"
                                 }),
-                                new sap.m.HBox({
+                                new HBox({
                                     visible: true,
                                     items: [
-                                        new sap.m.Button({
+                                        new Button({
                                             icon: "sap-icon://image-viewer",
                                             type: "Transparent",
                                             tooltip: "Download",
@@ -2675,7 +2413,7 @@ sap.ui.define(
                                             }
 
                                         }),
-                                        new sap.m.Button({
+                                        new Button({
                                             icon: "sap-icon://delete",
                                             type: "Transparent",
                                             tooltip: "Remove",
@@ -2705,13 +2443,13 @@ sap.ui.define(
                         });
 
                         // Create an HBox for the title and Remove button
-                        var oHeaderHBox = new sap.m.HBox({
+                        var oHeaderHBox = new HBox({
                             items: [
-                                new sap.m.Title({
+                                new Title({
                                     text: sNewTitle,
                                     level: "H3"
                                 }),
-                                new sap.m.Button({
+                                new Button({
                                     icon: "sap-icon://decline",
                                     type: "Transparent",
                                     tooltip: "Remove Section",
@@ -2722,7 +2460,7 @@ sap.ui.define(
                             alignItems: "Center"
                         });
 
-                        var oNewVBox = new sap.m.VBox({
+                        var oNewVBox = new VBox({
                             items: [
                                 oHeaderHBox,
                                 oNewTable
@@ -2774,10 +2512,10 @@ sap.ui.define(
                 // Handle section removal
                 this.onRemoveDocumentSection = function (sTitle) {
                     // Confirm deletion
-                    sap.m.MessageBox.confirm(`Are you sure you want to remove the "${sTitle}" section?`, {
+                    MessageBox.confirm(`Are you sure you want to remove the "${sTitle}" section?`, {
                         title: "Confirm Deletion",
                         onClose: function (oAction) {
-                            if (oAction === sap.m.MessageBox.Action.OK) {
+                            if (oAction === MessageBox.Action.OK) {
                                 // Remove from model
                                 var oAttachments = oFormDataModel.getProperty("/Attachments");
                                 oAttachments = oAttachments.filter(field => field.title !== sTitle);
@@ -2787,9 +2525,9 @@ sap.ui.define(
 
                                 // Remove the VBox from UI
                                 var oVBoxToRemove = this._oMainVBox.getItems().find(item => {
-                                    return item instanceof sap.m.VBox &&
-                                        item.getItems()[0] instanceof sap.m.HBox &&
-                                        item.getItems()[0].getItems()[0] instanceof sap.m.Title &&
+                                    return item instanceof VBox &&
+                                        item.getItems()[0] instanceof HBox &&
+                                        item.getItems()[0].getItems()[0] instanceof Title &&
                                         item.getItems()[0].getItems()[0].getText() === sTitle;
                                 });
                                 if (oVBoxToRemove) {
@@ -2812,15 +2550,15 @@ sap.ui.define(
                 };
 
                 // Create the "Add Other Document" button in the header
-                var oAddButton = new sap.m.Button({
+                var oAddButton = new Button({
                     text: "Add Other Document",
                     press: this.openDocumentDialog.bind(this)
                 });
 
                 // Create the header with the Add button
-                var oHeader = new sap.m.HBox({
+                var oHeader = new HBox({
                     items: [
-                        new sap.m.Title({ text: "Attachments", level: "H2" }),
+                        new Title({ text: "Attachments", level: "H2" }),
                         oAddButton
                     ],
                     justifyContent: "SpaceBetween"
@@ -2833,13 +2571,13 @@ sap.ui.define(
 
                 if (bForceRecreate || !this._bAttachmentSectionCreated) {
                     transformedFields.forEach((oField, index) => {
-                        var oTable = new sap.m.Table({
+                        var oTable = new Table({
                             growing: true,
                             columns: [
-                                new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
-                                new sap.m.Column({ header: new sap.m.Label({ text: "Upload" }) }),
-                                new sap.m.Column({ header: new sap.m.Label({ text: "File Name" }) }),
-                                new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
+                                new Column({ header: new Label({ text: "Description" }) }),
+                                new Column({ header: new Label({ text: "Upload" }) }),
+                                new Column({ header: new Label({ text: "File Name" }) }),
+                                new Column({ header: new Label({ text: "Actions" }) })
                             ]
                         });
 
@@ -2856,13 +2594,13 @@ sap.ui.define(
                             visible: true
                         });
 
-                        var oItemTemplate = new sap.m.ColumnListItem({
+                        var oItemTemplate = new ColumnListItem({
                             cells: [
-                                new sap.m.Input({
+                                new Input({
                                     value: "{formDataModel>description}",
                                     change: this.onDescriptionChange.bind(this)
                                 }),
-                                new sap.m.Button({
+                                new Button({
                                     text: "Upload",
                                     press: function (oEvent) {
                                         var oButton = oEvent.getSource();
@@ -2888,13 +2626,13 @@ sap.ui.define(
                                         }
                                     }
                                 }),
-                                new sap.m.Text({
+                                new Text({
                                     text: "{formDataModel>fileName}"
                                 }),
-                                new sap.m.HBox({
+                                new HBox({
                                     visible: true,
                                     items: [
-                                        new sap.m.Button({
+                                        new Button({
                                             icon: "sap-icon://image-viewer",
                                             type: "Transparent",
                                             tooltip: "View",
@@ -2932,7 +2670,7 @@ sap.ui.define(
 
 
                                         }),
-                                        new sap.m.Button({
+                                        new Button({
                                             icon: "sap-icon://delete",
                                             type: "Transparent",
                                             tooltip: "Remove",
@@ -2966,9 +2704,9 @@ sap.ui.define(
 
                         aTables.push({ table: oTable, title: oField.title });
 
-                        oMainVBox.addItem(new sap.m.VBox({
+                        oMainVBox.addItem(new VBox({
                             items: [
-                                new sap.m.Title({
+                                new Title({
                                     text: oField.title,
                                     level: "H3"
                                 }),
@@ -2991,7 +2729,7 @@ sap.ui.define(
                         });
                     }, 100);
 
-                    oContainer.addContent(new sap.m.VBox({
+                    oContainer.addContent(new VBox({
                         items: [oMainVBox]
                     }));
 
@@ -3013,425 +2751,6 @@ sap.ui.define(
 
                 console.log("Final Attachments in model after setup:", oFormDataModel.getProperty("/Attachments"));
             },
-
-            // createAttachmentsForm: function (oAttachmentFields, bForceRecreate = false) {
-            //     // Check if the attachment section has already been created
-            //     if (this._bAttachmentSectionCreated && !bForceRecreate) {
-            //         console.log("Attachment section already created, skipping re-render");
-            //         return;
-            //     }
-
-            //     if (!oAttachmentFields || oAttachmentFields.length === 0) {
-            //         console.error("No fields found for Attachments");
-            //         return;
-            //     }
-
-            //     var oContainer = this.getView().byId("AttachmentsFormContainer");
-            //     if (!oContainer) {
-            //         console.error("AttachmentsFormContainer not found. Check your view XML.");
-            //         return;
-            //     }
-
-            //     // Clear the container only if we are forcing a recreate
-            //     if (bForceRecreate || !this._bAttachmentSectionCreated) {
-            //         oContainer.removeAllContent();
-            //     }
-
-            //     var oMainVBox = new sap.m.VBox().addStyleClass("subSectionSpacing");
-            //     this._oMainVBox = oMainVBox;
-
-            //     var oFormDataModel = this.getView().getModel("formDataModel");
-            //     if (!oFormDataModel) {
-            //         console.error("formDataModel not found in the view. Ensure it is set in onInit.");
-            //         return;
-            //     }
-
-            //     // Log the initial oAttachmentFields
-            //     console.log("Initial oAttachmentFields:", oAttachmentFields);
-
-            //     // Transform oAttachmentFields to include title and empty description
-            //     var transformedFields = oAttachmentFields.map(field => {
-            //         const updatedField = {
-            //             description: field.description || "",
-            //             title: field.title || "Untitled Section", // Use the original title from input
-            //             fileName: field.fileName || "",
-            //             uploaded: field.uploaded || false,
-            //             fieldPath: field.fieldPath || (field.title || "DEFAULT").toUpperCase().replace(/\s+/g, '_'),
-            //             fieldId: field.fieldId || "V1R1D" + Date.now(),
-            //             imageUrl: field.imageUrl || ""
-            //         };
-            //         console.log("Transformed field:", updatedField);
-            //         return updatedField;
-            //     });
-
-            //     // Set the transformed data into the model only if it hasn't been set yet
-            //     if (!oFormDataModel.getProperty("/Attachments") || bForceRecreate) {
-            //         oFormDataModel.setProperty("/Attachments", transformedFields);
-            //         oFormDataModel.refresh(true); // Force a model refresh
-            //         console.log("Model after setting Attachments:", oFormDataModel.getProperty("/Attachments"));
-            //     }
-
-            //     this._attachmentFields = transformedFields;
-
-            //     // Create the "Add Other Document" button in the header
-            //     var oAddButton = new sap.m.Button({
-            //         text: "Add Other Document",
-            //         press: () => {
-            //             var newAttachment = {
-            //                 description: "",
-            //                 title: "Other Documents",
-            //                 fileName: "",
-            //                 uploaded: false,
-            //                 fieldPath: "OTHER_DOCUMENTS",
-            //                 fieldId: "V1R1D" + Date.now(),
-            //                 imageUrl: "",
-            //             };
-
-            //             var oAttachments = oFormDataModel.getProperty("/Attachments");
-            //             oAttachments.push(newAttachment);
-            //             oFormDataModel.setProperty("/Attachments", oAttachments);
-            //             console.log("Added new attachment:", newAttachment);
-
-            //             var oExistingVBox = this._oMainVBox.getItems().find(item => {
-            //                 return item instanceof sap.m.VBox &&
-            //                     item.getItems()[0] instanceof sap.m.Title &&
-            //                     item.getItems()[0].getText() === "Other Documents";
-            //             });
-
-            //             if (!oExistingVBox) {
-            //                 var oNewTable = new sap.m.Table({
-            //                     growing: true,
-            //                     columns: [
-            //                         new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
-            //                         new sap.m.Column({ header: new sap.m.Label({ text: "Upload" }) }),
-            //                         new sap.m.Column({ header: new sap.m.Label({ text: "File Name" }) }),
-            //                         new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
-            //                     ]
-            //                 });
-
-            //                 var oFileUploader = new sap.ui.unified.FileUploader({
-            //                     name: "myFileUpload",
-            //                     uploadUrl: "upload/",
-            //                     tooltip: "Upload your file to the local server",
-            //                     uploadComplete: this.handleUploadComplete.bind(this),
-            //                     change: this.handleValueChange.bind(this),
-            //                     typeMissmatch: this.handleTypeMissmatch.bind(this),
-            //                     style: "Emphasized",
-            //                     fileType: "txt,jpg,pdf,doc,docx,png",
-            //                     placeholder: "Choose a file for Upload...",
-            //                     visible: true
-            //                 });
-
-            //                 var oItemTemplate = new sap.m.ColumnListItem({
-            //                     cells: [
-            //                         new sap.m.Input({
-            //                             value: "{formDataModel>description}",
-            //                             change: this.onDescriptionChange.bind(this)
-            //                         }),
-            //                         new sap.m.Button({
-            //                             text: "Upload",
-            //                             press: function (oEvent) {
-            //                                 var oButton = oEvent.getSource();
-            //                                 var oContext = oButton.getBindingContext("formDataModel");
-            //                                 if (oContext) {
-            //                                     oButton.addDependent(oFileUploader);
-            //                                     oFileUploader.setBindingContext(oContext, "formDataModel");
-
-            //                                     oContainer.addContent(oFileUploader);
-
-            //                                     setTimeout(() => {
-            //                                         var $fileInput = oFileUploader.$().find("input[type='file']");
-            //                                         if ($fileInput.length > 0) {
-            //                                             $fileInput.trigger("click");
-            //                                             if (!oFileUploader.getFocusDomRef()) {
-            //                                                 console.warn("FileUploader focus issue detected after delay");
-            //                                             }
-            //                                         } else {
-            //                                             console.error("File input not found in FileUploader");
-            //                                         }
-            //                                         oContainer.removeContent(oFileUploader);
-            //                                     }, 100);
-            //                                 } else {
-            //                                     console.error("No binding context found for Upload button");
-            //                                 }
-            //                             }
-            //                         }),
-            //                         new sap.m.Text({
-            //                             text: "{formDataModel>fileName}"
-            //                         }),
-            //                         new sap.m.HBox({
-            //                             visible: true,
-            //                             items: [
-            //                                 new sap.m.Button({
-            //                                     icon: "sap-icon://download",
-            //                                     type: "Transparent",
-            //                                     tooltip: "Download",
-            //                                     press: function (oEvent) {
-            //                                         debugger;
-            //                                         var oContext = oEvent.getSource().getBindingContext("formDataModel");
-            //                                         var sFileName = oContext.getProperty("fileName");
-            //                                         var sImageUrl = oContext.getProperty("imageUrl");
-            //                                         sap.m.MessageToast.show("Download functionality for " + sImageUrl + " to be implemented");
-            //                                     }
-            //                                 }),
-            //                                 new sap.m.Button({
-            //                                     icon: "sap-icon://delete",
-            //                                     type: "Transparent",
-            //                                     tooltip: "Remove",
-            //                                     press: function (oEvent) {
-            //                                         var oContext = oEvent.getSource().getBindingContext("formDataModel");
-            //                                         var sPath = oContext.getPath();
-            //                                         oFormDataModel.setProperty(sPath + "/fileName", "");
-            //                                         oFormDataModel.setProperty(sPath + "/uploaded", false);
-            //                                         oFormDataModel.setProperty(sPath + "/imageUrl", "");
-            //                                     }
-            //                                 })
-            //                             ]
-            //                         })
-            //                     ]
-            //                 });
-
-            //                 oNewTable.bindItems({
-            //                     path: "formDataModel>/Attachments",
-            //                     template: oItemTemplate,
-            //                     filters: [
-            //                         new sap.ui.model.Filter({
-            //                             path: "title",
-            //                             operator: sap.ui.model.FilterOperator.EQ,
-            //                             value1: "Other Documents"
-            //                         })
-            //                     ]
-            //                 });
-
-            //                 var oNewVBox = new sap.m.VBox({
-            //                     items: [
-            //                         new sap.m.Title({
-            //                             text: "Other Documents",
-            //                             level: "H3"
-            //                         }),
-            //                         oNewTable
-            //                     ]
-            //                 }).addStyleClass("attachmentTableSection");
-
-            //                 this._oMainVBox.addItem(oNewVBox);
-            //                 console.log("Created new table for Other Documents");
-
-            //                 var oNewTableBinding = oNewTable.getBinding("items");
-            //                 if (oNewTableBinding) {
-            //                     oNewTableBinding.refresh();
-            //                     console.log("Refreshed binding for Other Documents table");
-            //                 } else {
-            //                     console.warn("Binding for Other Documents table not found, attempting delayed refresh");
-            //                     setTimeout(() => {
-            //                         var delayedBinding = oNewTable.getBinding("items");
-            //                         if (delayedBinding) {
-            //                             delayedBinding.refresh();
-            //                             console.log("Delayed refresh successful for Other Documents table");
-            //                         } else {
-            //                             console.error("Delayed binding for Other Documents table still not found");
-            //                         }
-            //                     }, 100);
-            //                 }
-            //             } else {
-            //                 var oExistingTable = oExistingVBox.getItems()[1];
-            //                 if (oExistingTable) {
-            //                     var oExistingBinding = oExistingTable.getBinding("items");
-            //                     if (oExistingBinding) {
-            //                         oExistingBinding.refresh();
-            //                         console.log("Refreshed existing table for Other Documents");
-            //                     } else {
-            //                         console.warn("Binding for existing Other Documents table not found, attempting delayed refresh");
-            //                         setTimeout(() => {
-            //                             var delayedBinding = oExistingTable.getBinding("items");
-            //                             if (delayedBinding) {
-            //                                 delayedBinding.refresh();
-            //                                 console.log("Delayed refresh successful for existing Other Documents table");
-            //                             } else {
-            //                                 console.error("Delayed binding for existing Other Documents table still not found");
-            //                             }
-            //                         }, 100);
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     });
-
-            //     // Create the header with the Add button
-            //     var oHeader = new sap.m.HBox({
-            //         items: [
-            //             new sap.m.Title({ text: "Attachments", level: "H2" }),
-            //             oAddButton
-            //         ],
-            //         justifyContent: "SpaceBetween",
-            //     });
-
-            //     oMainVBox.addItem(oHeader);
-
-            //     // Store tables for delayed refresh
-            //     var aTables = [];
-
-            //     if (bForceRecreate || !this._bAttachmentSectionCreated) {
-            //         transformedFields.forEach((oField, index) => {
-            //             var oTable = new sap.m.Table({
-            //                 growing: true,
-            //                 columns: [
-            //                     new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
-            //                     new sap.m.Column({ header: new sap.m.Label({ text: "Upload" }) }),
-            //                     new sap.m.Column({ header: new sap.m.Label({ text: "File Name" }) }),
-            //                     new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
-            //                 ]
-            //             });
-
-            //             var oFileUploader = new sap.ui.unified.FileUploader({
-            //                 name: "myFileUpload",
-            //                 uploadUrl: "upload/",
-            //                 tooltip: "Upload your file to the local server",
-            //                 uploadComplete: this.handleUploadComplete.bind(this),
-            //                 change: this.handleValueChange.bind(this),
-            //                 typeMissmatch: this.handleTypeMissmatch.bind(this),
-            //                 style: "Emphasized",
-            //                 fileType: "txt,jpg,pdf,doc,docx,png",
-            //                 placeholder: "Choose a file for Upload...",
-            //                 visible: true
-            //             });
-
-            //             var oItemTemplate = new sap.m.ColumnListItem({
-            //                 cells: [
-            //                     new sap.m.Input({
-            //                         value: "{formDataModel>description}",
-            //                         change: this.onDescriptionChange.bind(this)
-            //                     }),
-            //                     new sap.m.Button({
-            //                         text: "Upload",
-            //                         press: function (oEvent) {
-            //                             var oButton = oEvent.getSource();
-            //                             var oContext = oButton.getBindingContext("formDataModel");
-            //                             if (oContext) {
-            //                                 oButton.addDependent(oFileUploader);
-            //                                 oFileUploader.setBindingContext(oContext, "formDataModel");
-
-            //                                 oContainer.addContent(oFileUploader);
-
-            //                                 setTimeout(() => {
-            //                                     var $fileInput = oFileUploader.$().find("input[type='file']");
-            //                                     if ($fileInput.length > 0) {
-            //                                         $fileInput.trigger("click");
-            //                                         if (!oFileUploader.getFocusDomRef()) {
-            //                                             console.warn("FileUploader focus issue detected after delay");
-            //                                         }
-            //                                     } else {
-            //                                         console.error("File input not found in FileUploader");
-            //                                     }
-            //                                     oContainer.removeContent(oFileUploader);
-            //                                 }, 100);
-            //                             } else {
-            //                                 console.error("No binding context found for Upload button");
-            //                             }
-            //                         }
-            //                     }),
-            //                     new sap.m.Text({
-            //                         text: "{formDataModel>fileName}"
-            //                     }),
-            //                     new sap.m.HBox({
-            //                         visible: true,
-            //                         items: [
-            //                             new sap.m.Button({
-            //                                 icon: "sap-icon://download",
-            //                                 type: "Transparent",
-            //                                 tooltip: "Download",
-            //                                 press: function (oEvent) {
-            //                                     var oContext = oEvent.getSource().getBindingContext("formDataModel");
-            //                                     var sFileName = oContext.getProperty("fileName");
-            //                                     sap.m.MessageToast.show("Download functionality for " + sFileName + " to be implemented");
-            //                                 }
-            //                             }),
-            //                             new sap.m.Button({
-            //                                 icon: "sap-icon://delete",
-            //                                 type: "Transparent",
-            //                                 tooltip: "Remove",
-            //                                 press: function (oEvent) {
-            //                                     var oContext = oEvent.getSource().getBindingContext("formDataModel");
-            //                                     var sPath = oContext.getPath();
-            //                                     oFormDataModel.setProperty(sPath + "/fileName", "");
-            //                                     oFormDataModel.setProperty(sPath + "/uploaded", false);
-            //                                     oFormDataModel.setProperty(sPath + "/imageUrl", "");
-            //                                 }
-            //                             })
-            //                         ]
-            //                     })
-            //                 ]
-            //             });
-
-            //             console.log(`Binding table with title: ${oField.title}`);
-
-            //             // Log model data before binding
-            //             console.log("Model data before binding:", oFormDataModel.getProperty("/Attachments"));
-
-            //             oTable.bindItems({
-            //                 path: "formDataModel>/Attachments",
-            //                 template: oItemTemplate,
-            //                 filters: [
-            //                     new sap.ui.model.Filter({
-            //                         path: "title",
-            //                         operator: sap.ui.model.FilterOperator.EQ,
-            //                         value1: oField.title
-            //                     })
-            //                 ]
-            //             });
-
-            //             // Store table for delayed refresh
-            //             aTables.push({ table: oTable, title: oField.title });
-
-            //             oMainVBox.addItem(new sap.m.VBox({
-            //                 items: [
-            //                     new sap.m.Title({
-            //                         text: oField.title,
-            //                         level: "H3"
-            //                     }),
-            //                     oTable
-            //                 ]
-            //             }).addStyleClass("attachmentTableSection"));
-            //         });
-
-            //         // Perform delayed refresh for all initial tables
-            //         setTimeout(() => {
-            //             aTables.forEach(({ table, title }) => {
-            //                 var oBinding = table.getBinding("items");
-            //                 if (oBinding) {
-            //                     oBinding.refresh();
-            //                     console.log(`Delayed refresh successful for table with title: ${title}`);
-            //                     // Log the binding contexts to confirm data
-            //                     console.log(`Binding contexts for ${title}:`, oBinding.getContexts());
-            //                 } else {
-            //                     console.error(`Delayed binding for table with title ${title} still not found.`);
-            //                 }
-            //             });
-            //         }, 100);
-
-            //         oContainer.addContent(new sap.m.VBox({
-            //             items: [
-            //                 oMainVBox
-            //             ]
-            //         }));
-
-            //         // Load external CSS file dynamically
-            //         var sCssPath = sap.ui.require.toUrl("com/aispsuppform/aispsupplierform/css/AttachmentsForm.css");
-            //         if (!Core.byId("customAttachmentsFormStyles")) {
-            //             $('<link>')
-            //                 .attr({
-            //                     id: "customAttachmentsFormStyles",
-            //                     rel: "stylesheet",
-            //                     type: "text/css",
-            //                     href: sCssPath
-            //                 })
-            //                 .appendTo('head');
-            //         }
-
-            //         this._bAttachmentSectionCreated = true;
-            //     }
-
-            //     console.log("Final Attachments in model after setup:", oFormDataModel.getProperty("/Attachments"));
-            // },
 
             onDescriptionChange: function (oEvent) {
                 var oInput = oEvent.getSource();
@@ -3457,8 +2776,8 @@ sap.ui.define(
 
                 var sTitle = oContext.getProperty("title");
                 var oExistingVBox = this._oMainVBox.getItems().find(item => {
-                    return item instanceof sap.m.VBox &&
-                        item.getItems()[0] instanceof sap.m.Title &&
+                    return item instanceof VBox &&
+                        item.getItems()[0] instanceof Title &&
                         item.getItems()[0].getText() === sTitle;
                 });
 
@@ -3478,204 +2797,6 @@ sap.ui.define(
                 console.log("Current Attachments in model:", oFormDataModel.getProperty("/Attachments"));
             },
 
-            // createAttachmentsForm: function (oAttachmentFields) {
-            //     if (!oAttachmentFields || oAttachmentFields.length === 0) {
-            //         console.error("No fields found for Attachments");
-            //         return;
-            //     }
-
-            //     var oContainer = this.getView().byId("AttachmentsFormContainer");
-            //     if (!oContainer) {
-            //         console.error("AttachmentsFormContainer not found. Check your view XML.");
-            //         return;
-            //     }
-
-            //     oContainer.removeAllContent();
-            //     var oMainVBox = new sap.m.VBox().addStyleClass("subSectionSpacing");
-
-            //     // Use the root formDataModel
-            //     var oFormDataModel = this.getView().getModel("formDataModel");
-            //     if (!oFormDataModel.getProperty("/Attachments")) {
-            //         oFormDataModel.setProperty("/Attachments", oAttachmentFields);
-            //     }
-
-            //     // Store oAttachmentFields as a controller property
-            //     this._attachmentFields = oAttachmentFields;
-
-            //     // Create the "Add Other Document" button in the header
-            //     // Create the "Add Other Document" button in the header
-            //     var oAddButton = new sap.m.Button({
-            //         text: "Add Other Document",
-            //         press: () => {  // Use an arrow function to preserve the `this` context
-            //             var newAttachment = {
-            //                 description: "Other Documents", // Default description
-            //                 fileName: "",
-            //                 uploaded: false,
-            //                 fieldPath: "OTHER_DOCUMENTS", // Unique field path
-            //                 fieldId: "V1R1D99", // Sample field ID, use a unique ID generator if necessary
-            //                 imageUrl: "", // Set to an empty string initially
-            //             };
-
-            //             // Add the new attachment to the model
-            //             var oAttachments = oFormDataModel.getProperty("/Attachments");
-            //             oAttachments.push(newAttachment);
-
-            //             // Update the model to reflect the new data
-            //             oFormDataModel.setProperty("/Attachments", oAttachments);
-            //             console.log("Added new attachment: ", newAttachment);
-
-            //             // Trigger the UI update by refreshing the binding of the table
-            //             var oTable = this.getView().byId("AttachmentsTable");
-            //             if (oTable) {
-            //                 oTable.getBinding("items").refresh(); // Refresh the binding of the table to reflect the updated data
-            //             }
-            //         }
-            //     });
-
-
-
-            //     // Create the header with the Add button
-            //     var oHeader = new sap.m.HBox({
-            //         items: [
-            //             new sap.m.Title({ text: "Attachments", level: "H2" }),  // Title for the section
-            //             oAddButton // Add button to the header
-            //         ],
-            //         justifyContent: "SpaceBetween", // Distribute space between title and button
-            //     });
-
-            //     oMainVBox.addItem(oHeader);
-
-            //     oAttachmentFields.forEach((oField, index) => {
-            //         var oTable = new sap.m.Table({
-            //             growing: true,
-            //             columns: [
-            //                 new sap.m.Column({ header: new sap.m.Label({ text: "Description" }) }),
-            //                 new sap.m.Column({ header: new sap.m.Label({ text: "Upload" }) }),
-            //                 new sap.m.Column({ header: new sap.m.Label({ text: "File Name" }) }),
-            //                 new sap.m.Column({ header: new sap.m.Label({ text: "Actions" }) })
-            //             ]
-            //         });
-
-            //         var oFileUploader = new sap.ui.unified.FileUploader({
-            //             name: "myFileUpload",
-            //             uploadUrl: "upload/",
-            //             tooltip: "Upload your file to the local server",
-            //             uploadComplete: this.handleUploadComplete.bind(this),
-            //             change: this.handleValueChange.bind(this),
-            //             typeMissmatch: this.handleTypeMissmatch.bind(this),
-            //             style: "Emphasized",
-            //             fileType: "txt,jpg,pdf,doc,docx,png",
-            //             placeholder: "Choose a file for Upload...",
-            //             visible: true
-            //         });
-
-            //         var oItemTemplate = new sap.m.ColumnListItem({
-            //             cells: [
-            //                 new sap.m.Input({
-            //                     value: "{formDataModel>description}"
-            //                 }),
-            //                 new sap.m.Button({
-            //                     text: "Upload",
-            //                     press: function (oEvent) {
-            //                         var oButton = oEvent.getSource();
-            //                         var oContext = oButton.getBindingContext("formDataModel");
-            //                         if (oContext) {
-            //                             oButton.addDependent(oFileUploader);
-            //                             oFileUploader.setBindingContext(oContext, "formDataModel");
-
-            //                             oContainer.addContent(oFileUploader);
-
-            //                             setTimeout(() => {
-            //                                 var $fileInput = oFileUploader.$().find("input[type='file']");
-            //                                 if ($fileInput.length > 0) {
-            //                                     $fileInput.trigger("click");
-            //                                     if (!oFileUploader.getFocusDomRef()) {
-            //                                         console.warn("FileUploader focus issue detected after delay");
-            //                                     }
-            //                                 } else {
-            //                                     console.error("File input not found in FileUploader");
-            //                                 }
-            //                                 oContainer.removeContent(oFileUploader);
-            //                             }, 100);
-            //                         } else {
-            //                             console.error("No binding context found for Upload button");
-            //                         }
-            //                     }
-            //                 }),
-            //                 new sap.m.Text({
-            //                     text: "{formDataModel>fileName}"
-            //                 }),
-            //                 new sap.m.HBox({
-            //                     visible: true,
-            //                     items: [
-            //                         new sap.m.Button({
-            //                             icon: "sap-icon://download",
-            //                             type: "Transparent",
-            //                             tooltip: "Download",
-            //                             press: function (oEvent) {
-            //                                 var oContext = oEvent.getSource().getBindingContext("formDataModel");
-            //                                 var sFileName = oContext.getProperty("fileName");
-            //                                 sap.m.MessageToast.show("Download functionality for " + sFileName + " to be implemented");
-            //                             }
-            //                         }),
-            //                         new sap.m.Button({
-            //                             icon: "sap-icon://delete",
-            //                             type: "Transparent",
-            //                             tooltip: "Remove",
-            //                             press: function (oEvent) {
-            //                                 var oContext = oEvent.getSource().getBindingContext("formDataModel");
-            //                                 var sPath = oContext.getPath();
-            //                                 oFormDataModel.setProperty(sPath + "/fileName", "");
-            //                                 oFormDataModel.setProperty(sPath + "/uploaded", false);
-            //                                 oFormDataModel.setProperty(sPath + "/imageUrl", "");
-            //                             }
-            //                         })
-            //                     ]
-            //                 })
-            //             ]
-            //         });
-
-            //         // Bind the table to a single item (not a "files" array)
-            //         oTable.bindItems({
-            //             path: "formDataModel>/Attachments",
-            //             template: oItemTemplate,
-            //             filters: [
-            //                 new sap.ui.model.Filter({
-            //                     path: "description",
-            //                     operator: sap.ui.model.FilterOperator.EQ,
-            //                     value1: oField.description
-            //                 })
-            //             ]
-            //         });
-
-            //         oMainVBox.addItem(new sap.m.VBox({
-            //             items: [
-            //                 new sap.m.Title({
-            //                     text: oField.description,
-            //                     level: "H3"
-            //                 }),
-            //                 oTable
-            //             ]
-            //         }).addStyleClass("attachmentTableSection"));
-            //     });
-
-            //     oContainer.addContent(new sap.m.VBox({
-            //         items: [
-            //             oMainVBox
-            //         ]
-            //     }));
-
-            //     var oCustomCSS = `
-            //         .attachmentTableSection {
-            //             margin-bottom: 2rem;
-            //         }
-            //         .attachmentTableSection .sapMTitle {
-            //             margin-bottom: 0.5rem;
-            //         }
-            //     `;
-            //     $('<style>').text(oCustomCSS).appendTo('head');
-            // },
-
             createQualityCertificatesForm: function (qualityCertificatesData) {
                 if (!qualityCertificatesData || typeof qualityCertificatesData !== "object" || Object.keys(qualityCertificatesData).length === 0) {
                     console.error("No fields found for Quality Certificates or invalid object. Check qualityCertificatesData:", qualityCertificatesData);
@@ -3689,13 +2810,13 @@ sap.ui.define(
                 }
 
                 // Main Table for Quality Certificates
-                var oTable = new sap.m.Table({
+                var oTable = new Table({
                     width: "100%",
                     headerToolbar: new sap.m.OverflowToolbar({
                         content: [
-                            new sap.m.Title({ text: "Quality Certificates" }),
-                            new sap.m.ToolbarSpacer(),
-                            new sap.m.Button({
+                            new Title({ text: "Quality Certificates" }),
+                            new ToolbarSpacer(),
+                            new Button({
                                 text: "Add Certificate",
                                 press: this._openAddCertificateFragment.bind(this)
                             })
@@ -3704,17 +2825,17 @@ sap.ui.define(
                 }).addStyleClass("qualityCertificatesTable");
 
                 // Add Columns
-                oTable.addColumn(new sap.m.Column({
-                    header: new sap.m.Label({ text: "Description" })
+                oTable.addColumn(new Column({
+                    header: new Label({ text: "Description" })
                 }));
-                oTable.addColumn(new sap.m.Column({
-                    header: new sap.m.Label({ text: "Action" })
+                oTable.addColumn(new Column({
+                    header: new Label({ text: "Action" })
                 }));
-                oTable.addColumn(new sap.m.Column({
-                    header: new sap.m.Label({ text: "Done By" })
+                oTable.addColumn(new Column({
+                    header: new Label({ text: "Done By" })
                 }));
-                oTable.addColumn(new sap.m.Column({
-                    header: new sap.m.Label({ text: "" }), // Empty header for remove icon
+                oTable.addColumn(new Column({
+                    header: new Label({ text: "" }), // Empty header for remove icon
                     width: "50px"
                 }));
 
@@ -3725,13 +2846,13 @@ sap.ui.define(
                         var field = categoryData[fieldKey];
                         if (field.visible) {
                             var descriptionText = field.label.replace(" - Done By", ""); // Extract certification name
-                            var oRow = new sap.m.ColumnListItem();
+                            var oRow = new ColumnListItem();
 
                             // Description Cell
-                            oRow.addCell(new sap.m.Text({ text: descriptionText }));
+                            oRow.addCell(new Text({ text: descriptionText }));
 
                             // Action Cell (ComboBox)
-                            var oComboBox = new sap.m.ComboBox({
+                            var oComboBox = new ComboBox({
                                 selectedKey: field.isCertified,
                                 items: [
                                     new sap.ui.core.ListItem({ key: "Yes", text: "Yes" }),
@@ -3743,7 +2864,7 @@ sap.ui.define(
                             oRow.addCell(oComboBox);
 
                             // Done By Cell (Input)
-                            var oInput = new sap.m.Input({
+                            var oInput = new Input({
                                 value: field.value,
                                 required: field.mandatory,
                                 visible: field.visible,
@@ -3756,13 +2877,13 @@ sap.ui.define(
 
                             // Remove Icon Cell (only for Custom Certifications)
                             if (category === "Custom Certifications") {
-                                oRow.addCell(new sap.m.Button({
+                                oRow.addCell(new Button({
                                     icon: "sap-icon://delete",
-                                    type: sap.m.ButtonType.Transparent,
+                                    type: ButtonType.Transparent,
                                     press: this._onRemoveCertificate.bind(this, category, fieldKey)
                                 }));
                             } else {
-                                oRow.addCell(new sap.m.Text({ text: "" })); // Empty cell for non-custom rows
+                                oRow.addCell(new Text({ text: "" })); // Empty cell for non-custom rows
                             }
 
                             oTable.addItem(oRow);
@@ -3821,9 +2942,9 @@ sap.ui.define(
                 oModel.setData(oData);
 
                 // Add new row to table
-                var oRow = new sap.m.ColumnListItem();
-                oRow.addCell(new sap.m.Text({ text: sCertificateName }));
-                oRow.addCell(new sap.m.ComboBox({
+                var oRow = new ColumnListItem();
+                oRow.addCell(new Text({ text: sCertificateName }));
+                oRow.addCell(new ComboBox({
                     selectedKey: "No",
                     items: [
                         new sap.ui.core.ListItem({ key: "Yes", text: "Yes" }),
@@ -3832,15 +2953,15 @@ sap.ui.define(
                 }).bindProperty("selectedKey", {
                     path: `formDataModel>/Quality Certificates/${sCategory}/${sFieldKey}/isCertified`
                 }));
-                oRow.addCell(new sap.m.Input({
+                oRow.addCell(new Input({
                     value: "",
                     placeholder: "Enter name"
                 }).bindValue({
                     path: `formDataModel>/Quality Certificates/${sCategory}/${sFieldKey}/value`
                 }));
-                oRow.addCell(new sap.m.Button({
+                oRow.addCell(new Button({
                     icon: "sap-icon://delete",
-                    type: sap.m.ButtonType.Transparent,
+                    type: ButtonType.Transparent,
                     press: this._onRemoveCertificate.bind(this, sCategory, sFieldKey)
                 }));
 
@@ -3938,19 +3059,19 @@ sap.ui.define(
 
             handleTypeMissmatch: function (oEvent) {
                 var aFileTypes = oEvent.getSource().getFileType().join(", ");
-                sap.m.MessageBox.error("The file type *." + oEvent.getParameter("fileType") +
+                MessageBox.error("The file type *." + oEvent.getParameter("fileType") +
                     " is not supported. Please upload only *." + aFileTypes + " files.");
             },
-
+          
             buildPayload: function (actionType) {
                 var oFormData = this.getView().getModel("formDataModel").getData();
                 var oDisclosureModel = this.getView().getModel("disclosureModel").getData();
                 const currentType = this.currentType;
-
+                
                 // Debug formDataModel
                 console.log("formDataModel:", JSON.stringify(oFormData, null, 2));
-
-                // Function to collect dynamic fields
+                
+                // Function to collect dynamic fields from a category
                 const collectDynamicFieldsFromCategory = (categoryData, dynamicFields) => {
                     Object.keys(categoryData).forEach(fieldKey => {
                         const field = categoryData[fieldKey];
@@ -3960,54 +3081,65 @@ sap.ui.define(
                         }
                     });
                 };
-
-                // Collect dynamic fields by section
+                
+                // Collect dynamic fields by section and category
                 const dynamicFormFields = [];
-
+                
                 // Iterate through sections
                 Object.keys(oFormData).forEach(sectionName => {
                     const sectionData = oFormData[sectionName];
-                    const dynamicFields = {};
-                    let representativeCategory = "";
-
-                    // Iterate through categories
+                    
+                    // Iterate through categories within the section
                     Object.keys(sectionData).forEach(categoryName => {
                         const categoryData = sectionData[categoryName];
-                        console.log(`Processing category: ${categoryName}`);
-
+                        console.log(`Processing category: ${sectionName}/${categoryName}`);
+                        
+                        // Handle array-based categories (e.g., Address, Primary Bank details)
                         if (Array.isArray(categoryData)) {
                             categoryData.forEach((item, index) => {
+                                const dynamicFields = {};
                                 collectDynamicFieldsFromCategory(item, dynamicFields);
+                                
+                                // Add an entry to dynamicFormFields if there are dynamic fields for this item
+                                if (Object.keys(dynamicFields).length > 0) {
+                                    let customCategory = categoryName;
+                                    if (categoryName === "Address") {
+                                        customCategory = index === 0 ? "PrimaryAddress" : (item.ADDRESS_TYPE || "Other");
+                                    } else if (categoryName === "Primary Bank details") {
+                                        customCategory = index === 0 ? "Primary Bank" : (item.BANK_TYPE || "Other Bank Details");
+                                    }
+                                    dynamicFormFields.push({
+                                        SECTION: sectionName,
+                                        CATEGORY: customCategory,
+                                        DATA: JSON.stringify(dynamicFields)
+                                    });
+                                    console.log(`Added dynamic fields for ${sectionName}/${customCategory}`, dynamicFields);
+                                }
                             });
-                            // Use category name without index as representative
-                            if (!representativeCategory || categoryName === "Address" || categoryName === "Primary Bank details") {
-                                representativeCategory = categoryName;
-                            }
                         } else {
+                            // Handle non-array categories (e.g., Supplier Information, Product-Service Description)
+                            const dynamicFields = {};
                             collectDynamicFieldsFromCategory(categoryData, dynamicFields);
-                            if (!representativeCategory) {
-                                representativeCategory = categoryName; // Prefer non-array category
+                            
+                            // Add an entry to dynamicFormFields if there are dynamic fields for this category
+                            if (Object.keys(dynamicFields).length > 0) {
+                                dynamicFormFields.push({
+                                    SECTION: sectionName,
+                                    CATEGORY: categoryName,
+                                    DATA: JSON.stringify(dynamicFields)
+                                });
+                                console.log(`Added dynamic fields for ${sectionName}/${categoryName}`, dynamicFields);
                             }
                         }
                     });
-
-                    // Add single entry per section if dynamic fields exist
-                    if (Object.keys(dynamicFields).length > 0) {
-                        dynamicFormFields.push({
-                            SECTION: sectionName,
-                            CATEGORY: representativeCategory || "General", // Fallback if no category
-                            DATA: JSON.stringify(dynamicFields)
-                        });
-                        console.log(`Added dynamic fields for ${sectionName}`, dynamicFields);
-                    }
                 });
-
+                
                 // Debug DynamicFormFields
                 console.log("DynamicFormFields:", JSON.stringify(dynamicFormFields, null, 2));
-
+                
                 // Debug Disclosure_Fields
                 console.log("disclosureModel:", JSON.stringify(oDisclosureModel, null, 2));
-
+                
                 var payload = {
                     action: actionType,
                     stepNo: 1,
@@ -4022,7 +3154,8 @@ sap.ui.define(
                         BP_TYPE_DESC: oFormData["Supplier Information"]["Supplier Information"]["VENDOR_SUB_TYPE"]?.value?.split("-")[1]?.trim() || "",
                         REQUEST_TYPE: this.REQUEST_TYPE
                     }],
-                    addressData: oFormData["Supplier Information"]["Address"].map(address => ({
+                    addressData: oFormData["Supplier Information"]["Address"].map((address, index) => ({
+                        SR_NO: index + 1, // Add SR_NO starting from 1
                         STREET: address.HOUSE_NUM1?.value || "",
                         STREET1: address.STREET1?.value || "",
                         STREET2: address.STREET2?.value || "",
@@ -4049,7 +3182,8 @@ sap.ui.define(
                         MOBILE_NO: oFormData["Supplier Information"]["Primary Contact"]["MOBILE"]?.value || ""
                     }],
                     DyanamicFormFields: dynamicFormFields,
-                    bankData: oFormData["Finance Information"]["Primary Bank details"].map(bank => ({
+                    bankData: oFormData["Finance Information"]["Primary Bank details"].map((bank, index) => ({
+                        SR_NO: index + 1, // Add SR_NO starting from 1
                         BANK_SECTION: bank.BANK_TYPE || "",
                         SWIFT_CODE: bank.SWIFT_CODE?.value || "",
                         BRANCH_NAME: bank.BRANCH_NAME?.value || "",
@@ -4118,7 +3252,6 @@ sap.ui.define(
                     })
                 };
                 
-
                 console.log("Final Payload:", JSON.stringify(payload, null, 2));
                 return payload;
             },
@@ -4126,14 +3259,14 @@ sap.ui.define(
             onDraftSave: function () {
                 var oPayload = this.buildPayload("DRAFT_SAVE");
                 let status = this.responseData?.STATUS;
-            
+
                 if (status === 1) {
                     oPayload.reqHeader[0].REQUEST_NO = parseInt(this.REQUEST_NO, 10);  // Ensure REQUEST_NO is an integer
                 }
-            
+
                 var oModel = this.getView().getModel("regModel");
                 this.getView().setBusy(true);
-            
+
                 oModel.create("/PostRegData", oPayload, {
                     success: function (oData, oResponse) {
                         console.log("Draft saved successfully:", oData);
@@ -4143,7 +3276,7 @@ sap.ui.define(
                     error: function (oError) {
                         console.error("Error saving draft:", oError);
                         this.getView().setBusy(false);
-            
+
                         var sMessage = "Failed to save the draft.";
                         if (oError.responseText) {
                             try {
@@ -4153,14 +3286,11 @@ sap.ui.define(
                                 sMessage = oError.responseText;
                             }
                         }
-            
+
                         sap.m.MessageToast.show(sMessage);
                     }.bind(this)
                 });
             },
-            
-
-
 
             submitForm: function () {
                 let status = this.responseData?.STATUS;
@@ -4171,19 +3301,18 @@ sap.ui.define(
                     actionType = this.currentType === "sendback" ? "EDIT_RESUBMIT" : "CREATE";
                 }
                 var oPayload = this.buildPayload(actionType);
-                // this.getView().setBusy(true)
+                this.getView().setBusy(true)
                 debugger;
                 var oModel = this.getView().getModel("regModel"); // OData model ("admin")
-
-                // Validate mandatory fields before submission
-                // var bValid = this.validateForm(oPayload);
-                // if (!bValid) {
-                //     MessageBox.error("Please fill all mandatory fields before submitting.");
-                //     return;
-                // }
-
-                // Perform OData create call to "PostRegData" entity
-
+                var bValid = this.validateForm(oPayload);
+                if (!bValid) {
+                    MessageBox.error("Please fill all mandatory fields before submitting.");
+                    this.getView().setBusy(false)
+                    return;
+                }else{
+                    console.log("validate sucess")
+                }
+      
                 oModel.create("/PostRegData", oPayload, {
                     success: function (oData, oResponse) {
                         console.log("Form submitted successfully:", oData, oResponse);
@@ -4210,129 +3339,6 @@ sap.ui.define(
                     }.bind(this)
                 });
             },
-
-            // createSubmission: function (submissionData) {
-            //     if (!submissionData || !submissionData.Declaration) {
-            //         console.error("Invalid or empty submission data:", submissionData);
-            //         return;
-            //     }
-
-            //     var oContainer = this.getView().byId(this.getView().createId("SubmissionFormContainer"));
-            //     if (!oContainer) {
-            //         console.error("SubmissionFormContainer not found. Check your view XML.");
-            //         return;
-            //     }
-
-            //     oContainer.removeAllContent();
-            //     console.log("Submission container cleared:", oContainer);
-
-            //     // Main VBox for the Submission section
-            //     var oMainVBox = new sap.m.VBox().addStyleClass("submissionSection");
-
-            //     // VBox to hold the two HBoxes
-            //     var oContentVBox = new sap.m.VBox().addStyleClass("submissionContent");
-
-            //     // First HBox for Labels and Inputs
-            //     var oLabelsHBox = new sap.m.HBox({
-            //         justifyContent: "SpaceBetween",
-            //         alignItems: "Start"
-            //     }).addStyleClass("submissionLabels");
-
-            //     // Completed By
-            //     var oCompletedByLabel = new sap.m.Label({
-            //         text: "Completed By",
-            //         required: true
-            //     }).addStyleClass("mandatoryLabel");
-            //     var oCompletedByInput = new sap.m.Input({
-            //         value: "{formDataModel>/Submission/Declaration/COMPLETED_BY/value}",
-            //         placeholder: "Enter Completed By",
-            //         required: true
-            //     }).addStyleClass("submissionInput");
-            //     oLabelsHBox.addItem(oCompletedByLabel);
-            //     oLabelsHBox.addItem(oCompletedByInput);
-
-            //     // Designation
-            //     var oDesignationLabel = new sap.m.Label({
-            //         text: "Designation",
-            //         required: true
-            //     }).addStyleClass("mandatoryLabel");
-            //     var oDesignationInput = new sap.m.Input({
-            //         value: "{formDataModel>/Submission/Declaration/DESIGNATION/value}",
-            //         placeholder: "Enter Designation",
-            //         required: true
-            //     }).addStyleClass("submissionInput");
-            //     oLabelsHBox.addItem(oDesignationLabel);
-            //     oLabelsHBox.addItem(oDesignationInput);
-
-            //     // Submission Date
-            //     var sDateValue = submissionData.Declaration.SUBMISSION_DATE.value || "";
-            //     if (!sDateValue) {
-            //         var oCurrentDate = new Date("2025-04-28"); // Current date as per context
-            //         sDateValue = oCurrentDate.toLocaleDateString("en-GB", {
-            //             day: "2-digit",
-            //             month: "2-digit",
-            //             year: "numeric"
-            //         }).split("/").join("-"); // Format as DD-MM-YYYY
-            //         this.getView().getModel("formDataModel").setProperty("/Submission/Declaration/SUBMISSION_DATE/value", sDateValue);
-            //     }
-            //     var oDateLabel = new sap.m.Label({
-            //         text: "Submission Date",
-            //         required: true
-            //     }).addStyleClass("mandatoryLabel");
-            //     var oDatePicker = new sap.m.DatePicker({
-            //         value: "{formDataModel>/Submission/Declaration/SUBMISSION_DATE/value}",
-            //         displayFormat: "dd-MM-yyyy",
-            //         valueFormat: "dd-MM-yyyy",
-            //         required: true
-            //     }).addStyleClass("submissionInput");
-            //     oLabelsHBox.addItem(oDateLabel);
-            //     oLabelsHBox.addItem(oDatePicker);
-
-            //     // Second HBox for Checkbox and Text
-            //     var oCheckboxHBox = new sap.m.HBox({
-            //         justifyContent: "Start",
-            //         alignItems: "Start"
-            //     }).addStyleClass("submissionCheckbox");
-
-            //     // Declaration Checkbox and Text
-            //     var sAckValue = submissionData.Declaration.ACK_VALIDATION.value || "false";
-            //     if (sAckValue === "true") {
-            //         this.getView().getModel("formDataModel").setProperty("/Submission/Declaration/ACK_VALIDATION/value", true);
-            //     } else {
-            //         this.getView().getModel("formDataModel").setProperty("/Submission/Declaration/ACK_VALIDATION/value", false);
-            //     }
-            //     var oCheckBox = new sap.m.CheckBox({
-            //         selected: "{formDataModel>/Submission/Declaration/ACK_VALIDATION/value}",
-            //         required: true
-            //     }).addStyleClass("submissionCheckbox");
-            //     var oDeclarationText = new sap.m.Text({
-            //         text: submissionData.Declaration.ACK_VALIDATION.description,
-            //         wrapping: true,
-            //         textAlign: "Left"
-            //     }).addStyleClass("declarationText boldText");
-            //     oCheckboxHBox.addItem(new sap.m.Label({
-            //         text: "",
-            //         required: true
-            //     }));
-            //     oCheckboxHBox.addItem(oCheckBox);
-            //     oCheckboxHBox.addItem(oDeclarationText);
-
-            //     // Add HBoxes to VBox
-            //     oContentVBox.addItem(oLabelsHBox);
-            //     oContentVBox.addItem(oCheckboxHBox);
-
-            //     // Add content to main VBox
-            //     oMainVBox.addItem(oContentVBox);
-
-            //     oContainer.addContent(oMainVBox);
-
-            //     // Bind the model
-            //     oContainer.setModel(this.getView().getModel("formDataModel"), "formDataModel");
-            // },
-
-
-
-
 
             onAddOtherOfficeAddress: function () {
                 var oFormDataModel = this.getView().getModel("formDataModel");
@@ -4370,78 +3376,247 @@ sap.ui.define(
                 });
             },
 
-
-
-
-
-
-            // Helper function to validate mandatory fields
             validateForm: function (oPayload) {
-                var bValid = true;
                 var oFormData = this.getView().getModel("formDataModel").getData();
-
-                // Validate each section
-                Object.keys(oFormData).forEach(function (section) {
-                    if (section === "Attachments") {
-                        // Attachments validation can be customized based on your requirements
-                        oFormData[section].forEach(function (attachment) {
-                            if (attachment.uploaded === false) {
-                                console.warn("Attachment not uploaded:", attachment.description);
+                var oModel = this.getView().getModel("formDataModel");
+                var bValid = true;
+                var aErrors = [];
+            
+                // Helper function to validate a field and set error state
+                function validateField(value, fieldName, isMandatory, model, modelPath) {
+                    if (isMandatory && (value === undefined || value === null || value === "")) {
+                        aErrors.push(`Mandatory field '${fieldName}' is missing or empty.`);
+                        model.setProperty(`${modelPath}/valueState`, "Error");
+                        model.setProperty(`${modelPath}/valueStateText`, `${fieldName} is required.`);
+                        console.log(`Set ${modelPath}/valueState=Error, valueStateText=${fieldName} is required.`);
+                        return false;
+                    } else {
+                        model.setProperty(`${modelPath}/valueState`, "None");
+                        model.setProperty(`${modelPath}/valueStateText`, "");
+                        console.log(`Set ${modelPath}/valueState=None, valueStateText=''`);
+                        return true;
+                    }
+                }
+            
+                // Validate reqHeader
+                if (oPayload.reqHeader && Array.isArray(oPayload.reqHeader)) {
+                    oPayload.reqHeader.forEach(function (header, index) {
+                        var headerFields = [
+                            { key: "REGISTERED_ID", mandatory: true },
+                            { key: "VENDOR_NAME1", mandatory: true },
+                            { key: "COMPANY_CODE", mandatory: true },
+                            { key: "SUPPL_TYPE", mandatory: true },
+                            { key: "BP_TYPE_CODE", mandatory: true }
+                        ];
+                        headerFields.forEach(function (field) {
+                            var fieldData = oFormData["Supplier Information"]["Supplier Information"][field.key];
+                            var isMandatory = fieldData?.mandatory || field.mandatory;
+                            if (!validateField(header[field.key], field.key, isMandatory, oModel, `/Supplier Information/Supplier Information/${field.key}`)) {
                                 bValid = false;
                             }
                         });
-                    } else {
-                        Object.keys(oFormData[section]).forEach(function (category) {
-                            if (category === "Address" || category === "Primary Bank details") {
-                                oFormData[section][category].forEach(function (item) {
-                                    Object.keys(item).forEach(function (fieldKey) {
-                                        if (fieldKey !== (category === "Address" ? "ADDRESS_TYPE" : "BANK_TYPE")) {
-                                            var field = item[fieldKey];
-                                            if (field.mandatory && (!field.value || field.value.trim() === "")) {
-                                                console.warn("Mandatory field empty:", section, category, fieldKey);
-                                                bValid = false;
-                                            }
-                                        }
-                                    });
-                                });
-                            } else {
-                                Object.keys(oFormData[section][category]).forEach(function (fieldKey) {
-                                    var field = oFormData[section][category][fieldKey];
-                                    if (field.mandatory && (!field.value || field.value.trim() === "")) {
-                                        console.warn("Mandatory field empty:", section, category, fieldKey);
-                                        bValid = false;
-                                    }
-                                });
+                    });
+                } else {
+                    aErrors.push("reqHeader is missing or invalid.");
+                    bValid = false;
+                }
+            
+                // Validate addressData
+                if (oPayload.addressData && Array.isArray(oPayload.addressData) && oPayload.addressData.length > 0) {
+                    oPayload.addressData.forEach(function (address, index) {
+                        var addressFields = [
+                            { key: "STREET", mandatory: false },
+                            { key: "STREET1", mandatory: true },
+                            { key: "COUNTRY", mandatory: true },
+                            { key: "STATE", mandatory: true },
+                            { key: "CITY", mandatory: true },
+                            { key: "POSTAL_CODE", mandatory: true },
+                            { key: "EMAIL", mandatory: true },
+                            { key: "CONTACT_NO", mandatory: true },
+                            { key: "AddreDrop", mandatory: true, fieldId: "V1R1D073" }
+                        ];
+                        addressFields.forEach(function (field) {
+                            var fieldData = oFormData["Supplier Information"]["Address"][index][field.key];
+                            var isMandatory = fieldData?.mandatory || field.mandatory;
+                            if (field.fieldId && fieldData?.fieldId !== field.fieldId) {
+                                console.warn(`FieldId mismatch for ${field.key}: expected ${field.fieldId}, found ${fieldData?.fieldId}`);
+                                return;
                             }
+                            var modelPath = `/Supplier Information/Address/${index}/${field.key}`;
+                            if (!validateField(address[field.key], fieldData?.label || field.key, isMandatory, oModel, modelPath)) {
+                                bValid = false;
+                            }
+                            // Debug model state after update
+                            console.log(`Post-validation state for ${field.key}:`, oModel.getProperty(modelPath));
                         });
-                    }
-                });
-
-                // Validate Disclosure section
-                var oDisclosureModel = this.getView().getModel("disclosureModel");
-                if (oDisclosureModel && oFormData["Disclosures"]) {
-                    Object.keys(oFormData["Disclosures"]).forEach(function (category) {
-                        Object.keys(oFormData["Disclosures"][category]).forEach(function (fieldKey) {
-                            var field = oFormData["Disclosures"][category][fieldKey];
-                            if (field.mandatory) {
-                                var propertyName = field.label.toLowerCase().replace(/ /g, '').replace('&', '').replace('-', '');
-                                var value = oDisclosureModel.getProperty("/" + propertyName);
-                                if (value === undefined || value === null) {
-                                    console.warn("Mandatory disclosure field not selected:", field.label);
-                                    bValid = false;
-                                }
+                    });
+                } else {
+                    aErrors.push("At least one address is required.");
+                    bValid = false;
+                }
+            
+                // Validate contactsData
+                if (oPayload.contactsData && Array.isArray(oPayload.contactsData) && oPayload.contactsData.length > 0) {
+                    oPayload.contactsData.forEach(function (contact, index) {
+                        var contactFields = [
+                            { key: "FIRST_NAME", mandatory: true },
+                            { key: "DESIGNATION", mandatory: true },
+                            { key: "EMAIL", mandatory: true },
+                            { key: "CONTACT_NO", mandatory: true }
+                        ];
+                        contactFields.forEach(function (field) {
+                            var isMandatory = oFormData["Supplier Information"]["Primary Contact"][field.key]?.mandatory || field.mandatory;
+                            if (!validateField(contact[field.key], field.key, isMandatory, oModel, `/Supplier Information/Primary Contact/${field.key}`)) {
+                                bValid = false;
                             }
                         });
                     });
+                } else {
+                    aErrors.push("At least one contact is required.");
+                    bValid = false;
                 }
-
+            
+                // Validate bankData
+                if (oPayload.bankData && Array.isArray(oPayload.bankData) && oPayload.bankData.length > 0) {
+                    oPayload.bankData.forEach(function (bank, index) {
+                        var bankFields = [
+                            { key: "SWIFT_CODE", mandatory: true },
+                            { key: "BRANCH_NAME", mandatory: true },
+                            { key: "BANK_COUNTRY", mandatory: true },
+                            { key: "BANK_NAME", mandatory: true },
+                            { key: "BENEFICIARY", mandatory: true },
+                            { key: "ACCOUNT_NO", mandatory: true },
+                            { key: "BANK_CURRENCY", mandatory: true },
+                            { key: "GST", mandatory: true }
+                        ];
+                        bankFields.forEach(function (field) {
+                            var fieldData = field.key === "GST" ?
+                                oFormData["Finance Information"]["TAX-VAT-GST"]["GST_NO"] :
+                                oFormData["Finance Information"]["Primary Bank details"][index][field.key];
+                            var isMandatory = fieldData?.mandatory || field.mandatory;
+                            var modelPath = field.key === "GST" ?
+                                `/Finance Information/TAX-VAT-GST/GST_NO` :
+                                `/Finance Information/Primary Bank details/${index}/${field.key}`;
+                            if (!validateField(bank[field.key], field.key, isMandatory, oModel, modelPath)) {
+                                bValid = false;
+                            }
+                        });
+                    });
+                } else {
+                    aErrors.push("At least one bank detail is required.");
+                    bValid = false;
+                }
+            
+                // Validate Operational_Prod_Desc
+                if (oPayload.Operational_Prod_Desc && Array.isArray(oPayload.Operational_Prod_Desc) && oPayload.Operational_Prod_Desc.length > 0) {
+                    oPayload.Operational_Prod_Desc.forEach(function (product, index) {
+                        var productFields = [
+                            { key: "PROD_NAME", mandatory: true },
+                            { key: "PROD_DESCRIPTION", mandatory: true },
+                            { key: "PROD_TYPE", mandatory: true },
+                            { key: "PROD_CATEGORY", mandatory: true }
+                        ];
+                        productFields.forEach(function (field) {
+                            var isMandatory = oFormData["Operational Information"]["Product-Service Description"][field.key]?.mandatory || field.mandatory;
+                            if (!validateField(product[field.key], field.key, isMandatory, oModel, `/Operational Information/Product-Service Description/${field.key}`)) {
+                                bValid = false;
+                            }
+                        });
+                    });
+                } else {
+                    aErrors.push("Product/Service description is required.");
+                    bValid = false;
+                }
+            
+                // Validate Operational_Capacity
+                if (oPayload.Operational_Capacity && Array.isArray(oPayload.Operational_Capacity) && oPayload.Operational_Capacity.length > 0) {
+                    oPayload.Operational_Capacity.forEach(function (capacity, index) {
+                        var capacityFields = [
+                            { key: "TOTAL_PROD_CAPACITY", mandatory: true },
+                            { key: "MINIMUM_ORDER_SIZE", mandatory: true },
+                            { key: "MAXMIMUM_ORDER_SIZE", mandatory: true },
+                            { key: "CITY", mandatory: true }
+                        ];
+                        capacityFields.forEach(function (field) {
+                            var isMandatory = oFormData["Operational Information"]["Operational Capacity"][field.key]?.mandatory || field.mandatory;
+                            if (!validateField(capacity[field.key], field.key, isMandatory, oModel, `/Operational Information/Operational Capacity/${field.key}`)) {
+                                bValid = false;
+                            }
+                        });
+                    });
+                } else {
+                    aErrors.push("Operational capacity is required.");
+                    bValid = false;
+                }
+            
+                // Validate Disclosure_Fields
+                if (oPayload.Disclosure_Fields && Array.isArray(oPayload.Disclosure_Fields) && oPayload.Disclosure_Fields.length > 0) {
+                    oPayload.Disclosure_Fields.forEach(function (disclosure) {
+                        var disclosureFields = [
+                            { key: "INTEREST_CONFLICT", mandatory: true },
+                            { key: "ANY_LEGAL_CASES", mandatory: true },
+                            { key: "ABAC_REG", mandatory: true },
+                            { key: "CONTROL_REGULATION", mandatory: true }
+                        ];
+                        disclosureFields.forEach(function (field) {
+                            var isMandatory = oFormData["Disclosures"]?.[field.key.replace(/_/g, ' ')]?.mandatory || field.mandatory;
+                            if (!validateField(disclosure[field.key], field.key, isMandatory, oModel, `/Disclosures/${field.key.replace(/_/g, ' ')}`)) {
+                                bValid = false;
+                            }
+                        });
+                    });
+                } else {
+                    aErrors.push("Disclosure fields are required.");
+                    bValid = false;
+                }
+            
+                // Validate Quality_Certificates
+                if (oPayload.Quality_Certificates && Array.isArray(oPayload.Quality_Certificates)) {
+                    oPayload.Quality_Certificates.forEach(function (cert, index) {
+                        if (cert.AVAILABLE === "YES") {
+                            if (!validateField(cert.DONE_BY, "DONE_BY", true, oModel, `/Quality Certificates/Standard Certifications/${cert.CERTI_NAME.replace(/ /g, '_')}_DONE_BY`)) {
+                                bValid = false;
+                            }
+                        }
+                    });
+                }
+            
+                // Validate Attachments
+                if (oPayload.Attachments && Array.isArray(oPayload.Attachments)) {
+                    oPayload.Attachments.forEach(function (attachment, index) {
+                        var attachmentData = oFormData["Attachments"][index];
+                        if (attachmentData?.mandatory && !attachment.fileName) {
+                            aErrors.push(`Mandatory attachment '${attachment.ATTACH_SHORT_DESC || `Attachment ${index + 1}`}' is missing.`);
+                            oModel.setProperty(`/Attachments/${index}/valueState`, "Error");
+                            oModel.setProperty(`/Attachments/${index}/valueStateText`, `${attachment.ATTACH_SHORT_DESC || `Attachment ${index + 1}`} is required.`);
+                            bValid = false;
+                        } else {
+                            oModel.setProperty(`/Attachments/${index}/valueState`, "None");
+                            oModel.setProperty(`/Attachments/${index}/valueStateText`, "");
+                        }
+                    });
+                }
+            
+                // Refresh the model to update UI error states
+                console.log("Before refresh:", oModel.getProperty("/Supplier Information/Address/0/AddreDrop"));
+                oModel.refresh(true);
+                console.log("After refresh:", oModel.getProperty("/Supplier Information/Address/0/AddreDrop"));
+            
+                // Log errors if any
+                if (aErrors.length > 0) {
+                    console.error("Validation errors:", aErrors);
+                }
+            
                 return bValid;
             },
 
-            // onWizardFinish: function () {
-            //     // Call submitForm instead of just building the payload
-            //     this.submitForm();
-            // },
+            rebuildFunction(){
+                var oContainer = this.getView().byId("FinanceInformationFormContainer");
+                oContainer.removeAllContent();
+                
+
+            }
+
         });
     }
 );

@@ -37,8 +37,8 @@
 }
 
 .sapMFlexBoxFit {
-    margin-right: -30px;
-    margin-left: -30px;
+    margin-right: -27px;
+    margin-left: -27px;
 }
 
 /* obj Header Styles */
@@ -166,3 +166,25 @@
 .noSplitterGrip .sapUiLoSplitterBarGrip {
     display: none !important;
 }
+
+.threeColumnHBox {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+}
+
+.threeColumnHBox .sapMVBox {
+    width: 33.33% !important;
+    min-width: 0 !important;
+}
+
+/* Make labels bold */
+.customLabelBold {
+    font-weight: bold !important;
+}
+
+.titleClass{
+    margin-bottom: 1.5rem !important;
+}
+
+/* Add top and bottom margins to the field values */
+

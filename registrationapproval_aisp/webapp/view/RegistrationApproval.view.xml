@@ -17,21 +17,17 @@
         </f:title>
         <f:header>
             <f:DynamicPageHeader pinnable="true">
-                <smartFilterBar:SmartFilterBar
-                    id="idSmartFilterRqgApp"
-                    smartVariant="pageVariantId"
-                    persistencyKey="SmartFilterPKey"
+                 <smartFilterBar:SmartFilterBar
+                    id="smartFilterBar"
                     entitySet="RequestInfoWithoutFilter"
-                    useToolbar="false"
-                    basicSearch="true"
+                    persistencyKey="SmartFilter_Explored"
+                    considerAnalyticalParameters="true"
+                    search="onGoPress"
+                    initialized="initialized"
+                    showRestoreButton="true"
                 >
                     <smartFilterBar:controlConfiguration>
-                        <!-- <smartFilterBar:ControlConfiguration
-                            key="USER_ID"
-                            visibleInAdvancedArea="false"
-                            index="0"
-                            label="User Id"
-                        /> -->
+                     
                     </smartFilterBar:controlConfiguration>
                 </smartFilterBar:SmartFilterBar>
             </f:DynamicPageHeader>
@@ -48,7 +44,7 @@
                 smartVariant="pageVariantId"
                 persistencyKey="SmartFilterPKey"
                 useVariantManagement="true"
-                useTablePersonalisation="true"
+                useTablePersonalisation="false"
                 enableAutoColumnWidth="true"
                 enableCopy="false"
                 header="Registration Approval List"
@@ -84,7 +80,7 @@
                                 />
                             </customData>
                             <Label
-                                text="Requested Number"
+                                text="Request Number"
                                 wrapping="true"
                             />
                         </Column>

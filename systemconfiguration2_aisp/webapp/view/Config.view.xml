@@ -398,7 +398,7 @@
                         text="Save"
                         class="sapUiTinyMarginEnd"
                         tooltip="Submit"
-                        icon="sap-icon://accept"
+                        icon="sap-icon://add-activity"
                     />
                     <!-- <OverflowToolbarButton
                         text="Save and Continue"

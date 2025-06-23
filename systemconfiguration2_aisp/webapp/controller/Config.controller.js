@@ -37,7 +37,7 @@ sap.ui.define([
                     { icon: "sap-icon://checklist-item", text: "Check Box", type: "checkBox" },
                     { icon: "sap-icon://circle-task", text: "Radio", type: "radio" },
                     { icon: "sap-icon://number-sign", text: "Number", type: "number" },
-                    // { icon: "sap-icon://favorite", text: "Rating", type: "rating" },
+                    { icon: "sap-icon://filter-fields", text: "Disclosures", type: "disclosure" },
                     { icon: "sap-icon://calendar", text: "Calender", type: "calendar" },
                 ]
                 var mediaWidget = [
@@ -107,7 +107,7 @@ sap.ui.define([
                     list: false,
                     unList: false,
                     companyCode: sCompanyCode,
-                    requestType : sRequestType
+                    requestType: sRequestType
                 });
                 this.formnames = false;
                 this.getView().setModel(emptyModel, 'listModel');
@@ -294,17 +294,17 @@ sap.ui.define([
                 }).addStyleClass("splitterWidgets thin-scrollbar");
                 oContainer.addContentArea(oPanel);
                 var oVBox = this.byId("splitterWidgets2") || sap.ui.getCore().byId("splitterWidgets2");
-
+            
                 if (type === 'textBox' || type === 'textArea' || type === 'number') {
                     var oVBox = this.getView().byId("splitterWidgets2") || sap.ui.getCore().byId("splitterWidgets2");
-
+            
                     // Determine Placeholder Text
                     var placeholderText = type === "number" ? "Enter number" : "Enter text";
-
+            
                     // Set property bindings based on type
                     var minProperty = type === "number" ? "minValue" : "minLength";
                     var maxProperty = type === "number" ? "maxValue" : "maxLength";
-
+            
                     var oFormContent = new sap.m.VBox('textBoxVbox', {
                         items: [
                             new sap.m.VBox({
@@ -335,6 +335,7 @@ sap.ui.define([
                                         selectedKey: "{ActivityFieldDetails>/results/" + index + "/section}",
                                         forceSelection: false,
                                         width: "100%",
+                                        change: this.onSectionChange.bind(this, index), // Add change event
                                         items: [
                                             new sap.ui.core.Item({ key: "Supplier Information", text: "Supplier Information" }),
                                             new sap.ui.core.Item({ key: "Finance Information", text: "Finance Information" }),
@@ -354,17 +355,7 @@ sap.ui.define([
                                         selectedKey: "{ActivityFieldDetails>/results/" + index + "/category}",
                                         forceSelection: false,
                                         width: "100%",
-                                        items: [
-                                            new sap.ui.core.Item({ key: "Primary Bank details", text: "Primary Bank details" }),
-                                            new sap.ui.core.Item({ key: "TAX-VAT-GST", text: "TAX-VAT-GST" }),
-                                            new sap.ui.core.Item({ key: "Operational Capacity", text: "Operational Capacity" }),
-                                            new sap.ui.core.Item({ key: "Standard Certifications", text: "Standard Certifications" }),
-                                            new sap.ui.core.Item({ key: "Product-Service Description", text: "Product-Service Description" }),
-                                            new sap.ui.core.Item({ key: "Declaration", text: "Declaration" }),
-                                            new sap.ui.core.Item({ key: "Address", text: "Address" }),
-                                            new sap.ui.core.Item({ key: "Primary Contact", text: "Primary Contact" }),
-                                            new sap.ui.core.Item({ key: "Supplier Information", text: "Supplier Information" })
-                                        ]
+                                        items: [] // Initially empty, will be populated dynamically
                                     }).addStyleClass('sapUiTinyMarginBottom')
                                 ]
                             }).addStyleClass('sapUiTinyMarginBottom'),
@@ -433,7 +424,7 @@ sap.ui.define([
                             }).addStyleClass('sapUiTinyMarginBottom')
                         ]
                     }).addStyleClass("sapUiSmallMargin");
-
+            
                     oVBox.addContent(oFormContent);
                 }
                 else if (type === 'calendar' || type === 'calender') {
@@ -560,32 +551,16 @@ sap.ui.define([
                                     })
                                 ]
                             }).addStyleClass('sapUiTinyMarginBottom'),
-                            // new sap.m.HBox({
-                            //     items: [
-                            //         new sap.m.Label({ text: "Change Type: ", width: "100px" }).addStyleClass('sapUiTinyMarginTop'),
-                            //         new sap.m.Select({
-                            //             id: this.createId("changeType_" + index),
-                            //             selectedKey: "{ActivityFieldDetails>/results/" + index + "/typeChange}",
-                            //             change: this.onChangeTypeSelected.bind(this, index),
-                            //             forceSelection: false,
-                            //             items: [
-                            //                 this.getSelectForTypeChange(type).map(option =>
-                            //                     new sap.ui.core.Item({ key: option.type, text: option.text })
-                            //                 )
-                            //             ]
-                            //         })
-                            //     ]
-                            // }).addStyleClass('sapUiTinyMarginBottom')
                         ]
                     }).addStyleClass("sapUiSmallMargin");
-
+            
                     oVBox.addContent(oFormContent);
                 }
                 else if (type === 'select' || type === 'radio' || type === 'dropdown') {
                     var oModel = this.getView().getModel("ActivityFieldDetails");
                     var aOptions = oModel.getProperty("/results/" + index + "/options") || [];
                     var oVBox = this.getView().byId("splitterWidgets2") || sap.ui.getCore().byId("splitterWidgets2");
-
+            
                     var defaultValues = type === 'select' ? 'Dropdown1' : type === 'radio' ? 'Radio1' : 'Select1';
                     if (aOptions.length === 0) {
                         aOptions.push({
@@ -594,7 +569,7 @@ sap.ui.define([
                         });
                         oModel.setProperty("/results/" + index + "/options", aOptions);
                     }
-
+            
                     var oFormContentItems = [
                         new sap.m.VBox({
                             items: [
@@ -685,32 +660,8 @@ sap.ui.define([
                                 })
                             ]
                         }).addStyleClass('sapUiTinyMarginBottom'),
-                        // new sap.m.HBox({
-                        //     items: [
-                        //         new sap.m.CheckBox({
-                        //             id: this.createId("disableOnEditCheckBox_" + index),
-                        //             text: "Disable Edit",
-                        //             selected: "{ActivityFieldDetails>/results/" + index + "/disableOnEdit}"
-                        //         })
-                        //     ]
-                        // }).addStyleClass('sapUiTinyMarginBottom')
                     ];
-
-                    // Add Allow Multiple Selection checkbox only for select type
-                    // if (type === 'select') {
-                    //     oFormContentItems.push(
-                    //         new sap.m.HBox({
-                    //             items: [
-                    //                 new sap.m.CheckBox({
-                    //                     id: this.createId("isAllowMultiselection_" + index),
-                    //                     text: "Allow Multiple Selection",
-                    //                     selected: "{ActivityFieldDetails>/results/" + index + "/isAllowMultiselection}"
-                    //                 })
-                    //             ]
-                    //         }).addStyleClass('sapUiTinyMarginBottom')
-                    //     );
-                    // }
-
+            
                     oFormContentItems.push(
                         new sap.m.VBox({
                             items: [
@@ -753,28 +704,12 @@ sap.ui.define([
                                 })
                             ]
                         }).addStyleClass("sapUiTinyMarginBottom"),
-                        // new sap.m.HBox({
-                        //     items: [
-                        //         new sap.m.Label({ text: "Change Type: ", width: "100px" }).addStyleClass('sapUiTinyMarginTop'),
-                        //         new sap.m.Select({
-                        //             id: this.createId("changeType_" + index),
-                        //             selectedKey: "{ActivityFieldDetails>/results/" + index + "/typeChange}",
-                        //             change: this.onChangeTypeSelected.bind(this, index),
-                        //             forceSelection: false,
-                        //             items: [
-                        //                 this.getSelectForTypeChange(type).map(option =>
-                        //                     new sap.ui.core.Item({ key: option.type, text: option.text })
-                        //                 )
-                        //             ]
-                        //         })
-                        //     ]
-                        // })
                     );
-
+            
                     var oFormContent = new sap.m.VBox('textBoxVbox', {
                         items: oFormContentItems
                     }).addStyleClass("sapUiSmallMargin");
-
+            
                     oVBox.addContent(oFormContent);
                 }
                 else if (type === 'checkBox') {
@@ -788,7 +723,7 @@ sap.ui.define([
                         });
                         oModel.setProperty("/results/" + index + "/options", aOptions);
                     }
-
+            
                     var oFormContent = new sap.m.VBox('textBoxVbox', {
                         items: [
                             new sap.m.VBox({
@@ -881,67 +816,101 @@ sap.ui.define([
                                     })
                                 ]
                             }).addStyleClass('sapUiTinyMarginBottom'),
-                            // new sap.m.VBox({
-                            //     items: [
-                            //         new sap.m.HBox({
-                            //             items: [
-                            //                 new sap.m.Label({ text: "Add New Value/Option" }).addStyleClass("sapUiTinyMarginTop"),
-                            //                 new sap.m.Button({
-                            //                     text: "Add",
-                            //                     press: this.onAddField.bind(this, index),
-                            //                     icon: "sap-icon://add"
-                            //                 }).addStyleClass("sapUiTinyMarginBegin")
-                            //             ]
-                            //         }).addStyleClass("sapUiTinyMarginBottom"),
-                            //         new sap.m.VBox({
-                            //             id: this.createId("newFieldsContainer_" + index),
-                            //             items: {
-                            //                 path: "ActivityFieldDetails>/results/" + index + "/options",
-                            //                 factory: function (sId, oContext) {
-                            //                     return new sap.m.HBox({
-                            //                         items: [
-                            //                             new sap.m.Input({
-                            //                                 value: "{ActivityFieldDetails>displayValue}",
-                            //                                 placeholder: "Display Value",
-                            //                                 liveChange: this.onOptionLiveChange.bind(this, index)
-                            //                             }).addStyleClass('sapUiTinyMarginBottom sapUiTinyMarginEnd'),
-                            //                             new sap.m.Input({
-                            //                                 value: "{ActivityFieldDetails>value}",
-                            //                                 placeholder: "Value",
-                            //                                 liveChange: this.onOptionLiveChange.bind(this, index)
-                            //                             }).addStyleClass('sapUiTinyMarginBottom sapUiTinyMarginBegin'),
-                            //                             new sap.m.Button({
-                            //                                 icon: "sap-icon://delete",
-                            //                                 type: "Transparent",
-                            //                                 press: this.onRemoveField.bind(this, index)
-                            //                             }).addStyleClass('sapUiTinyMarginBegin')
-                            //                         ]
-                            //                     });
-                            //                 }.bind(this)
-                            //             }
-                            //         })
-                            //     ]
-                            // }).addStyleClass("sapUiTinyMarginBottom"),
-                            // new sap.m.HBox({
-                            //     items: [
-                            //         new sap.m.Label({ text: "Change Type: ", width: "100px" }).addStyleClass('sapUiTinyMarginTop'),
-                            //         new sap.m.Select({
-                            //             id: this.createId("changeType_" + index),
-                            //             selectedKey: "{ActivityFieldDetails>/results/" + index + "/typeChange}",
-                            //             change: this.onChangeTypeSelected.bind(this, index),
-                            //             forceSelection: false,
-                            //             items: [
-                            //                 this.getSelectForTypeChange(type).map(option =>
-                            //                     new sap.ui.core.Item({ key: option.type, text: option.text })
-                            //                 )
-                            //             ]
-                            //         })
-                            //     ]
-                            // })
                         ]
                     }).addStyleClass("sapUiSmallMargin");
-
+            
                     oVBox.addContent(oFormContent);
+                }
+                else if (type === 'disclosure') {
+                    var oVBox = this.getView().byId("splitterWidgets2") || sap.ui.getCore().byId("splitterWidgets2");
+            
+                    // Determine Placeholder Text
+                    var placeholderText = type === "number" ? "Enter number" : "Enter text";
+            
+                    // Set property bindings based on type
+                    var minProperty = type === "number" ? "minValue" : "minLength";
+                    var maxProperty = type === "number" ? "maxValue" : "maxLength";
+            
+                    var oFormContent = new sap.m.VBox('textBoxVbox', {
+                        items: [
+                            new sap.m.VBox({
+                                items: [
+                                    new sap.m.Label({ text: "LABEL" }),
+                                    new sap.m.Input({
+                                        id: this.createId("textBoxLabel_" + index),
+                                        value: "{ActivityFieldDetails>/results/" + index + "/label}",
+                                        liveChange: this.onLabelLiveChange.bind(this, index)
+                                    }).addStyleClass('sapUiTinyMarginBottom')
+                                ]
+                            }),
+                            new sap.m.VBox({
+                                items: [
+                                    new sap.m.Label({ text: "DESCRIPTION" }),
+                                    new sap.m.Input({
+                                        id: this.createId("description_" + index),
+                                        value: "{ActivityFieldDetails>/results/" + index + "/description}",
+                                        placeholder: "Enter description"
+                                    }).addStyleClass('sapUiTinyMarginBottom')
+                                ]
+                            }).addStyleClass('sapUiTinyMarginBottom'),
+                            new sap.m.VBox({
+                                items: [
+                                    new sap.m.Label({ text: "SECTION" }),
+                                    new sap.m.Select({
+                                        id: this.createId("sectionSelect_" + index),
+                                        selectedKey: "Disclosures", // Set to Disclosures
+                                        enabled: false, // Make uneditable
+                                        forceSelection: false,
+                                        width: "100%",
+                                        change: this.onSectionChange.bind(this, index), // Keep the change event (though it won't trigger since disabled)
+                                        items: [
+                                            new sap.ui.core.Item({ key: "Supplier Information", text: "Supplier Information" }),
+                                            new sap.ui.core.Item({ key: "Finance Information", text: "Finance Information" }),
+                                            new sap.ui.core.Item({ key: "Submission", text: "Submission" }),
+                                            new sap.ui.core.Item({ key: "Quality Certificates", text: "Quality Certificates" }),
+                                            new sap.ui.core.Item({ key: "Disclosures", text: "Disclosures" }),
+                                            new sap.ui.core.Item({ key: "Operational Information", text: "Operational Information" })
+                                        ]
+                                    }).addStyleClass('sapUiTinyMarginBottom')
+                                ]
+                            }).addStyleClass('sapUiTinyMarginBottom'),
+                            new sap.m.VBox({
+                                items: [
+                                    new sap.m.Label({ text: "CATEGORY" }),
+                                    new sap.m.Input({
+                                        id: this.createId("categoryInput_" + index),
+                                        value: "{ActivityFieldDetails>/results/" + index + "/category}",
+                                        placeholder: "Enter category",
+                                        width: "100%"
+                                    }).addStyleClass('sapUiTinyMarginBottom')
+                                ]
+                            }).addStyleClass('sapUiTinyMarginBottom'),
+                            new sap.m.HBox({
+                                items: [
+                                    new sap.m.Label({ text: "SET RULES", width: "100px" }),
+                                ]
+                            }).addStyleClass('sapUiTinyMarginBottom'),
+                            new sap.m.HBox({
+                                items: [
+                                    new sap.m.CheckBox({
+                                        id: this.createId("requiredCheckBox_" + index),
+                                        text: "Mandatory",
+                                        selected: "{ActivityFieldDetails>/results/" + index + "/isRequired}"
+                                    }),
+                                    new sap.m.CheckBox({
+                                        id: this.createId("disabledCheckBox_" + index),
+                                        text: "Is Visible",
+                                        selected: "{ActivityFieldDetails>/results/" + index + "/disabled}"
+                                    })
+                                ]
+                            }).addStyleClass('sapUiTinyMarginBottom')
+                        ]
+                    }).addStyleClass("sapUiSmallMargin");
+            
+                    oVBox.addContent(oFormContent);
+            
+                    // Ensure the model is updated with the section value
+                    oModel.setProperty("/results/" + index + "/section", "Disclosures");
                 }
             },
             // onCreateThirdPanel: function (type, index) {
@@ -2024,22 +1993,75 @@ sap.ui.define([
                 }
             },
 
+            onSectionChange: function (index, oEvent) {
+                var sSelectedSection = oEvent.getParameter("selectedItem").getKey();
+                var oCategorySelect = sap.ui.getCore().byId(this.createId("categorySelect_" + index));
+
+                // Define the mapping of sections to categories
+                var oCategoryMap = {
+                    "Supplier Information": [
+                        { key: "Supplier Information", text: "Supplier Information" },
+                        { key: "Address", text: "Address" },
+                        { key: "Primary Contact", text: "Primary Contact" }
+                    ],
+                    "Finance Information": [
+                        { key: "Primary Bank details", text: "Primary Bank details" },
+                        { key: "TAX-VAT-GST", text: "TAX-VAT-GST" }
+                    ],
+                    "Operational Information": [
+                        { key: "Product-Service Description", text: "Product-Service Description" },
+                        { key: "Operational Capacity", text: "Operational Capacity" }
+                    ],
+                    "Disclosures": [
+                        // { key: "Anti-Corruption Regulation", text: "Anti-Corruption Regulation" },
+                        // { key: "Legal Case Disclosure", text: "Legal Case Disclosure" },
+                        // { key: "Export Control", text: "Export Control" },
+                        // { key: "Conflict of Interest", text: "Conflict of Interest" }
+                    ],
+                    "Submission": [], // No categories for Submission
+                    "Quality Certificates": [] // No categories for Quality Certificates
+                };
+
+                // Clear existing items in the Category dropdown
+                oCategorySelect.removeAllItems();
+
+                // Populate the Category dropdown with filtered items
+                var aCategories = oCategoryMap[sSelectedSection] || [];
+                aCategories.forEach(function (oCategory) {
+                    oCategorySelect.addItem(new sap.ui.core.Item({
+                        key: oCategory.key,
+                        text: oCategory.text
+                    }));
+                });
+
+                // Reset the selected category in the model if the current category is not valid for the new section
+                var oModel = this.getView().getModel("ActivityFieldDetails");
+                var sCurrentCategory = oModel.getProperty("/results/" + index + "/category");
+                var bValidCategory = aCategories.some(function (oCategory) {
+                    return oCategory.key === sCurrentCategory;
+                });
+
+                if (!bValidCategory) {
+                    oModel.setProperty("/results/" + index + "/category", "");
+                    oCategorySelect.setSelectedKey("");
+                }
+            },
 
             // Example: Integrate with onPressSave
-            onPressSave: function() {
+            onPressSave: function () {
                 var that = this;
                 var oView = this.getView();
                 var oPayload = this.getAllFormData();
-            
+
                 // Validate payload
                 if (!oPayload.config || oPayload.config.length === 0) {
                     sap.m.MessageBox.error("No data to save. Please add at least one field.");
                     return;
                 }
-            
+
                 // Additional validation: Ensure SECTION and CATEGORY are filled
                 var bValid = true;
-                oPayload.config.forEach(function(oField, index) {
+                oPayload.config.forEach(function (oField, index) {
                     if (!oField.SECTION) {
                         sap.m.MessageBox.error("Section is required for field at index " + index);
                         bValid = false;
@@ -2049,27 +2071,27 @@ sap.ui.define([
                         bValid = false;
                     }
                 });
-            
+
                 if (!bValid) {
                     return;
                 }
-            
+
                 // Get the OData V4 model
                 var oODataModel = this.getView().getModel();
-            
+
                 // Set busy state
                 oView.setBusy(true);
-            
+
                 // Submit the payload using create
                 oODataModel.create("/AddDynamicField", oPayload, {
-                    success: function(res) {
+                    success: function (res) {
                         oView.setBusy(false);
                         sap.m.MessageBox.success(res.AddDynamicField || "Fields saved successfully.");
-            
+
                         // Clear the ActivityFieldDetails model to empty the splitterWidgets1 panel
                         var oActivityModel = oView.getModel("ActivityFieldDetails");
                         oActivityModel.setProperty("/results", []);
-            
+
                         // Remove the splitterWidgets2 panel (third panel)
                         var thirdPanel = sap.ui.getCore().byId("splitterWidgets2");
                         if (thirdPanel) {
@@ -2077,7 +2099,7 @@ sap.ui.define([
                             thirdPanel.destroy(); // Destroy the panel itself
                         }
                     },
-                    error: function(err) {
+                    error: function (err) {
                         oView.setBusy(false);
                         sap.m.MessageBox.error("Unable to Create: " + (err.message || "Unknown error."));
                     }
@@ -2134,7 +2156,7 @@ sap.ui.define([
                     return {
                         FIELD_LABEL: oRecord.label || "",
                         DESCRIPTION: oRecord.description || "",
-                        FIELD_PATH:oRecord.label || "",
+                        FIELD_PATH: oRecord.label || "",
                         SECTION: oRecord.section || "",
                         CATEGORY: oRecord.category || "",
                         COMPANY_CODE: cCode, // Static value as per example

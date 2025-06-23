@@ -23,10 +23,6 @@ sap.ui.define([
                 }
             };
             this.oSmartTable = this.getView().byId('idSmartTableApprovalRegister');
-            // this.oSmartTable.setCustomizeConfig(customizeConfig);
-
-
-
         },
 
         onObjectMatchedS: function () {
@@ -52,21 +48,16 @@ sap.ui.define([
             let url = oEvent.getSource().getBindingContext().getObject().REQUEST_NO;
             this.getOwnerComponent().getRouter().navTo("RegisterObjPage", { id: url });
         },
+        
         onSearchRequestNoChange: function (oEvent) {
             debugger;
             var oTable = this.byId("idTest");
             var oBinding = oTable.getBinding("items");
-
-            // Get the search value from the event
             var sQuery = oEvent.getParameter("query") || oEvent.getParameter("newValue");
-
-            // Create a filter for the search
             var aFilters = [];
             if (sQuery) {
                 aFilters.push(new Filter("REQUEST_NO", FilterOperator.Contains, sQuery));
             }
-
-            // Apply the filter to the table's binding
             oBinding.filter(aFilters);
         },
 
@@ -118,32 +109,22 @@ sap.ui.define([
             debugger;
             var oTable = this.byId("idTest");
             var oBinding = oTable.getBinding("items");
-
-            // Get the search value from the event
             var sQuery = oEvent.getParameter("query") || oEvent.getParameter("newValue");
-
-            // Create a filter for the search
             var aFilters = [];
             if (sQuery) {
                 aFilters.push(new Filter("REQUEST_NO", FilterOperator.Contains, sQuery));
             }
-
-            // Apply the filter to the table's binding
             oBinding.filter(aFilters);
-
-
         },
 
         createdOnAndByFormatter: function (createdOn) {
             if (!createdOn) {
                 return "";
             }
-
             var oDateFormat = DateFormat.getDateInstance({
                 pattern: "dd-MM-yyyy"
             });
             var formattedDate = oDateFormat.format(new Date(createdOn));
-
             return formattedDate;
         },
     });
