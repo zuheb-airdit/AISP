@@ -1,0 +1,165 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "com.reqreportsaisp.reqreportsaisp",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.18.1",
+      "toolsId": "cdf6b260-ad53-46d6-842c-0e5e4653eefc"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/v2/odata/v4/registration-manage/",
+        "type": "OData",
+        "settings": {
+          "annotations": [
+            "annotation0"
+          ],
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "annotation0": {
+        "type": "ODataAnnotation",
+        "uri": "annotations/annotation0.xml",
+        "settings": {
+          "localUri": "annotations/annotation0.xml"
+        }
+      },
+      "admin": {
+        "uri": "v2/odata/v4/admin/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/admin/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "Vendor_Empanelment-Display": {
+          "semanticObject": "Vendor_Empanelment",
+          "action": "Display",
+          "title": "{{Vendor_Empanelment-Display.flpTitle}}",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.136.2",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.reqreportsaisp.reqreportsaisp.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
+      },
+      "admin": {
+        "dataSource": "admin",
+        "preload": true,
+        "settings": {}
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "com.reqreportsaisp.reqreportsaisp.view",
+        "async": true,
+        "viewPath": "com.reqreportsaisp.reqreportsaisp.view"
+      },
+      "routes": [
+        {
+          "name": "RouteAllRequests",
+          "pattern": ":?query:",
+          "target": [
+            "TargetAllRequests"
+          ]
+        },
+        {
+          "name": "ReportObj",
+          "pattern": "ReportObj/{id}",
+          "target": [
+            "TargetReportObj"
+          ]
+        }
+      ],
+      "targets": {
+        "TargetAllRequests": {
+          "id": "AllRequests",
+          "name": "AllRequests"
+        },
+        "TargetReportObj":{
+          "id": "RequestDetails",
+          "name": "RequestDetails"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "com.reqreportsaisp.reqreportsaisp.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "aisp_vp_airdit"
+  }
+}

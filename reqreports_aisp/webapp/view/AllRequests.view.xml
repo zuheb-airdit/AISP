@@ -1,0 +1,312 @@
+<mvc:View
+    controllerName="com.reqreportsaisp.reqreportsaisp.controller.AllRequests"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:f="sap.f"
+>
+    <f:DynamicPage
+        id="dynamicPageId"
+        class="sapUiSizeCompact"
+    >
+        <f:title>
+            <f:DynamicPageTitle id="_IDGenDynamicPageTitle">
+                <f:heading>
+                    <Title
+                        id="_IDGenTitle"
+                        text="Request Reports"
+                    />
+                </f:heading>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader
+                id="_IDGenDynamicPageHeader1"
+                pinnable="true"
+            >
+                <smartFilterBar:SmartFilterBar
+                    id="smartFilterBar"
+                    entitySet="RequestReport"
+                    persistencyKey="SmartFilter_Explored"
+                    considerAnalyticalParameters="true"
+                    initialized="initialized"
+                >
+                    <!-- <smartFilterBar:controlConfiguration>
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration1"
+                            key="USER_NAME"
+                            label="User Name"
+                            visibleInAdvancedArea="true"
+                        />
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration2"
+                            key="USER_ID"
+                            label="Email"
+                            visibleInAdvancedArea="true"
+                        />
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration3"
+                            key="COMPANY_CODE"
+                            label="Company Code"
+                            visibleInAdvancedArea="true"
+                        />
+                        <smartFilterBar:ControlConfiguration
+                            id="_IDGenControlConfiguration4"
+                            key="USER_ROLE"
+                            label="User Role"
+                            visibleInAdvancedArea="true"
+                        />
+                    </smartFilterBar:controlConfiguration> -->
+                </smartFilterBar:SmartFilterBar>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <smartTable:SmartTable
+                entitySet="RequestInfoWithoutFilter"
+                id="idSmartTableApprovalRegister"
+                smartFilterId="idSmartFilterRqgApp"
+                showRowCount="true"
+                tableType="ResponsiveTable"
+                enableAutoBinding="true"
+                demandPopin="true"
+                smartVariant="pageVariantId"
+                persistencyKey="SmartFilterPKey"
+                useVariantManagement="true"
+                useTablePersonalisation="false"
+                enableAutoColumnWidth="true"
+                enableCopy="false"
+                header="Registration Approval List"
+            >
+                <smartTable:customToolbar>
+                    <OverflowToolbar design="Solid">
+                        <!-- <SearchField
+                            placeholder="Enter Request No..."
+                            search="onSearchRequestNoChange"
+                        /> -->
+                    </OverflowToolbar>
+                </smartTable:customToolbar>
+                <Table
+                    id="idTest"
+                    selectionChange="selectionChangeHandlerRregister"
+                    growing="true"
+                    growingThreshold="20"
+                >
+                    <columns>
+                        <Column
+                            hAlign="Begin"
+                            demandPopin="true"
+                            minScreenWidth="Tablet"
+                            popinDisplay="Inline"
+                            width="auto"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "REQUEST_NO","leadingProperty": "REQUEST_NO", "sortProperty": "REQUEST_NO", "filterProperty": "REQUEST_NO", "columnIndex": "0" }'
+                                />
+                            </customData>
+                            <Label
+                                text="Request Number"
+                                wrapping="true"
+                            />
+                        </Column>
+                        <Column
+                            hAlign="Begin"
+                            demandPopin="true"
+                            minScreenWidth="Tablet"
+                            popinDisplay="Inline"
+                            width="auto"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "VENDOR_NAME1","leadingProperty": "VENDOR_NAME1", "sortProperty": "VENDOR_NAME1", "filterProperty": "VENDOR_NAME1", "columnIndex": "1" }'
+                                />
+                            </customData>
+                            <Label
+                                text="Supplier Name"
+                                wrapping="true"
+                            />
+                        </Column>
+                        <Column
+                            hAlign="Begin"
+                            demandPopin="true"
+                            minScreenWidth="Desktop"
+                            popinDisplay="Inline"
+                            width="auto"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "COMPANY_CODE","leadingProperty": "COMPANY_CODE", "sortProperty": "COMPANY_CODE", "filterProperty": "COMPANY_CODE", "columnIndex": "2" }'
+                                />
+                            </customData>
+                            <Label
+                                text="Company Code"
+                                wrapping="true"
+                            />
+                        </Column>
+                        <Column
+                            hAlign="Begin"
+                            demandPopin="true"
+                            minScreenWidth="Desktop"
+                            popinDisplay="Inline"
+                            width="auto"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "REGISTERED_ID","leadingProperty": "REGISTERED_ID", "sortProperty": "REGISTERED_ID", "filterProperty": "REGISTERED_ID", "columnIndex": "3" }'
+                                />
+                            </customData>
+                            <Label
+                                text="Supplier Email"
+                                wrapping="true"
+                            />
+                        </Column>
+                        <Column
+                            hAlign="Begin"
+                            demandPopin="true"
+                            minScreenWidth="Tablet"
+                            popinDisplay="Inline"
+                            width="auto"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "SUPPL_TYPE","leadingProperty": "SUPPL_TYPE", "sortProperty": "SUPPL_TYPE", "filterProperty": "SUPPL_TYPE", "columnIndex": "4"}'
+                                />
+                            </customData>
+                            <Label
+                                text="Supplier Type"
+                                wrapping="false"
+                                vAlign="Inherit"
+                            />
+                        </Column>
+                        <Column
+                            hAlign="Begin"
+                            demandPopin="true"
+                            minScreenWidth="Tablet"
+                            popinDisplay="Inline"
+                            width="auto"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "BP_TYPE_CODE","leadingProperty": "BP_TYPE_CODE", "sortProperty": "BP_TYPE_CODE", "filterProperty": "BP_TYPE_CODE", "columnIndex": "5"}'
+                                />
+                            </customData>
+                            <Label
+                                text="Supplier Sub-Type"
+                                wrapping="true"
+                                vAlign="Inherit"
+                            />
+                        </Column>
+                        <Column
+                            hAlign="Begin"
+                            demandPopin="true"
+                            minScreenWidth="Tablet"
+                            popinDisplay="Inline"
+                            width="auto"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "CREATED_ON","leadingProperty": "CREATED_ON", "sortProperty": "CREATED_ON", "filterProperty": "CREATED_ON", "columnIndex": "6"}'
+                                />
+                            </customData>
+                            <Label
+                                text="Created On"
+                                wrapping="true"
+                            />
+                        </Column>
+                        <!-- <Column
+                            hAlign="Begin"
+                            demandPopin="true"
+                            minScreenWidth="Tablet"
+                            popinDisplay="Inline"
+                            width="auto"
+                        >
+                            <customData>
+                                <core:CustomData
+                                    key="p13nData"
+                                    value='\{"columnKey": "STATUS","leadingProperty": "STATUS", "sortProperty": "STATUS", "filterProperty": "STATUS", "columnIndex": "7" }'
+                                />
+                            </customData>
+                            <Label
+                                text="Status"
+                                wrapping="false"
+                                vAlign="Middle"
+                            />
+                        </Column> -->
+                    </columns>
+                    <items>
+                        <ColumnListItem
+                            vAlign="Middle"
+                            type="Navigation"
+                            press="handleProcessTable_RowClick"
+                        >
+                            <cells>
+                                <VBox>
+                                    <Text
+                                        text="{REQUEST_NO}"
+                                        class="usermasterColo"
+                                    />
+                                    <Text
+                                        text="{REQUEST_TYPE}"
+                                        class="blackText"
+                                    />
+                                </VBox>
+                                <Text
+                                    text="{VENDOR_NAME1}"
+                                    class=""
+                                />
+                                <Text
+                                    text="{COMPANY_CODE}"
+                                    class=""
+                                />
+                                <Text
+                                    text="{REGISTERED_ID}"
+                                    class=""
+                                />
+                                <VBox>
+                                    <Text
+                                        text="{SUPPL_TYPE}"
+                                        class=""
+                                    />
+                                    <Text
+                                        text="{SUPPL_TYPE_DESC}"
+                                        class=""
+                                    />
+                                </VBox>
+                                <VBox>
+                                    <Text
+                                        text="{BP_TYPE_CODE}"
+                                        class=""
+                                    />
+                                    <Text
+                                        text="{BP_TYPE_DESC}"
+                                        class=""
+                                    />
+                                </VBox>
+                                <Text
+                                    text="{path: 'CREATED_ON', formatter: '.createdOnAndByFormatter'}"
+                                    class=""
+                                />
+                                <!-- <ObjectStatus
+                                    text="{ parts :[{path: 'STATUS'},{path: 'APPROVER_ROLE'}], formatter: '.statusFormatter'}"
+                                    state="Indication15"
+                                    inverted="true"
+                                    class="noWrapText"
+                                /> -->
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </smartTable:SmartTable>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>

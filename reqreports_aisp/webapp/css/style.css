@@ -1,0 +1,9 @@
+/* Enter your custom styles here */
+.noWrapText {
+    white-space: nowrap;
+    margin: auto;
+}
+
+.customLabelBold {
+    font-weight: bold !important;
+}

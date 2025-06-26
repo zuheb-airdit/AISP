@@ -62,17 +62,17 @@ modules:
       - comregistrationregistrationapprovalaisp.zip
       name: comregistrationregistrationapprovalaisp
       target-path: resources/
-    # - artifacts:
-    #   - comsystemconfigurationsystemconfigurationaisp.zip
-    #   name: comsystemconfigurationsystemconfigurationaisp
-    #   target-path: resources/
     - artifacts:
       - comsconfigsystemconfiguration2aisp.zip
       name: comsconfigsystemconfiguration2aisp
       target-path: resources/
+    # - artifacts:
+    #   - comdemoworkflowmanagement.zip
+    #   name: comdemoworkflowmanagement
+    #   target-path: resources/
     - artifacts:
-      - comdemoworkflowmanagement.zip
-      name: comdemoworkflowmanagement
+      - comreqreportsaispreqreportsaisp.zip
+      name: comreqreportsaispreqreportsaisp
       target-path: resources/
 - name: comusermasteraispusermasteraisp
   type: html5
@@ -124,16 +124,6 @@ modules:
     - npm install
     - npm run build:cf
     supported-platforms: []
-# - name: comsystemconfigurationsystemconfigurationaisp
-#   type: html5
-#   path: systemconfiguration_aisp
-#   build-parameters:
-#     build-result: dist
-#     builder: custom
-#     commands:
-#     - npm install
-#     - npm run build:cf
-#     supported-platforms: []
 - name: comsconfigsystemconfiguration2aisp
   type: html5
   path: systemconfiguration2_aisp
@@ -144,9 +134,19 @@ modules:
     - npm install
     - npm run build:cf
     supported-platforms: []
-- name: comdemoworkflowmanagement
+# - name: comdemoworkflowmanagement
+#   type: html5
+#   path: workflowmanagement
+#   build-parameters:
+#     build-result: dist
+#     builder: custom
+#     commands:
+#     - npm install
+#     - npm run build:cf
+#     supported-platforms: []
+- name: comreqreportsaispreqreportsaisp
   type: html5
-  path: workflowmanagement
+  path: reqreports_aisp
   build-parameters:
     build-result: dist
     builder: custom

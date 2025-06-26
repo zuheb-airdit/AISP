@@ -163,12 +163,21 @@ sap.ui.define(
                     Attachments: [] // Initialize Attachments at the root level
                 };
                 console.log("Building form data from fields:", fields, type);
-
+            
+                // Map to store unique field keys per section/category/index
+                const fieldKeyMap = {};
+            
+                // Helper function to normalize field keys
+                const normalizeKey = (key) => key.replace(/\s+/g, '_').toUpperCase();
+            
+                // Process static fields
                 fields.forEach(field => {
                     const section = field.SECTION;
                     const category = field.CATEGORY;
                     const key = field.FIELD_PATH;
-
+                    const normalizedKey = normalizeKey(key);
+                    const fieldKeyIdentifier = `${section}/${category}/${normalizedKey}/0`;
+            
                     if (section === "Attachments" && field.IS_VISIBLE) {
                         model.Attachments.push({
                             title: field.FIELD_LABEL,
@@ -183,7 +192,7 @@ sap.ui.define(
                         });
                         return;
                     }
-
+            
                     if (!model[section]) model[section] = {};
                     if (!model[section][category]) {
                         if (category === "Address") {
@@ -194,7 +203,7 @@ sap.ui.define(
                             model[section][category] = {};
                         }
                     }
-
+            
                     const fieldData = {
                         label: field.FIELD_LABEL,
                         mandatory: !!field.IS_MANDATORY,
@@ -211,7 +220,24 @@ sap.ui.define(
                         dropdownValues: field.DROPDOWN_VALUES || "",
                         newDynamicFormField: !!field.NEW_DYANAMIC_FORM_FIELD
                     };
-
+            
+                    if (fieldKeyMap[fieldKeyIdentifier]) {
+                        console.warn(`Duplicate static field detected: ${fieldKeyIdentifier}. Merging.`);
+                        const existingField = category === "Address" || category === "Primary Bank details" ?
+                            model[section][category][0][key] : model[section][category][key];
+                        if ((fieldData.value && !existingField.value) || (fieldData.fieldId && !existingField.fieldId)) {
+                            if (category === "Address" && key !== "ADDRESS_TYPE") {
+                                model[section][category][0][key] = { ...existingField, ...fieldData };
+                            } else if (category === "Primary Bank details" && key !== "BANK_TYPE") {
+                                model[section][category][0][key] = { ...existingField, ...fieldData };
+                            } else if (category !== "Address" && category !== "Primary Bank details") {
+                                model[section][category][key] = { ...existingField, ...fieldData };
+                            }
+                        }
+                        return;
+                    }
+                    fieldKeyMap[fieldKeyIdentifier] = true;
+            
                     if (category === "Address" && key !== "ADDRESS_TYPE") {
                         model[section][category][0][key] = fieldData;
                     } else if (category === "Primary Bank details" && key !== "BANK_TYPE") {
@@ -220,98 +246,62 @@ sap.ui.define(
                         model[section][category][key] = fieldData;
                     }
                 });
-
-                if (type === "registration") {
-                    model["Supplier Information"]["Supplier Information"]["COMPANY_CODE"].value = this.COMPANY_CODE;
-
-                    //filling Dummy data for Testing
-                    if (model["Supplier Information"]) {
-                        if (model["Supplier Information"]["Supplier Information"]) {
-                            model["Supplier Information"]["Supplier Information"]["VENDOR_NAME1"].value = "Innovent Solutions Pvt. Ltd.";
-                            model["Supplier Information"]["Supplier Information"]["WEBSITE"].value = "https://innoventsolutions.in";
-                            model["Supplier Information"]["Supplier Information"]["REGISTERED_ID"].value = "REG123456789";
-                            model["Supplier Information"]["Supplier Information"]["COMPANY_CODE"].value = this.COMPANY_CODE;
-                        }
-
-                        if (model["Supplier Information"]["Address"]) {
-                            model["Supplier Information"]["Address"][0]["HOUSE_NUM1"].value = "456";
-                            model["Supplier Information"]["Address"][0]["STREET1"].value = "Innovation Tower";
-                            model["Supplier Information"]["Address"][0]["STREET2"].value = "Sector 5";
-                            model["Supplier Information"]["Address"][0]["STREET3"].value = "Technocity";
-                            model["Supplier Information"]["Address"][0]["STREET4"].value = "Bangalore";
-                            model["Supplier Information"]["Address"][0]["COUNTRY"].value = "India";
-                            model["Supplier Information"]["Address"][0]["STATE"].value = "Karnataka";
-                            model["Supplier Information"]["Address"][0]["CITY"].value = "Bangalore";
-                            model["Supplier Information"]["Address"][0]["POSTAL_CODE"].value = "560103";
-                            model["Supplier Information"]["Address"][0]["EMAIL"].value = "contact@innoventsolutions.in";
-                            model["Supplier Information"]["Address"][0]["CONTACT_NO"].value = "08012345678";
-                        }
-
-                        if (model["Supplier Information"]["Primary Contact"]) {
-                            model["Supplier Information"]["Primary Contact"]["FIRST_NAME"].value = "Rahul Verma";
-                            model["Supplier Information"]["Primary Contact"]["LAST_NAME"].value = "";
-                            model["Supplier Information"]["Primary Contact"]["CITY"].value = "Bangalore";
-                            model["Supplier Information"]["Primary Contact"]["STATE"].value = "Karnataka";
-                            model["Supplier Information"]["Primary Contact"]["COUNTRY"].value = "India";
-                            model["Supplier Information"]["Primary Contact"]["POSTAL_CODE"].value = "560103";
-                            model["Supplier Information"]["Primary Contact"]["DESIGNATION"].value = "Vendor Manager";
-                            model["Supplier Information"]["Primary Contact"]["EMAIL"].value = "rahul.verma@innoventsolutions.in";
-                            model["Supplier Information"]["Primary Contact"]["CONTACT_NUMBER"].value = "+918061234567";
-                            model["Supplier Information"]["Primary Contact"]["MOBILE"].value = "+919876543210";
-                        }
-                    }
-
-                    if (model["Finance Information"]) {
-                        if (model["Finance Information"]["Primary Bank details"]) {
-                            model["Finance Information"]["Primary Bank details"][0]["SWIFT_CODE"].value = "HDFCINBBXXX";
-                            model["Finance Information"]["Primary Bank details"][0]["BRANCH_NAME"].value = "HDFC Koramangala Branch";
-                            model["Finance Information"]["Primary Bank details"][0]["BANK_COUNTRY"].value = "India";
-                            model["Finance Information"]["Primary Bank details"][0]["BANK_NAME"].value = "HDFC Bank";
-                            model["Finance Information"]["Primary Bank details"][0]["BENEFICIARY"].value = "Innovent Solutions Pvt. Ltd.";
-                            model["Finance Information"]["Primary Bank details"][0]["ACCOUNT_NO"].value = "987654321001";
-                            model["Finance Information"]["Primary Bank details"][0]["IBAN_NUMBER"].value = "IN91HDFC000987654321001";
-                            model["Finance Information"]["Primary Bank details"][0]["ROUTING_CODE"].value = "HDFC0000987";
-                            model["Finance Information"]["Primary Bank details"][0]["BANK_CURRENCY"].value = "INR";
-                            model["Finance Information"]["TAX-VAT-GST"].GST_NO.value = "29AACCI1234M1Z5";
-                        }
-                    }
-
-                    if (model["Operational Information"]) {
-                        if (model["Operational Information"]["Product-Service Description"]) {
-                            model["Operational Information"]["Product-Service Description"]["PRODUCT_NAME"].value = "Smart Sensor Kits";
-                            model["Operational Information"]["Product-Service Description"]["PRODUCT_DESCRIPTION"].value = "IoT-based smart sensors for industrial automation";
-                            model["Operational Information"]["Product-Service Description"]["PRODUCT_TYPE"].value = "Electronics";
-                            model["Operational Information"]["Product-Service Description"]["PRODUCT_CATEGORY"].value = "Sensors & Automation";
-                        }
-
-                        if (model["Operational Information"]["Operational Capacity"]) {
-                            model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MIN"].value = "100 Units";
-                            model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MAX"].value = "10000 Units";
-                            model["Operational Information"]["Operational Capacity"]["PRODUCTION_CAPACITY"].value = "50000 Units/Year";
-                            model["Operational Information"]["Operational Capacity"]["PRODUCTION_LOCATION"].value = "Bangalore Industrial Estate";
-                        }
-                    }
-
-                    // if (model["Quality Certificates"]) {
-                    //     if (model["Quality Certificates"]["Standard Certifications"]) {
-                    //         Object.keys(model["Quality Certificates"]["Standard Certifications"]).forEach(key => {
-                    //             model["Quality Certificates"]["Standard Certifications"][key].value = "Rahul Verma";
-                    //             model["Quality Certificates"]["Standard Certifications"][key].isCertified = "Yes";
-                    //         });
-                    //     }
-                    // }
-
-                    // if (model["Submission"]) {
-                    //     if (model["Submission"]["Declaration"]) {
-                    //         model["Submission"]["Declaration"]["COMPLETED_BY"].value = "Rahul Verma";
-                    //         model["Submission"]["Declaration"]["DESIGNATION"].value = "Vendor Manager";
-                    //         model["Submission"]["Declaration"]["SUBMISSION_DATE"].value = "2025-05-16";
-                    //         model["Submission"]["Declaration"]["ACK_VALIDATION"].value = true;
-                    //     }
-                    // }
-                } else if (type === "sendback") {
+            
+                if (type === "sendback") {
                     const r = this.responseData;
-
+            
+                    // Log TO_DYNAMIC_FIELDS for debugging
+                    console.log("TO_DYNAMIC_FIELDS:", JSON.stringify(r.TO_DYNAMIC_FIELDS?.results, null, 2));
+            
+                    var oDisclosureModelData = new sap.ui.model.json.JSONModel({});
+                    this.getView().setModel(oDisclosureModelData, "existModel");
+            
+                    const disclosure = model["Disclosures"];
+                    if (disclosure && type === "sendback") {
+                        const disclosureKeys = Object.keys(disclosure);
+                        const fieldMapping = {
+                            "Conflict of Interest": "INTEREST_CONFLICT",
+                            "Legal Case Disclosure": "ANY_LEGAL_CASES",
+                            "Anti-Corruption Regulation": "ABAC_REG",
+                            "Export Control": "CONTROL_REGULATION"
+                        };
+                        const valueMapping = { "YES": 0, "NO": 1, "NA": 2 };
+                        const reverseValueMapping = { 0: "YES", 1: "NO", 2: "NA" };
+            
+                        disclosureKeys.forEach(function (fieldKey) {
+                            const field = disclosure[fieldKey];
+                            if (field && fieldKey) {
+                                const mappedField = fieldMapping[fieldKey];
+                                const innerFieldKey = Object.keys(field)[0];
+            
+                                if (r && r.TO_DISCLOSURE_FIELDS && r.TO_DISCLOSURE_FIELDS.results && r.TO_DISCLOSURE_FIELDS.results.length > 0) {
+                                    const disclosureData = r.TO_DISCLOSURE_FIELDS.results[0];
+                                    let fieldValue = disclosureData[mappedField] || "NA";
+                                    const numericValue = valueMapping[fieldValue];
+                                    const displayValue = reverseValueMapping[numericValue];
+            
+                                    if (field[innerFieldKey]) {
+                                        field[innerFieldKey].value = displayValue;
+                                        console.log(`Set disclosure field ${fieldKey}/${innerFieldKey} value:`, displayValue);
+                                    } else {
+                                        console.error(`Inner field ${innerFieldKey} not found in ${fieldKey}`);
+                                    }
+            
+                                    let propertyName = "/" + fieldKey.toLowerCase().replace(/ /g, '').replace('&', '').replace('-', '');
+                                    oDisclosureModelData.setProperty(propertyName, numericValue);
+                                    console.log(`Set existModel field ${fieldKey} (mapped to ${mappedField}):`, propertyName, "with numeric value:", numericValue);
+                                } else {
+                                    console.error(`Disclosure data for ${mappedField} not found in response.`);
+                                    field[innerFieldKey].value = "N/A";
+                                }
+                            } else {
+                                console.error(`Missing or invalid data for field: ${fieldKey}. Full field data:`, field);
+                            }
+                        });
+                    } else {
+                        console.warn("Disclosures section not found in model or type is not 'sendback'.");
+                    }
+            
                     const sInfo = model["Supplier Information"];
                     if (sInfo) {
                         const sup = sInfo["Supplier Information"];
@@ -323,28 +313,22 @@ sap.ui.define(
                             sup["VENDOR_TYPE"].value = `${r.SUPPL_TYPE} - ${r.SUPPL_TYPE_DESC}` || "";
                             sup["VENDOR_SUB_TYPE"].value = `${r.BP_TYPE_CODE} - ${r.BP_TYPE_DESC}` || "";
                         }
-
+            
                         const addressRows = sInfo["Address"] || [];
                         const addressResults = r.TO_ADDRESS?.results || [];
-
+            
                         if (addressRows[0] && addressResults[0]) {
                             const src = addressResults[0];
                             const trg = addressRows[0];
-
                             trg.ADDRESS_TYPE = "Primary";
-                            trg["HOUSE_NUM1"].value = src.STREET ?? "";
-                            trg["STREET1"].value = src.STREET1 ?? "";
-                            trg["STREET2"].value = src.STREET2 ?? "";
-                            trg["STREET3"].value = src.STREET3 ?? "";
-                            trg["STREET4"].value = src.STREET4 ?? "";
-                            trg["COUNTRY"].value = src.COUNTRY ?? "";
-                            trg["STATE"].value = src.STATE ?? "";
-                            trg["CITY"].value = src.CITY ?? "";
-                            trg["POSTAL_CODE"].value = src.POSTAL_CODE ?? "";
-                            trg["EMAIL"].value = src.EMAIL ?? "";
-                            trg["CONTACT_NO"].value = src.CONTACT_NO ?? "";
+                            ["HOUSE_NUM1", "STREET1", "STREET2", "STREET3", "STREET4", "COUNTRY", "STATE", "CITY", "POSTAL_CODE", "EMAIL", "CONTACT_NO"].forEach(field => {
+                                if (!trg[field]) {
+                                    trg[field] = { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+                                }
+                                trg[field].value = src[field] ?? "";
+                            });
                         }
-
+            
                         if (addressResults[1]) {
                             if (!addressRows[1]) {
                                 const copy = JSON.parse(JSON.stringify(addressRows[0]));
@@ -352,36 +336,17 @@ sap.ui.define(
                                 copy.ADDRESS_TYPE = "Other Office Address";
                                 addressRows.push(copy);
                             }
-
                             const src = addressResults[1];
                             const trg = addressRows[1];
-
                             trg.ADDRESS_TYPE = "Other Office Address";
-                            trg["HOUSE_NUM1"] = trg["HOUSE_NUM1"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["STREET1"] = trg["STREET1"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["STREET2"] = trg["STREET2"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["STREET3"] = trg["STREET3"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["STREET4"] = trg["STREET4"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["COUNTRY"] = trg["COUNTRY"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["STATE"] = trg["STATE"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["CITY"] = trg["CITY"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["POSTAL_CODE"] = trg["POSTAL_CODE"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["EMAIL"] = trg["EMAIL"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-                            trg["CONTACT_NO"] = trg["CONTACT_NO"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-
-                            trg["HOUSE_NUM1"].value = src.STREET ?? "";
-                            trg["STREET1"].value = src.STREET1 ?? "";
-                            trg["STREET2"].value = src.STREET2 ?? "";
-                            trg["STREET3"].value = src.STREET3 ?? "";
-                            trg["STREET4"].value = src.STREET4 ?? "";
-                            trg["COUNTRY"].value = src.COUNTRY ?? "";
-                            trg["STATE"].value = src.STATE ?? "";
-                            trg["CITY"].value = src.CITY ?? "";
-                            trg["POSTAL_CODE"].value = src.POSTAL_CODE ?? "";
-                            trg["EMAIL"].value = src.EMAIL ?? "";
-                            trg["CONTACT_NO"].value = src.CONTACT_NO ?? "";
+                            ["HOUSE_NUM1", "STREET1", "STREET2", "STREET3", "STREET4", "COUNTRY", "STATE", "CITY", "POSTAL_CODE", "EMAIL", "CONTACT_NO"].forEach(field => {
+                                if (!trg[field]) {
+                                    trg[field] = { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+                                }
+                                trg[field].value = src[field] ?? "";
+                            });
                         }
-
+            
                         const pCon = sInfo["Primary Contact"];
                         if (pCon) {
                             const c = r.TO_CONTACTS?.results?.[0] || {};
@@ -397,29 +362,25 @@ sap.ui.define(
                             pCon["MOBILE"].value = c.MOBILE_NO || "";
                         }
                     }
-
+            
                     const fin = model["Finance Information"];
                     if (fin) {
                         const bankRows = fin["Primary Bank details"] || [];
                         const bankResults = r.TO_BANKS?.results || [];
-
+            
                         if (bankRows[0] && bankResults[0]) {
                             const src = bankResults[0];
                             const trg = bankRows[0];
-
                             trg.BANK_TYPE = "Primary";
-                            trg["SWIFT_CODE"].value = src.SWIFT_CODE ?? "";
-                            trg["BRANCH_NAME"].value = src.BRANCH_NAME ?? "";
-                            trg["BANK_COUNTRY"].value = src.BANK_COUNTRY ?? "";
-                            trg["BANK_NAME"].value = src.BANK_NAME ?? "";
-                            trg["BENEFICIARY"].value = src.BENEFICIARY ?? "";
-                            trg["ACCOUNT_NO"].value = src.ACCOUNT_NO ?? "";
-                            trg["IBAN_NUMBER"].value = src.IBAN_NUMBER ?? "";
-                            trg["ROUTING_CODE"].value = src.ROUTING_CODE ?? "";
-                            trg["BANK_CURRENCY"].value = src.BANK_CURRENCY ?? "";
+                            ["SWIFT_CODE", "BRANCH_NAME", "BANK_COUNTRY", "BANK_NAME", "BENEFICIARY", "ACCOUNT_NO", "IBAN_NUMBER", "ROUTING_CODE", "BANK_CURRENCY"].forEach(field => {
+                                if (!trg[field]) {
+                                    trg[field] = { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+                                }
+                                trg[field].value = src[field] ?? "";
+                            });
                             fin["TAX-VAT-GST"].GST_NO.value = src.GST ?? "";
                         }
-
+            
                         if (bankResults[1]) {
                             if (!bankRows[1]) {
                                 const copy = JSON.parse(JSON.stringify(bankRows[0]));
@@ -427,22 +388,18 @@ sap.ui.define(
                                 copy.BANK_TYPE = "Other Bank Details";
                                 bankRows.push(copy);
                             }
-
                             const src = bankResults[1];
                             const trg = bankRows[1];
-
-                            trg["SWIFT_CODE"].value = src.SWIFT_CODE ?? "";
-                            trg["BRANCH_NAME"].value = src.BRANCH_NAME ?? "";
-                            trg["BANK_COUNTRY"].value = src.BANK_COUNTRY ?? "";
-                            trg["BANK_NAME"].value = src.BANK_NAME ?? "";
-                            trg["BENEFICIARY"].value = src.BENEFICIARY ?? "";
-                            trg["ACCOUNT_NO"].value = src.ACCOUNT_NO ?? "";
-                            trg["IBAN_NUMBER"].value = src.IBAN_NUMBER ?? "";
-                            trg["ROUTING_CODE"].value = src.ROUTING_CODE ?? "";
-                            trg["BANK_CURRENCY"].value = src.BANK_CURRENCY ?? "";
+                            trg.BANK_TYPE = "Other Bank Details";
+                            ["SWIFT_CODE", "BRANCH_NAME", "BANK_COUNTRY", "BANK_NAME", "BENEFICIARY", "ACCOUNT_NO", "IBAN_NUMBER", "ROUTING_CODE", "BANK_CURRENCY"].forEach(field => {
+                                if (!trg[field]) {
+                                    trg[field] = { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+                                }
+                                trg[field].value = src[field] ?? "";
+                            });
                         }
                     }
-
+            
                     const op = model["Operational Information"];
                     if (op) {
                         const prod = op["Product-Service Description"];
@@ -462,50 +419,45 @@ sap.ui.define(
                             cap["ORDER_SIZE_MAX"].value = c.MAXMIMUM_ORDER_SIZE || "";
                         }
                     }
-
+            
                     // Handle dynamic fields from TO_DYNAMIC_FIELDS
                     if (r && r.TO_DYNAMIC_FIELDS && r.TO_DYNAMIC_FIELDS.results && r.TO_DYNAMIC_FIELDS.results.length > 0) {
                         r.TO_DYNAMIC_FIELDS.results.forEach(dynamicField => {
                             const section = dynamicField.SECTION;
                             const category = dynamicField.CATEGORY;
+                            const srNo = dynamicField.SR_NO;
                             let data;
-
+            
                             try {
                                 data = JSON.parse(dynamicField.DATA);
                             } catch (e) {
-                                console.error(`Failed to parse DATA for SECTION: ${section}, CATEGORY: ${category}`, dynamicField.DATA, e);
+                                console.error(`Failed to parse DATA for SECTION: ${section}, CATEGORY: ${category}, SR_NO: ${srNo}`, dynamicField.DATA, e);
                                 return;
                             }
-
-                            console.log(`Processing dynamic field - SECTION: ${section}, CATEGORY: ${category}, DATA:`, data);
-
-                            // Ensure section and category exist in the model
+            
+                            console.log(`Processing dynamic field - SECTION: ${section}, CATEGORY: ${category}, SR_NO: ${srNo}, DATA:`, data);
+            
                             if (!model[section]) {
                                 console.warn(`Section ${section} not found in model. Creating it.`);
                                 model[section] = {};
                             }
-                            if (!model[section][category]) {
-                                console.warn(`Category ${category} not found in model for section ${section}. Creating it.`);
-                                if (category === "Address") {
-                                    model[section][category] = [{ ADDRESS_TYPE: "Primary" }];
-                                } else if (category === "Primary Bank details") {
-                                    model[section][category] = [{ BANK_TYPE: "Primary" }];
-                                } else {
-                                    model[section][category] = {};
-                                }
-                            }
-
-                            // Update fields with dynamic data, ensuring they are applied to the correct category
+            
                             Object.keys(data).forEach(fieldKey => {
                                 let fieldValue = data[fieldKey];
-                                const normalizedFieldKey = fieldKey.replace(/\s+/g, '_'); // Normalize spaces to underscores
-
-                                // Reformat date fields to YYYY-MM-DD only if the field is explicitly a date field
+                                const normalizedFieldKey = normalizeKey(fieldKey);
+                                const fieldKeyIdentifier = `${section}/${category}/${normalizedFieldKey}/${srNo}`;
+            
+                                if (fieldKeyMap[fieldKeyIdentifier]) {
+                                    console.warn(`Duplicate dynamic field detected: ${fieldKeyIdentifier}. Merging.`);
+                                    return;
+                                }
+                                fieldKeyMap[fieldKeyIdentifier] = true;
+            
                                 if (normalizedFieldKey.toLowerCase().includes("date") && fieldValue) {
                                     try {
                                         const parsedDate = new Date(fieldValue);
                                         if (!isNaN(parsedDate.getTime())) {
-                                            fieldValue = parsedDate.toISOString().split('T')[0]; // YYYY-MM-DD
+                                            fieldValue = parsedDate.toISOString().split('T')[0];
                                             console.log(`Reformatted date for ${fieldKey}: ${fieldValue}`);
                                         } else {
                                             console.warn(`Invalid date format for ${fieldKey}: ${fieldValue}`);
@@ -514,107 +466,87 @@ sap.ui.define(
                                         console.error(`Error parsing date for ${fieldKey}: ${fieldValue}`, e);
                                     }
                                 }
-
-                                if (category === "Address" || category === "Primary Bank details") {
-                                    const index = 0; // Assume first entry (e.g., "Primary")
-                                    if (!model[section][category][index]) {
-                                        model[section][category][index] = category === "Address" ? { ADDRESS_TYPE: "Primary" } : { BANK_TYPE: "Primary" };
+            
+                                const fieldData = {
+                                    value: fieldValue || "",
+                                    label: fieldKey,
+                                    mandatory: false,
+                                    visible: true,
+                                    type: normalizedFieldKey.toLowerCase().includes("date") ? "Date" : "",
+                                    description: "",
+                                    fieldId: "",
+                                    companyCode: "",
+                                    requestType: "",
+                                    minimum: "",
+                                    maximum: "",
+                                    placeholder: "",
+                                    dropdownValues: "",
+                                    newDynamicFormField: true
+                                };
+            
+                                if (section === "Supplier Information" && (category === "PrimaryAddress" || category === "Other Office Address")) {
+                                    const addressType = category === "PrimaryAddress" ? "Primary" : "Other Office Address";
+                                    let addressArray = model[section]["Address"] || [];
+                                    let targetIndex = addressArray.findIndex(addr => addr.ADDRESS_TYPE === addressType);
+            
+                                    if (targetIndex === -1) {
+                                        const newAddress = { ADDRESS_TYPE: addressType };
+                                        addressArray.push(newAddress);
+                                        targetIndex = addressArray.length - 1;
                                     }
-
-                                    // Check if the field exists in the model, if not create it
-                                    if (!model[section][category][index][normalizedFieldKey]) {
-                                        model[section][category][index][normalizedFieldKey] = {
-                                            value: "",
-                                            label: fieldKey,
-                                            mandatory: false,
-                                            visible: true,
-                                            type: normalizedFieldKey.toLowerCase().includes("date") ? "Date" : "",
-                                            description: "",
-                                            fieldId: "",
-                                            companyCode: "",
-                                            requestType: "",
-                                            minimum: "",
-                                            maximum: "",
-                                            placeholder: "",
-                                            dropdownValues: "",
-                                            newDynamicFormField: true
-                                        };
+            
+                                    addressArray[targetIndex][fieldKey] = fieldData;
+                                    model[section]["Address"] = addressArray;
+                                    console.log(`Set dynamic field in ${section}/Address[${targetIndex}]: ${fieldKey} = ${fieldValue} for ${addressType}`);
+                                } else if (section === "Finance Information" && (category === "Primary Bank" || category === "Other Bank Details")) {
+                                    const bankType = category === "Primary Bank" ? "Primary" : "Other Bank Details";
+                                    let bankArray = model[section]["Primary Bank details"] || [];
+                                    let targetIndex = bankArray.findIndex(bank => bank.BANK_TYPE === bankType);
+            
+                                    if (targetIndex === -1) {
+                                        const newBank = { BANK_TYPE: bankType };
+                                        bankArray.push(newBank);
+                                        targetIndex = bankArray.length - 1;
                                     }
-
-                                    // Update the value and mark as dynamic
-                                    model[section][category][index][normalizedFieldKey].value = fieldValue;
-                                    model[section][category][index][normalizedFieldKey].newDynamicFormField = true;
-                                    console.log(`Updated dynamic field in ${section}/${category}[${index}]: ${normalizedFieldKey} = ${fieldValue}`);
+            
+                                    bankArray[targetIndex][fieldKey] = fieldData;
+                                    model[section]["Primary Bank details"] = bankArray;
+                                    console.log(`Set dynamic field in ${section}/Primary Bank details[${targetIndex}]: ${fieldKey} = ${fieldValue} for ${bankType}`);
                                 } else {
-                                    // Non-array category (like Product-Service Description)
-                                    if (!model[section][category][normalizedFieldKey]) {
-                                        model[section][category][normalizedFieldKey] = {
-                                            value: "",
+                                    if (!model[section][category]) {
+                                        model[section][category] = {};
+                                    }
+                                    if (model[section][category][fieldKey]) {
+                                        console.warn(`Merging existing field in ${section}/${category}: ${fieldKey}`);
+                                        const existingField = model[section][category][fieldKey];
+                                        model[section][category][fieldKey] = {
+                                            ...existingField,
+                                            value: fieldValue || existingField.value,
                                             label: fieldKey,
-                                            mandatory: false,
-                                            visible: true,
-                                            type: normalizedFieldKey.toLowerCase().includes("date") ? "Date" : "",
-                                            description: "",
-                                            fieldId: "",
-                                            companyCode: "",
-                                            requestType: "",
-                                            minimum: "",
-                                            maximum: "",
-                                            placeholder: "",
-                                            dropdownValues: "",
+                                            mandatory: existingField.mandatory || fieldData.mandatory,
+                                            visible: existingField.visible || fieldData.visible,
+                                            type: existingField.type || fieldData.type,
+                                            description: existingField.description || fieldData.description,
+                                            fieldId: existingField.fieldId || fieldData.fieldId,
+                                            companyCode: existingField.companyCode || fieldData.companyCode,
+                                            requestType: existingField.requestType || fieldData.requestType,
+                                            minimum: existingField.minimum || fieldData.minimum,
+                                            maximum: existingField.maximum || fieldData.maximum,
+                                            placeholder: existingField.placeholder || fieldData.placeholder,
+                                            dropdownValues: existingField.dropdownValues || fieldData.dropdownValues,
                                             newDynamicFormField: true
                                         };
+                                    } else {
+                                        model[section][category][fieldKey] = fieldData;
                                     }
-
-                                    // Update the value and mark as dynamic
-                                    model[section][category][normalizedFieldKey].value = fieldValue;
-                                    model[section][category][normalizedFieldKey].newDynamicFormField = true;
-                                    console.log(`Updated dynamic field in ${section}/${category}: ${normalizedFieldKey} = ${fieldValue}`);
+                                    console.log(`Set dynamic field in ${section}/${category}: ${fieldKey} = ${fieldValue}`);
                                 }
                             });
                         });
                     } else {
                         console.warn("No dynamic fields found in response.");
                     }
-
-                    var oDisclosureModelData = new JSONModel({});
-                    const disclosure = model["Disclosures"];
-                    const disclosureKeys = Object.keys(disclosure);
-                    const fieldMapping = {
-                        "Conflict of Interest": "INTEREST_CONFLICT",
-                        "Legal Case Disclosure": "ANY_LEGAL_CASES",
-                        "Anti-Corruption Regulation": "ABAC_REG",
-                        "Export Control": "CONTROL_REGULATION"
-                    };
-
-                    const valueMapping = {
-                        "YES": 0,
-                        "NO": 1,
-                        "NA": 2
-                    };
-
-                    disclosureKeys.forEach(function (fieldKey) {
-                        const field = disclosure[fieldKey];
-                        if (field && fieldKey) {
-                            let propertyName = "/" + fieldKey.toLowerCase().replace(/ /g, '').replace('&', '').replace('-', '');
-                            const mappedField = fieldMapping[fieldKey];
-
-                            if (r && r.TO_DISCLOSURE_FIELDS && r.TO_DISCLOSURE_FIELDS.results.length > 0) {
-                                const disclosureData = r.TO_DISCLOSURE_FIELDS.results[0];
-                                let fieldValue = disclosureData[mappedField] || "NA";
-                                fieldValue = valueMapping[fieldValue];
-                                oDisclosureModelData.setProperty(`/${propertyName}`, fieldValue);
-                                console.log(`Set disclosure field ${fieldKey} (mapped to ${mappedField}):`, propertyName, "with value:", fieldValue);
-                            } else {
-                                console.error(`Disclosure data for ${mappedField} not found in response.`);
-                            }
-                        } else {
-                            console.error(`Missing or invalid data for field: ${fieldKey}. Full field data:`, field);
-                        }
-                    });
-
-                    this.getView().setModel(oDisclosureModelData, "existModel");
-
+            
                     if (model["Quality Certificates"]) {
                         if (model["Quality Certificates"]["Standard Certifications"]) {
                             if (r && r.TO_QA_CERTIFICATES && r.TO_QA_CERTIFICATES.results && r.TO_QA_CERTIFICATES.results.length > 0) {
@@ -624,8 +556,6 @@ sap.ui.define(
                                         model["Quality Certificates"]["Standard Certifications"][certName].value = cert.DONE_BY || "N/A";
                                         model["Quality Certificates"]["Standard Certifications"][certName].isCertified = cert.AVAILABLE === "YES" ? "Yes" : "No";
                                         console.log(`Updated certification: ${certName}, DONE_BY: ${cert.DONE_BY}, AVAILABLE: ${cert.AVAILABLE}`);
-                                    } else {
-                                        console.warn(`No matching certification found in model for: ${cert.CERTI_NAME}`);
                                     }
                                 });
                             } else {
@@ -633,25 +563,7 @@ sap.ui.define(
                             }
                         }
                     }
-
-                    if (model["Attachments"]) {
-                        if (r && r.TO_ATTACHMENTS && r.TO_ATTACHMENTS.results && r.TO_ATTACHMENTS.results.length > 0) {
-                            r.TO_ATTACHMENTS.results.forEach((attachment, index) => {
-                                const attachmentData = model["Attachments"][index];
-                                if (attachmentData) {
-                                    attachmentData.fileName = attachment.IMAGE_FILE_NAME || "";
-                                    attachmentData.imageUrl = attachment.IMAGEURL || "";
-                                    attachmentData.title = attachment.ATTACH_SHORT_DEC;
-                                    attachmentData.description = attachment.DESCRIPTION;
-                                    attachmentData.uploaded = true;
-                                }
-                            });
-                            this.getView().getModel("formDataModel").setProperty("/Attachments", model["Attachments"]);
-                        } else {
-                            console.error("No attachments found in response.");
-                        }
-                    }
-
+            
                     const sub = model["Submission"]?.["Declaration"];
                     if (sub) {
                         sub["COMPLETED_BY"].value = r.COMPLETED_BY || "";
@@ -659,11 +571,521 @@ sap.ui.define(
                         sub["SUBMISSION_DATE"].value = r.SUBMISSION_DATE || "";
                         sub["ACK_VALIDATION"].value = true;
                     }
+            
+                    // Log final model for debugging
+                    console.log("Final model:", JSON.stringify(model, null, 2));
                 }
-
-                console.log("Final model:", JSON.stringify(model, null, 2));
+            
                 return model;
             },
+
+            // buildFormDataBySectionCategory: function (fields, type) {
+            //     this.currentType = type;
+            //     const model = {
+            //         Attachments: [] // Initialize Attachments at the root level
+            //     };
+            //     console.log("Building form data from fields:", fields, type);
+
+            //     fields.forEach(field => {
+            //         const section = field.SECTION;
+            //         const category = field.CATEGORY;
+            //         const key = field.FIELD_PATH;
+
+            //         if (section === "Attachments" && field.IS_VISIBLE) {
+            //             model.Attachments.push({
+            //                 title: field.FIELD_LABEL,
+            //                 description: "",
+            //                 fileName: "",
+            //                 uploaded: false,
+            //                 fieldPath: field.FIELD_PATH,
+            //                 fieldId: field.FIELD_ID,
+            //                 imageUrl: "",
+            //                 mandatory: !!field.IS_MANDATORY,
+            //                 visible: !!field.IS_VISIBLE,
+            //             });
+            //             return;
+            //         }
+
+            //         if (!model[section]) model[section] = {};
+            //         if (!model[section][category]) {
+            //             if (category === "Address") {
+            //                 model[section][category] = [{ ADDRESS_TYPE: "Primary" }];
+            //             } else if (category === "Primary Bank details") {
+            //                 model[section][category] = [{ BANK_TYPE: "Primary" }];
+            //             } else {
+            //                 model[section][category] = {};
+            //             }
+            //         }
+
+            //         const fieldData = {
+            //             label: field.FIELD_LABEL,
+            //             mandatory: !!field.IS_MANDATORY,
+            //             visible: !!field.IS_VISIBLE,
+            //             type: field.FIELD_TYPE || "",
+            //             description: field.DESCRIPTION || "",
+            //             value: field.DEFAULT_VALUE || "",
+            //             fieldId: field.FIELD_ID || "",
+            //             companyCode: field.COMPANY_CODE || "",
+            //             requestType: field.REQUEST_TYPE || "",
+            //             minimum: field.MINIMUM || "",
+            //             maximum: field.MAXIMUM || "",
+            //             placeholder: field.PLACEHOLDER || "",
+            //             dropdownValues: field.DROPDOWN_VALUES || "",
+            //             newDynamicFormField: !!field.NEW_DYANAMIC_FORM_FIELD
+            //         };
+
+            //         if (category === "Address" && key !== "ADDRESS_TYPE") {
+            //             model[section][category][0][key] = fieldData;
+            //         } else if (category === "Primary Bank details" && key !== "BANK_TYPE") {
+            //             model[section][category][0][key] = fieldData;
+            //         } else if (category !== "Address" && category !== "Primary Bank details") {
+            //             model[section][category][key] = fieldData;
+            //         }
+            //     });
+
+            //     if (type === "registration") {
+            //         model["Supplier Information"]["Supplier Information"]["COMPANY_CODE"].value = this.COMPANY_CODE;
+
+            //         //filling Dummy data for Testing
+            //         if (model["Supplier Information"]) {
+            //             if (model["Supplier Information"]["Supplier Information"]) {
+            //                 model["Supplier Information"]["Supplier Information"]["VENDOR_NAME1"].value = "Innovent Solutions Pvt. Ltd.";
+            //                 model["Supplier Information"]["Supplier Information"]["WEBSITE"].value = "https://innoventsolutions.in";
+            //                 model["Supplier Information"]["Supplier Information"]["REGISTERED_ID"].value = "REG123456789";
+            //                 model["Supplier Information"]["Supplier Information"]["COMPANY_CODE"].value = this.COMPANY_CODE;
+            //             }
+
+            //             if (model["Supplier Information"]["Address"]) {
+            //                 model["Supplier Information"]["Address"][0]["HOUSE_NUM1"].value = "456";
+            //                 model["Supplier Information"]["Address"][0]["STREET1"].value = "Innovation Tower";
+            //                 model["Supplier Information"]["Address"][0]["STREET2"].value = "Sector 5";
+            //                 model["Supplier Information"]["Address"][0]["STREET3"].value = "Technocity";
+            //                 model["Supplier Information"]["Address"][0]["STREET4"].value = "Bangalore";
+            //                 model["Supplier Information"]["Address"][0]["COUNTRY"].value = "India";
+            //                 model["Supplier Information"]["Address"][0]["STATE"].value = "Karnataka";
+            //                 model["Supplier Information"]["Address"][0]["CITY"].value = "Bangalore";
+            //                 model["Supplier Information"]["Address"][0]["POSTAL_CODE"].value = "560103";
+            //                 model["Supplier Information"]["Address"][0]["EMAIL"].value = "contact@innoventsolutions.in";
+            //                 model["Supplier Information"]["Address"][0]["CONTACT_NO"].value = "08012345678";
+            //             }
+
+            //             if (model["Supplier Information"]["Primary Contact"]) {
+            //                 model["Supplier Information"]["Primary Contact"]["FIRST_NAME"].value = "Rahul Verma";
+            //                 model["Supplier Information"]["Primary Contact"]["LAST_NAME"].value = "";
+            //                 model["Supplier Information"]["Primary Contact"]["CITY"].value = "Bangalore";
+            //                 model["Supplier Information"]["Primary Contact"]["STATE"].value = "Karnataka";
+            //                 model["Supplier Information"]["Primary Contact"]["COUNTRY"].value = "India";
+            //                 model["Supplier Information"]["Primary Contact"]["POSTAL_CODE"].value = "560103";
+            //                 model["Supplier Information"]["Primary Contact"]["DESIGNATION"].value = "Vendor Manager";
+            //                 model["Supplier Information"]["Primary Contact"]["EMAIL"].value = "rahul.verma@innoventsolutions.in";
+            //                 model["Supplier Information"]["Primary Contact"]["CONTACT_NUMBER"].value = "+918061234567";
+            //                 model["Supplier Information"]["Primary Contact"]["MOBILE"].value = "+919876543210";
+            //             }
+            //         }
+
+            //         if (model["Finance Information"]) {
+            //             if (model["Finance Information"]["Primary Bank details"]) {
+            //                 model["Finance Information"]["Primary Bank details"][0]["SWIFT_CODE"].value = "HDFCINBBXXX";
+            //                 model["Finance Information"]["Primary Bank details"][0]["BRANCH_NAME"].value = "HDFC Koramangala Branch";
+            //                 model["Finance Information"]["Primary Bank details"][0]["BANK_COUNTRY"].value = "India";
+            //                 model["Finance Information"]["Primary Bank details"][0]["BANK_NAME"].value = "HDFC Bank";
+            //                 model["Finance Information"]["Primary Bank details"][0]["BENEFICIARY"].value = "Innovent Solutions Pvt. Ltd.";
+            //                 model["Finance Information"]["Primary Bank details"][0]["ACCOUNT_NO"].value = "987654321001";
+            //                 model["Finance Information"]["Primary Bank details"][0]["IBAN_NUMBER"].value = "IN91HDFC000987654321001";
+            //                 model["Finance Information"]["Primary Bank details"][0]["ROUTING_CODE"].value = "HDFC0000987";
+            //                 model["Finance Information"]["Primary Bank details"][0]["BANK_CURRENCY"].value = "INR";
+            //                 model["Finance Information"]["TAX-VAT-GST"].GST_NO.value = "29AACCI1234M1Z5";
+            //             }
+            //         }
+
+            //         if (model["Operational Information"]) {
+            //             if (model["Operational Information"]["Product-Service Description"]) {
+            //                 model["Operational Information"]["Product-Service Description"]["PRODUCT_NAME"].value = "Smart Sensor Kits";
+            //                 model["Operational Information"]["Product-Service Description"]["PRODUCT_DESCRIPTION"].value = "IoT-based smart sensors for industrial automation";
+            //                 model["Operational Information"]["Product-Service Description"]["PRODUCT_TYPE"].value = "Electronics";
+            //                 model["Operational Information"]["Product-Service Description"]["PRODUCT_CATEGORY"].value = "Sensors & Automation";
+            //             }
+
+            //             if (model["Operational Information"]["Operational Capacity"]) {
+            //                 model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MIN"].value = "100 Units";
+            //                 model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MAX"].value = "10000 Units";
+            //                 model["Operational Information"]["Operational Capacity"]["PRODUCTION_CAPACITY"].value = "50000 Units/Year";
+            //                 model["Operational Information"]["Operational Capacity"]["PRODUCTION_LOCATION"].value = "Bangalore Industrial Estate";
+            //             }
+            //         }
+
+            //         // if (model["Quality Certificates"]) {
+            //         //     if (model["Quality Certificates"]["Standard Certifications"]) {
+            //         //         Object.keys(model["Quality Certificates"]["Standard Certifications"]).forEach(key => {
+            //         //             model["Quality Certificates"]["Standard Certifications"][key].value = "Rahul Verma";
+            //         //             model["Quality Certificates"]["Standard Certifications"][key].isCertified = "Yes";
+            //         //         });
+            //         //     }
+            //         // }
+
+            //         // if (model["Submission"]) {
+            //         //     if (model["Submission"]["Declaration"]) {
+            //         //         model["Submission"]["Declaration"]["COMPLETED_BY"].value = "Rahul Verma";
+            //         //         model["Submission"]["Declaration"]["DESIGNATION"].value = "Vendor Manager";
+            //         //         model["Submission"]["Declaration"]["SUBMISSION_DATE"].value = "2025-05-16";
+            //         //         model["Submission"]["Declaration"]["ACK_VALIDATION"].value = true;
+            //         //     }
+            //         // }
+            //     } else if (type === "sendback") {
+            //         const r = this.responseData;
+
+            //         const sInfo = model["Supplier Information"];
+            //         if (sInfo) {
+            //             const sup = sInfo["Supplier Information"];
+            //             if (sup) {
+            //                 sup["VENDOR_NAME1"].value = r.VENDOR_NAME1 || "";
+            //                 sup["WEBSITE"].value = r.WEBSITE || "";
+            //                 sup["REGISTERED_ID"].value = r.REGISTERED_ID || "";
+            //                 sup["COMPANY_CODE"].value = r.COMPANY_CODE || "";
+            //                 sup["VENDOR_TYPE"].value = `${r.SUPPL_TYPE} - ${r.SUPPL_TYPE_DESC}` || "";
+            //                 sup["VENDOR_SUB_TYPE"].value = `${r.BP_TYPE_CODE} - ${r.BP_TYPE_DESC}` || "";
+            //             }
+
+            //             const addressRows = sInfo["Address"] || [];
+            //             const addressResults = r.TO_ADDRESS?.results || [];
+
+            //             if (addressRows[0] && addressResults[0]) {
+            //                 const src = addressResults[0];
+            //                 const trg = addressRows[0];
+
+            //                 trg.ADDRESS_TYPE = "Primary";
+            //                 trg["HOUSE_NUM1"].value = src.STREET ?? "";
+            //                 trg["STREET1"].value = src.STREET1 ?? "";
+            //                 trg["STREET2"].value = src.STREET2 ?? "";
+            //                 trg["STREET3"].value = src.STREET3 ?? "";
+            //                 trg["STREET4"].value = src.STREET4 ?? "";
+            //                 trg["COUNTRY"].value = src.COUNTRY ?? "";
+            //                 trg["STATE"].value = src.STATE ?? "";
+            //                 trg["CITY"].value = src.CITY ?? "";
+            //                 trg["POSTAL_CODE"].value = src.POSTAL_CODE ?? "";
+            //                 trg["EMAIL"].value = src.EMAIL ?? "";
+            //                 trg["CONTACT_NO"].value = src.CONTACT_NO ?? "";
+            //             }
+
+            //             if (addressResults[1]) {
+            //                 if (!addressRows[1]) {
+            //                     const copy = JSON.parse(JSON.stringify(addressRows[0]));
+            //                     Object.keys(copy).forEach(k => { if (k !== "ADDRESS_TYPE") copy[k].value = ""; });
+            //                     copy.ADDRESS_TYPE = "Other Office Address";
+            //                     addressRows.push(copy);
+            //                 }
+
+            //                 const src = addressResults[1];
+            //                 const trg = addressRows[1];
+
+            //                 trg.ADDRESS_TYPE = "Other Office Address";
+            //                 trg["HOUSE_NUM1"] = trg["HOUSE_NUM1"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["STREET1"] = trg["STREET1"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["STREET2"] = trg["STREET2"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["STREET3"] = trg["STREET3"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["STREET4"] = trg["STREET4"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["COUNTRY"] = trg["COUNTRY"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["STATE"] = trg["STATE"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["CITY"] = trg["CITY"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["POSTAL_CODE"] = trg["POSTAL_CODE"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["EMAIL"] = trg["EMAIL"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+            //                 trg["CONTACT_NO"] = trg["CONTACT_NO"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
+
+            //                 trg["HOUSE_NUM1"].value = src.STREET ?? "";
+            //                 trg["STREET1"].value = src.STREET1 ?? "";
+            //                 trg["STREET2"].value = src.STREET2 ?? "";
+            //                 trg["STREET3"].value = src.STREET3 ?? "";
+            //                 trg["STREET4"].value = src.STREET4 ?? "";
+            //                 trg["COUNTRY"].value = src.COUNTRY ?? "";
+            //                 trg["STATE"].value = src.STATE ?? "";
+            //                 trg["CITY"].value = src.CITY ?? "";
+            //                 trg["POSTAL_CODE"].value = src.POSTAL_CODE ?? "";
+            //                 trg["EMAIL"].value = src.EMAIL ?? "";
+            //                 trg["CONTACT_NO"].value = src.CONTACT_NO ?? "";
+            //             }
+
+            //             const pCon = sInfo["Primary Contact"];
+            //             if (pCon) {
+            //                 const c = r.TO_CONTACTS?.results?.[0] || {};
+            //                 pCon["FIRST_NAME"].value = c.FIRST_NAME || "";
+            //                 pCon["LAST_NAME"].value = c.LAST_NAME || "";
+            //                 pCon["CITY"].value = c.CITY || "";
+            //                 pCon["STATE"].value = c.STATE || "";
+            //                 pCon["COUNTRY"].value = c.COUNTRY || "";
+            //                 pCon["POSTAL_CODE"].value = c.POSTAL_CODE || "";
+            //                 pCon["DESIGNATION"].value = c.DESIGNATION || "";
+            //                 pCon["EMAIL"].value = c.EMAIL || "";
+            //                 pCon["CONTACT_NUMBER"].value = c.CONTACT_NO || "";
+            //                 pCon["MOBILE"].value = c.MOBILE_NO || "";
+            //             }
+            //         }
+
+            //         const fin = model["Finance Information"];
+            //         if (fin) {
+            //             const bankRows = fin["Primary Bank details"] || [];
+            //             const bankResults = r.TO_BANKS?.results || [];
+
+            //             if (bankRows[0] && bankResults[0]) {
+            //                 const src = bankResults[0];
+            //                 const trg = bankRows[0];
+
+            //                 trg.BANK_TYPE = "Primary";
+            //                 trg["SWIFT_CODE"].value = src.SWIFT_CODE ?? "";
+            //                 trg["BRANCH_NAME"].value = src.BRANCH_NAME ?? "";
+            //                 trg["BANK_COUNTRY"].value = src.BANK_COUNTRY ?? "";
+            //                 trg["BANK_NAME"].value = src.BANK_NAME ?? "";
+            //                 trg["BENEFICIARY"].value = src.BENEFICIARY ?? "";
+            //                 trg["ACCOUNT_NO"].value = src.ACCOUNT_NO ?? "";
+            //                 trg["IBAN_NUMBER"].value = src.IBAN_NUMBER ?? "";
+            //                 trg["ROUTING_CODE"].value = src.ROUTING_CODE ?? "";
+            //                 trg["BANK_CURRENCY"].value = src.BANK_CURRENCY ?? "";
+            //                 fin["TAX-VAT-GST"].GST_NO.value = src.GST ?? "";
+            //             }
+
+            //             if (bankResults[1]) {
+            //                 if (!bankRows[1]) {
+            //                     const copy = JSON.parse(JSON.stringify(bankRows[0]));
+            //                     Object.keys(copy).forEach(k => { if (k !== "BANK_TYPE") copy[k].value = ""; });
+            //                     copy.BANK_TYPE = "Other Bank Details";
+            //                     bankRows.push(copy);
+            //                 }
+
+            //                 const src = bankResults[1];
+            //                 const trg = bankRows[1];
+
+            //                 trg["SWIFT_CODE"].value = src.SWIFT_CODE ?? "";
+            //                 trg["BRANCH_NAME"].value = src.BRANCH_NAME ?? "";
+            //                 trg["BANK_COUNTRY"].value = src.BANK_COUNTRY ?? "";
+            //                 trg["BANK_NAME"].value = src.BANK_NAME ?? "";
+            //                 trg["BENEFICIARY"].value = src.BENEFICIARY ?? "";
+            //                 trg["ACCOUNT_NO"].value = src.ACCOUNT_NO ?? "";
+            //                 trg["IBAN_NUMBER"].value = src.IBAN_NUMBER ?? "";
+            //                 trg["ROUTING_CODE"].value = src.ROUTING_CODE ?? "";
+            //                 trg["BANK_CURRENCY"].value = src.BANK_CURRENCY ?? "";
+            //             }
+            //         }
+
+            //         const op = model["Operational Information"];
+            //         if (op) {
+            //             const prod = op["Product-Service Description"];
+            //             if (prod) {
+            //                 const p = r.TO_REG_PRODUCT_SERVICE?.results?.[0] || {};
+            //                 prod["PRODUCT_NAME"].value = p.PROD_NAME || "";
+            //                 prod["PRODUCT_DESCRIPTION"].value = p.PROD_DESCRIPTION || "";
+            //                 prod["PRODUCT_TYPE"].value = p.PROD_TYPE || "";
+            //                 prod["PRODUCT_CATEGORY"].value = p.PROD_CATEGORY || "";
+            //             }
+            //             const cap = op["Operational Capacity"];
+            //             if (cap) {
+            //                 const c = r.TO_REG_CAPACITY?.results?.[0] || {};
+            //                 cap["ORDER_SIZE_MIN"].value = c.MINIMUM_ORDER_SIZE || "";
+            //                 cap["PRODUCTION_CAPACITY"].value = c.TOTAL_PROD_CAPACITY || "";
+            //                 cap["PRODUCTION_LOCATION"].value = c.CITY || "";
+            //                 cap["ORDER_SIZE_MAX"].value = c.MAXMIMUM_ORDER_SIZE || "";
+            //             }
+            //         }
+
+            //         // Handle dynamic fields from TO_DYNAMIC_FIELDS
+            //         if (r && r.TO_DYNAMIC_FIELDS && r.TO_DYNAMIC_FIELDS.results && r.TO_DYNAMIC_FIELDS.results.length > 0) {
+            //             r.TO_DYNAMIC_FIELDS.results.forEach(dynamicField => {
+            //                 const section = dynamicField.SECTION;
+            //                 const category = dynamicField.CATEGORY;
+            //                 let data;
+
+            //                 try {
+            //                     data = JSON.parse(dynamicField.DATA);
+            //                 } catch (e) {
+            //                     console.error(`Failed to parse DATA for SECTION: ${section}, CATEGORY: ${category}`, dynamicField.DATA, e);
+            //                     return;
+            //                 }
+
+            //                 console.log(`Processing dynamic field - SECTION: ${section}, CATEGORY: ${category}, DATA:`, data);
+
+            //                 // Ensure section and category exist in the model
+            //                 if (!model[section]) {
+            //                     console.warn(`Section ${section} not found in model. Creating it.`);
+            //                     model[section] = {};
+            //                 }
+            //                 if (!model[section][category]) {
+            //                     console.warn(`Category ${category} not found in model for section ${section}. Creating it.`);
+            //                     if (category === "Address") {
+            //                         model[section][category] = [{ ADDRESS_TYPE: "Primary" }];
+            //                     } else if (category === "Primary Bank details") {
+            //                         model[section][category] = [{ BANK_TYPE: "Primary" }];
+            //                     } else {
+            //                         model[section][category] = {};
+            //                     }
+            //                 }
+
+            //                 // Update fields with dynamic data, ensuring they are applied to the correct category
+            //                 Object.keys(data).forEach(fieldKey => {
+            //                     let fieldValue = data[fieldKey];
+            //                     const normalizedFieldKey = fieldKey.replace(/\s+/g, '_'); // Normalize spaces to underscores
+
+            //                     // Reformat date fields to YYYY-MM-DD only if the field is explicitly a date field
+            //                     if (normalizedFieldKey.toLowerCase().includes("date") && fieldValue) {
+            //                         try {
+            //                             const parsedDate = new Date(fieldValue);
+            //                             if (!isNaN(parsedDate.getTime())) {
+            //                                 fieldValue = parsedDate.toISOString().split('T')[0]; // YYYY-MM-DD
+            //                                 console.log(`Reformatted date for ${fieldKey}: ${fieldValue}`);
+            //                             } else {
+            //                                 console.warn(`Invalid date format for ${fieldKey}: ${fieldValue}`);
+            //                             }
+            //                         } catch (e) {
+            //                             console.error(`Error parsing date for ${fieldKey}: ${fieldValue}`, e);
+            //                         }
+            //                     }
+
+            //                     if (category === "Address" || category === "Primary Bank details") {
+            //                         const index = 0; // Assume first entry (e.g., "Primary")
+            //                         if (!model[section][category][index]) {
+            //                             model[section][category][index] = category === "Address" ? { ADDRESS_TYPE: "Primary" } : { BANK_TYPE: "Primary" };
+            //                         }
+
+            //                         // Check if the field exists in the model, if not create it
+            //                         if (!model[section][category][index][normalizedFieldKey]) {
+            //                             model[section][category][index][normalizedFieldKey] = {
+            //                                 value: "",
+            //                                 label: fieldKey,
+            //                                 mandatory: false,
+            //                                 visible: true,
+            //                                 type: normalizedFieldKey.toLowerCase().includes("date") ? "Date" : "",
+            //                                 description: "",
+            //                                 fieldId: "",
+            //                                 companyCode: "",
+            //                                 requestType: "",
+            //                                 minimum: "",
+            //                                 maximum: "",
+            //                                 placeholder: "",
+            //                                 dropdownValues: "",
+            //                                 newDynamicFormField: true
+            //                             };
+            //                         }
+
+            //                         // Update the value and mark as dynamic
+            //                         model[section][category][index][normalizedFieldKey].value = fieldValue;
+            //                         model[section][category][index][normalizedFieldKey].newDynamicFormField = true;
+            //                         console.log(`Updated dynamic field in ${section}/${category}[${index}]: ${normalizedFieldKey} = ${fieldValue}`);
+            //                     } else {
+            //                         // Non-array category (like Product-Service Description)
+            //                         if (!model[section][category][normalizedFieldKey]) {
+            //                             model[section][category][normalizedFieldKey] = {
+            //                                 value: "",
+            //                                 label: fieldKey,
+            //                                 mandatory: false,
+            //                                 visible: true,
+            //                                 type: normalizedFieldKey.toLowerCase().includes("date") ? "Date" : "",
+            //                                 description: "",
+            //                                 fieldId: "",
+            //                                 companyCode: "",
+            //                                 requestType: "",
+            //                                 minimum: "",
+            //                                 maximum: "",
+            //                                 placeholder: "",
+            //                                 dropdownValues: "",
+            //                                 newDynamicFormField: true
+            //                             };
+            //                         }
+
+            //                         // Update the value and mark as dynamic
+            //                         model[section][category][normalizedFieldKey].value = fieldValue;
+            //                         model[section][category][normalizedFieldKey].newDynamicFormField = true;
+            //                         console.log(`Updated dynamic field in ${section}/${category}: ${normalizedFieldKey} = ${fieldValue}`);
+            //                     }
+            //                 });
+            //             });
+            //         } else {
+            //             console.warn("No dynamic fields found in response.");
+            //         }
+
+            //         var oDisclosureModelData = new JSONModel({});
+            //         const disclosure = model["Disclosures"];
+            //         const disclosureKeys = Object.keys(disclosure);
+            //         const fieldMapping = {
+            //             "Conflict of Interest": "INTEREST_CONFLICT",
+            //             "Legal Case Disclosure": "ANY_LEGAL_CASES",
+            //             "Anti-Corruption Regulation": "ABAC_REG",
+            //             "Export Control": "CONTROL_REGULATION"
+            //         };
+
+            //         const valueMapping = {
+            //             "YES": 0,
+            //             "NO": 1,
+            //             "NA": 2
+            //         };
+
+            //         disclosureKeys.forEach(function (fieldKey) {
+            //             const field = disclosure[fieldKey];
+            //             if (field && fieldKey) {
+            //                 let propertyName = "/" + fieldKey.toLowerCase().replace(/ /g, '').replace('&', '').replace('-', '');
+            //                 const mappedField = fieldMapping[fieldKey];
+
+            //                 if (r && r.TO_DISCLOSURE_FIELDS && r.TO_DISCLOSURE_FIELDS.results.length > 0) {
+            //                     const disclosureData = r.TO_DISCLOSURE_FIELDS.results[0];
+            //                     let fieldValue = disclosureData[mappedField] || "NA";
+            //                     fieldValue = valueMapping[fieldValue];
+            //                     oDisclosureModelData.setProperty(`/${propertyName}`, fieldValue);
+            //                     console.log(`Set disclosure field ${fieldKey} (mapped to ${mappedField}):`, propertyName, "with value:", fieldValue);
+            //                 } else {
+            //                     console.error(`Disclosure data for ${mappedField} not found in response.`);
+            //                 }
+            //             } else {
+            //                 console.error(`Missing or invalid data for field: ${fieldKey}. Full field data:`, field);
+            //             }
+            //         });
+
+            //         this.getView().setModel(oDisclosureModelData, "existModel");
+
+            //         if (model["Quality Certificates"]) {
+            //             if (model["Quality Certificates"]["Standard Certifications"]) {
+            //                 if (r && r.TO_QA_CERTIFICATES && r.TO_QA_CERTIFICATES.results && r.TO_QA_CERTIFICATES.results.length > 0) {
+            //                     r.TO_QA_CERTIFICATES.results.forEach(cert => {
+            //                         const certName = `${cert.CERTI_NAME.replace(/ /g, '_')}_DONE_BY`;
+            //                         if (model["Quality Certificates"]["Standard Certifications"][certName]) {
+            //                             model["Quality Certificates"]["Standard Certifications"][certName].value = cert.DONE_BY || "N/A";
+            //                             model["Quality Certificates"]["Standard Certifications"][certName].isCertified = cert.AVAILABLE === "YES" ? "Yes" : "No";
+            //                             console.log(`Updated certification: ${certName}, DONE_BY: ${cert.DONE_BY}, AVAILABLE: ${cert.AVAILABLE}`);
+            //                         } else {
+            //                             console.warn(`No matching certification found in model for: ${cert.CERTI_NAME}`);
+            //                         }
+            //                     });
+            //                 } else {
+            //                     console.error("No QA certificates found in response.");
+            //                 }
+            //             }
+            //         }
+
+            //         if (model["Attachments"]) {
+            //             if (r && r.TO_ATTACHMENTS && r.TO_ATTACHMENTS.results && r.TO_ATTACHMENTS.results.length > 0) {
+            //                 r.TO_ATTACHMENTS.results.forEach((attachment, index) => {
+            //                     const attachmentData = model["Attachments"][index];
+            //                     if (attachmentData) {
+            //                         attachmentData.fileName = attachment.IMAGE_FILE_NAME || "";
+            //                         attachmentData.imageUrl = attachment.IMAGEURL || "";
+            //                         attachmentData.title = attachment.ATTACH_SHORT_DEC;
+            //                         attachmentData.description = attachment.DESCRIPTION;
+            //                         attachmentData.uploaded = true;
+            //                     }
+            //                 });
+            //                 this.getView().getModel("formDataModel").setProperty("/Attachments", model["Attachments"]);
+            //             } else {
+            //                 console.error("No attachments found in response.");
+            //             }
+            //         }
+
+            //         const sub = model["Submission"]?.["Declaration"];
+            //         if (sub) {
+            //             sub["COMPLETED_BY"].value = r.COMPLETED_BY || "";
+            //             sub["DESIGNATION"].value = r.DESIGNATION || "";
+            //             sub["SUBMISSION_DATE"].value = r.SUBMISSION_DATE || "";
+            //             sub["ACK_VALIDATION"].value = true;
+            //         }
+            //     }
+
+            //     console.log("Final model:", JSON.stringify(model, null, 2));
+            //     return model;
+            // },
 
             createDynamicForm: function (data, type) {
                 console.log("Creating dynamic form with data:", data, type);
