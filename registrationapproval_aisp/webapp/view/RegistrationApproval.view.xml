@@ -61,6 +61,24 @@
                         >
                             <columns>
                                 <Column
+                                    hAlign="Center"
+                                    demandPopin="true"
+                                    minScreenWidth="Tablet"
+                                    popinDisplay="Inline"
+                                    width="auto"
+                                >
+                                    <customData>
+                                        <core:CustomData
+                                            key="p13nData"
+                                            value='\{"columnKey": "UPLOAD_LOGO","leadingProperty": "UPLOAD_LOGO", "sortProperty": "UPLOAD_LOGO", "filterProperty": "UPLOAD_LOGO", "columnIndex": "0" }'
+                                        />
+                                    </customData>
+                                    <Label
+                                        text="Profile Image"
+                                        wrapping="true"
+                                    />
+                                </Column>
+                                <Column
                                     hAlign="Begin"
                                     demandPopin="true"
                                     minScreenWidth="Tablet"
@@ -70,7 +88,7 @@
                                     <customData>
                                         <core:CustomData
                                             key="p13nData"
-                                            value='\{"columnKey": "REQUEST_NO","leadingProperty": "REQUEST_NO", "sortProperty": "REQUEST_NO", "filterProperty": "REQUEST_NO", "columnIndex": "0" }'
+                                            value='\{"columnKey": "REQUEST_NO","leadingProperty": "REQUEST_NO", "sortProperty": "REQUEST_NO", "filterProperty": "REQUEST_NO", "columnIndex": "1" }'
                                         />
                                     </customData>
                                     <Label
@@ -88,7 +106,7 @@
                                     <customData>
                                         <core:CustomData
                                             key="p13nData"
-                                            value='\{"columnKey": "VENDOR_NAME1","leadingProperty": "VENDOR_NAME1", "sortProperty": "VENDOR_NAME1", "filterProperty": "VENDOR_NAME1", "columnIndex": "1" }'
+                                            value='\{"columnKey": "VENDOR_NAME1","leadingProperty": "VENDOR_NAME1", "sortProperty": "VENDOR_NAME1", "filterProperty": "VENDOR_NAME1", "columnIndex": "2" }'
                                         />
                                     </customData>
                                     <Label
@@ -106,7 +124,7 @@
                                     <customData>
                                         <core:CustomData
                                             key="p13nData"
-                                            value='\{"columnKey": "COMPANY_CODE","leadingProperty": "COMPANY_CODE", "sortProperty": "COMPANY_CODE", "filterProperty": "COMPANY_CODE", "columnIndex": "2" }'
+                                            value='\{"columnKey": "COMPANY_CODE","leadingProperty": "COMPANY_CODE", "sortProperty": "COMPANY_CODE", "filterProperty": "COMPANY_CODE", "columnIndex": "3" }'
                                         />
                                     </customData>
                                     <Label
@@ -124,7 +142,7 @@
                                     <customData>
                                         <core:CustomData
                                             key="p13nData"
-                                            value='\{"columnKey": "REGISTERED_ID","leadingProperty": "REGISTERED_ID", "sortProperty": "REGISTERED_ID", "filterProperty": "REGISTERED_ID", "columnIndex": "3" }'
+                                            value='\{"columnKey": "REGISTERED_ID","leadingProperty": "REGISTERED_ID", "sortProperty": "REGISTERED_ID", "filterProperty": "REGISTERED_ID", "columnIndex": "4" }'
                                         />
                                     </customData>
                                     <Label
@@ -142,7 +160,7 @@
                                     <customData>
                                         <core:CustomData
                                             key="p13nData"
-                                            value='\{"columnKey": "SUPPL_TYPE","leadingProperty": "SUPPL_TYPE", "sortProperty": "SUPPL_TYPE", "filterProperty": "SUPPL_TYPE", "columnIndex": "4"}'
+                                            value='\{"columnKey": "SUPPL_TYPE","leadingProperty": "SUPPL_TYPE", "sortProperty": "SUPPL_TYPE", "filterProperty": "SUPPL_TYPE", "columnIndex": "5"}'
                                         />
                                     </customData>
                                     <Label
@@ -161,7 +179,7 @@
                                     <customData>
                                         <core:CustomData
                                             key="p13nData"
-                                            value='\{"columnKey": "BP_TYPE_CODE","leadingProperty": "BP_TYPE_CODE", "sortProperty": "BP_TYPE_CODE", "filterProperty": "BP_TYPE_CODE", "columnIndex": "5"}'
+                                            value='\{"columnKey": "BP_TYPE_CODE","leadingProperty": "BP_TYPE_CODE", "sortProperty": "BP_TYPE_CODE", "filterProperty": "BP_TYPE_CODE", "columnIndex": "6"}'
                                         />
                                     </customData>
                                     <Label
@@ -180,7 +198,7 @@
                                     <customData>
                                         <core:CustomData
                                             key="p13nData"
-                                            value='\{"columnKey": "CREATED_ON","leadingProperty": "CREATED_ON", "sortProperty": "CREATED_ON", "filterProperty": "CREATED_ON", "columnIndex": "6"}'
+                                            value='\{"columnKey": "CREATED_ON","leadingProperty": "CREATED_ON", "sortProperty": "CREATED_ON", "filterProperty": "CREATED_ON", "columnIndex": "7"}'
                                         />
                                     </customData>
                                     <Label
@@ -198,7 +216,7 @@
                                     <customData>
                                         <core:CustomData
                                             key="p13nData"
-                                            value='\{"columnKey": "STATUS","leadingProperty": "STATUS", "sortProperty": "STATUS", "filterProperty": "STATUS", "columnIndex": "7" }'
+                                            value='\{"columnKey": "STATUS","leadingProperty": "STATUS", "sortProperty": "STATUS", "filterProperty": "STATUS", "columnIndex": "8" }'
                                         />
                                     </customData>
                                     <Label
@@ -215,6 +233,13 @@
                                     press="handleProcessTable_RowClick"
                                 >
                                     <cells>
+                                    <Avatar
+                                        src="{= ${UPLOAD_LOGO} ? ${UPLOAD_LOGO} : './Images/Industry.png' }"
+                                        displaySize="S"
+                                        initials="{= ${VENDOR_NAME1} ? ${VENDOR_NAME1}.substring(0, 2).toUpperCase() : 'AB' }"
+                                        displayShape="Circle"
+                                        class="sapUiTinyMarginEnd"
+                                    />
                                         <VBox>
                                             <Text
                                                 text="{REQUEST_NO}"
