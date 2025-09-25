@@ -305,7 +305,9 @@ sap.ui.define([
                         },
                         error: function (errorResponse) {
                             that.getView().setBusy(false);
-                            let errorMessage = errorResponse.responseText || "An error occurred.";
+                            let eMessage = JSON.parse(errorResponse.responseText);
+                            let errorMessage = eMessage.error.message.value || "An error occurred while creating the user."
+                            // let errorMessage = errorResponse.responseText || "An error occurred.";
                             MessageBox.error(errorMessage, {
                                 title: "Error",
                                 onClose: function () {

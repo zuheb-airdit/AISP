@@ -1,0 +1,343 @@
+<mvc:View
+    controllerName="com.sconfig.systemconfiguration2aisp.controller.BuyerMail"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:dnd-grid="sap.f.dnd"
+    xmlns:layout="sap.ui.layout"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:table="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:l="sap.ui.layout"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:plugins="sap.m.plugins"
+    xmlns:columnmenu="sap.m.table.columnmenu"
+    xmlns:sap.ui.fl="sap.ui.fl"
+    xmlns:sap.ui.dt="sap.ui.dt"
+    xmlns:vm="sap.ui.fl.variants"
+    xmlns:dnd="sap.ui.core.dnd"
+>
+    <Page
+        title="Global Mail Configuration"
+        titleLevel="H1"
+        showNavButton="true"
+        navButtonPress="onNavHome"
+    >
+        <content>
+            <Panel
+                width="auto"
+                class="sapUiResponsiveMargin"
+                accessibleRole="Region"
+            >
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title
+                            text="Buyer Mail Configuration"
+                            level="H3"
+                            class="sapUiSmallMarginBegin sapUiTinyMarginTopBottom"
+                        />
+                        <ToolbarSpacer />
+                        <Button
+                            id="createButton"
+                            text="{i18n>Create}"
+                            type="Emphasized"
+                            icon="sap-icon://add"
+                            press="onCreatePress"
+                            visible="{= (${BuyerModel>/MAIL_ID} || '') === '' &amp;&amp; ${viewModel>/isEditing} === false}"
+                            class="sapUiTinyMarginEnd"
+                        />
+                        <Button
+                            id="submitButtonqq"
+                            text="{i18n>Submit}"
+                            type="Accept"
+                            press="onUpdateBuyerMConf"
+                            visible="{viewModel>/isEditing}"
+                            class="sapUiTinyMarginEnd"
+                        />
+                        <Button
+                            id="editButtoan"
+                            text="{= ${viewModel>/isEditing} ? ${i18n>Cancel} : ${i18n>Edit}}"
+                            type="Emphasized"
+                            icon="{= ${viewModel>/isEditing} ? 'sap-icon://cancel' : 'sap-icon://edit'}"
+                            press="onEditPress"
+                            visible="{= (${BuyerModel>/MAIL_ID} || '') !== ''}"
+                            class="sapUiTinyMarginEnd"
+                        />
+                        <Button
+                            id="deleteButton"
+                            text="{i18n>Delete}"
+                            type="Reject"
+                            icon="sap-icon://delete"
+                            press="onDeletePress"
+                            visible="{= (${BuyerModel>/MAIL_ID} || '') !== '' &amp;&amp; ${viewModel>/isEditing} === false}"
+                            class="sapUiTinyMarginEnd"
+                        />
+                    </OverflowToolbar>
+                </headerToolbar>
+                <content>
+                    <VBox
+                        visible="{= (${BuyerModel>/MAIL_ID} || '') !== '' || ${viewModel>/isEditing} === true}"
+                    >
+                        <f:GridContainer
+                            id="buyerConfig"
+                            snapToRow="true"
+                            class="sapUiSmallMargin"
+                        >
+                            <f:layout>
+                                <f:GridContainerSettings
+                                    rowSize="5rem"
+                                    columnSize="20rem"
+                                    gap="1rem"
+                                />
+                            </f:layout>
+
+                            <!-- Email Exchange Server -->
+                            <VBox class="customInputGroup">
+                                <Label
+                                    text="Email Exchange Server"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <ComboBox
+                                    id="emailExchangeServerComboBox"
+                                    selectedKey="{BuyerModel>/EMAIL_EXCHANGE_SERVER}"
+                                   
+                                    change=".onExchangeServerChange"
+                                    enabled="{= ${viewModel>/isEditing} }"
+                                >
+                                    <core:Item
+                                        key="N"
+                                        text="{i18n>PleaseSelectOption}"
+                                    />
+                                    <core:Item
+                                        key="M"
+                                        text="{i18n>MicrosoftExchangeServer}"
+                                    />
+                                    <core:Item
+                                        key="G"
+                                        text="{i18n>GoogleWorkspace}"
+                                    />
+                                </ComboBox>
+                            </VBox>
+
+                            <!-- Mail ID -->
+                            <VBox
+                                class="customInputGroup"
+                                visible="{= ${BuyerModel>/EMAIL_EXCHANGE_SERVER} !== 'N'}"
+                            >
+                                <Label
+                                    text="Mail ID"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <Input
+                                    id="mailIdInput"
+                                    type="Email"
+                                    value="{BuyerModel>/MAIL_ID}"
+                                    maxLength="100"
+                                   
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                />
+                            </VBox>
+
+                            <!-- Poll Interval -->
+                            <VBox class="customInputGroup">
+                                <Label
+                                    text="Poll Interval(Mins)"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <Input
+                                    id="pollIntervalInput"
+                                    type="Number"
+                                    value="{BuyerModel>/POLL_INTERVAL}"
+                                    maxLength="2"
+                                   
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                />
+                            </VBox>
+
+                            <!-- Allowed File Types -->
+                            <VBox class="customInputGroup">
+                                <Label
+                                    text="Allowed File Types"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <ComboBox
+                                    id="fileTypesComboBox"
+                                    selectedKey="{BuyerModel>/FILE_TYPES}"
+                                    
+                                    selectionChange=".onFileTypesChange"
+                                    enabled="{= ${viewModel>/isEditing} }"
+                                >
+                                    <core:Item
+                                        key="jpeg"
+                                        text="JPEG"
+                                    />
+                                    <core:Item
+                                        key="png"
+                                        text="PNG"
+                                    />
+                                    <core:Item
+                                        key="pdf"
+                                        text="PDF"
+                                    />
+                                </ComboBox>
+                            </VBox>
+
+                            <!-- File Size -->
+                            <VBox class="customInputGroup">
+                                <Label
+                                    text="FileSize(MB)"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <Input
+                                    id="fileSizeInput"
+                                    type="Number"
+                                    value="{BuyerModel>/FILE_SIZE_MB}"
+                                    maxLength="3"
+                                   
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                />
+                            </VBox>
+
+                            <!-- Mail Subject Pattern -->
+                            <VBox class="customInputGroup">
+                                <Label
+                                    text="Mail Subject Pattern"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <Input
+                                    id="mailSubjectPatternInput"
+                                    value="{BuyerModel>/MAIL_SUBJECT_PATTERN}"
+                                    maxLength="100"
+                                  
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                />
+                            </VBox>
+
+                            <!-- Microsoft Exchange Fields -->
+                            <VBox
+                                class="customInputGroup"
+                                visible="{= ${BuyerModel>/EMAIL_EXCHANGE_SERVER} === 'M'}"
+                            >
+                                <Label
+                                    text="Client ID"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <Input
+                                    id="clientIdInput"
+                                    value="{BuyerModel>/CLIENT_ID}"
+                                    maxLength="100"
+                                  
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                />
+                                <Label
+                                    text="Client Secret"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <Input
+                                    id="clientSecretInput"
+                                    value="{BuyerModel>/CLIENT_SECRET}"
+                                    maxLength="100"
+                                    
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                />
+                                <Label
+                                    text="Tenant ID"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <Input
+                                    id="tenantIdInput"
+                                    value="{BuyerModel>/TENANT_ID}"
+                                    maxLength="100"
+                                   
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                />
+                            </VBox>
+
+                            <!-- Google Workspace Fields -->
+                            <VBox
+                                class="customInputGroup"
+                                visible="{= ${BuyerModel>/EMAIL_EXCHANGE_SERVER} === 'G'}"
+                            >
+                                <Label
+                                    text="HostName"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <Input
+                                    id="hostInput"
+                                    value="{BuyerModel>/HOST}"
+                                    maxLength="100"
+                                  
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                />
+                                <Label
+                                    text="App Password"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <Input
+                                    id="appPasswordInput"
+                                    type="Password"
+                                    value="{BuyerModel>/APP_PASSWORD}"
+                                    maxLength="100"
+                                   
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                />
+                            </VBox>
+
+                            <!-- Description -->
+                            <VBox class="customInputGroup">
+                                <Label
+                                    text="{i18n>Description}"
+                                    required="true"
+                                    design="Bold"
+                                />
+                                <TextArea
+                                    id="descriptionInput"
+                                    value="{BuyerModel>/DESCRIPTION}"
+                                    rows="3"
+                                  
+                                    editable="{= ${viewModel>/isEditing} }"
+                                    class="sapUiTinyMarginBottom"
+                                    width="100%"
+                                />
+                            </VBox>
+                        </f:GridContainer>
+                    </VBox>
+                    <VBox
+                        visible="{= (${BuyerModel>/MAIL_ID} || '') === '' &amp;&amp; ${viewModel>/isEditing} === false}"
+                        alignItems="Center"
+                        justifyContent="Center"
+                        class="sapUiLargeMarginTop"
+                    >
+                        <Text
+                            text="{i18n>NoData}"
+                            class="sapUiLargeMargin"
+                        />
+                    </VBox>
+                </content>
+            </Panel>
+        </content>
+    </Page>
+</mvc:View>

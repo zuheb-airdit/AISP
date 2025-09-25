@@ -48,6 +48,7 @@
                 <Annotation Term="Common.ValueList">
                     <Record Type="Common.ValueListType">
                         <PropertyValue Property="CollectionPath" String="RequestInfo" />
+                        <PropertyValue Property="SearchSupported" Bool="true" />
                         <PropertyValue Property="Parameters">
                             <Collection>
                                 <Record Type="Common.ValueListParameterInOut">
@@ -64,6 +65,7 @@
                 <Annotation Term="Common.ValueList">
                     <Record Type="Common.ValueListType">
                         <PropertyValue Property="CollectionPath" String="RequestInfo" />
+                        <PropertyValue Property="SearchSupported" Bool="true" />
                         <PropertyValue Property="Parameters">
                             <Collection>
                                 <Record Type="Common.ValueListParameterInOut">
@@ -78,9 +80,10 @@
             </Annotations>
 
             <Annotations Target="SAP.RequestInfo/COMPANY_CODE">
-             <Annotation Term="Common.ValueList">
+                <Annotation Term="Common.ValueList">
                     <Record Type="Common.ValueListType">
                         <PropertyValue Property="CollectionPath" String="CompanyCode" />
+                        <PropertyValue Property="SearchSupported" Bool="true" />
                         <PropertyValue Property="Parameters">
                             <Collection>
                                 <Record Type="Common.ValueListParameterInOut">
@@ -88,7 +91,7 @@
                                     <PropertyValue Property="ValueListProperty" String="BUKRS" />
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="BUTXT"/>
+                                    <PropertyValue Property="ValueListProperty" String="BUTXT" />
                                 </Record>
                             </Collection>
                         </PropertyValue>
@@ -98,24 +101,37 @@
             </Annotations>
 
             <Annotations Target="SAP.RequestInfo/BP_TYPE_DESC">
-             <Annotation Term="Common.ValueList">
+                <Annotation Term="Common.ValueList">
                     <Record Type="Common.ValueListType">
                         <PropertyValue Property="CollectionPath" String="Vendor_Type" />
+                        <PropertyValue Property="SearchSupported" Bool="true" />
                         <PropertyValue Property="Parameters">
                             <Collection>
                                 <Record Type="Common.ValueListParameterInOut">
                                     <PropertyValue Property="LocalDataProperty" PropertyPath="BP_TYPE_DESC" />
-                                    <PropertyValue Property="ValueListProperty" String="SPRAS" />
+                                    <PropertyValue Property="ValueListProperty" String="TXT30" />
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="TXT30"/>
+                                    <PropertyValue Property="ValueListProperty" String="SPRAS" />
                                 </Record>
                             </Collection>
-
                         </PropertyValue>
                     </Record>
                 </Annotation>
                 <Annotation Term="Common.Label" String="Vendor Type" />
+            </Annotations>
+
+            <Annotations Target="SAP.CompanyCode/BUKRS">
+                <Annotation Term="Common.Label" String="Code" />
+            </Annotations>
+            <Annotations Target="SAP.CompanyCode/BUTXT">
+                <Annotation Term="Common.Label" String="Description" />
+            </Annotations>
+            <Annotations Target="SAP.Vendor_Type/TXT30">
+                <Annotation Term="Common.Label" String="Description" />
+            </Annotations>
+            <Annotations Target="SAP.Vendor_Type/SPRAS">
+                <Annotation Term="Common.Label" String="Code" />
             </Annotations>
         </Schema>
     </edmx:DataServices>

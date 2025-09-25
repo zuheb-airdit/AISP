@@ -9,16 +9,17 @@ server:
     - name: fiori-tools-proxy
       afterMiddleware: compression
       configuration:
-        ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
+        ignoreCertError: false
         ui5:
           path:
             - /resources
             - /test-resources
           url: https://ui5.sap.com
         backend:
-          - path: /v2
-            url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
+          - url: https://airdit-software-services-private-limite-airdit-190920235a6e3d29.cfapps.ap10.hana.ondemand.com
+            authenticationType: OAuth2JWTBearer
             destination: VendorManagement-Airdit
+            path: /v2
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
@@ -38,5 +39,13 @@ server:
           - urlPath: /v2/odata/v4/admin
             metadataPath: ./webapp/localService/mainService/metadata.xml
             mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+          - urlPath: /v2/odata/v4/global-mail
+            metadataPath: ./webapp/localService/global-mail/metadata.xml
+            mockdataPath: ./webapp/localService/global-mail/data
+            generateMockData: true
+          - urlPath: v2/odata/v4/supplier-configuration
+            metadataPath: ./webapp/localService/supplier-configuration/metadata.xml
+            mockdataPath: ./webapp/localService/supplier-configuration/data
             generateMockData: true
         annotations: []

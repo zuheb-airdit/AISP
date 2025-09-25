@@ -61,7 +61,7 @@
             <Button text="Send Email" type="Emphasized" press="onSubmitEmailPress" icon="sap-icon://paper-plane"/>
         </beginButton>
         <endButton>
-            <Button text="Close" press="onDialogClose" icon="sap-icon://decline"/>
+            <Button text="Close" press="onDialogCloseTestEmail" icon="sap-icon://decline"/>
         </endButton>
     </Dialog>
 </core:FragmentDefinition>

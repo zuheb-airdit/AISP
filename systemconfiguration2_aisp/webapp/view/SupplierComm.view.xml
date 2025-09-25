@@ -1,0 +1,120 @@
+<mvc:View
+    controllerName="com.sconfig.systemconfiguration2aisp.controller.SupplierComm"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:dnd-grid="sap.f.dnd"
+    xmlns:layout="sap.ui.layout"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:table="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:l="sap.ui.layout"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:plugins="sap.m.plugins"
+    xmlns:columnmenu="sap.m.table.columnmenu"
+    xmlns:sap.ui.fl="sap.ui.fl"
+    xmlns:sap.ui.dt="sap.ui.dt"
+    xmlns:vm="sap.ui.fl.variants"
+    xmlns:dnd="sap.ui.core.dnd"
+>
+    <Page
+        title="Supplier Communication Configuration"
+        titleLevel="H1"
+        navButtonPress="onNavHome"
+        showNavButton="true"
+    >
+        <content>
+            <smartFilterBar:SmartFilterBar
+                id="smartFilterBar"
+                entitySet="supplierConfiguration"
+                persistencyKey="SmartFilter_Explored"
+            >
+                <smartFilterBar:controlConfiguration />
+            </smartFilterBar:SmartFilterBar>
+
+            <smartTable:SmartTable
+                id="idSuppCon"
+                entitySet="supplierConfiguration"
+                smartFilterId="smartFilterBar"
+                models="supplier-configuration"
+                enableExport="true"
+                beforeExport="onBeforeExport"
+                useVariantManagement="true"
+                useTablePersonalisation="true"
+                header="Items"
+                showRowCount="true"
+                persistencyKey="SmartTableRefApp_Explored"
+                enableAutoBinding="true"
+                tableType="ResponsiveTable"
+                demandPopin="true"
+                enableAutoColumnWidth="false"
+                beforeRebindTable="onRebindPending"
+                showDetailsButton="true"
+                editTogglable="false"
+                class="sapUiTinyMarginTop"
+            >
+                <Table
+                    id="idApprovedInvoiceTable"
+                    growing="true"
+                    growingThreshold="10"
+                    selectionChange="selectionChangeHandler"
+                    noDataText="No Data"
+                    mode="SingleSelectLeft"
+                />
+                <smartTable:customToolbar>
+                    <Toolbar>
+                        <ToolbarSpacer />
+                        <Button
+                            text="Create"
+                            icon="sap-icon://add"
+                            type="Accept"
+                            press="openFragment"
+                        />
+                        <Button
+                            text="Delete"
+                            icon="sap-icon://delete"
+                            type="Negative"
+                            press="deleteRecord"
+                        />
+                        <Button
+                            text="Edit"
+                            icon="sap-icon://edit"
+                            type="Emphasized"
+                            press="editRecord"
+                        />
+                    </Toolbar>
+                </smartTable:customToolbar>
+            </smartTable:SmartTable>
+        </content>
+        <!-- <footer>
+            <Bar class='sapUiSmallMarginBottom'>
+                <contentRight>
+                    <OverflowToolbarButton
+                        press="onPressSave"
+                        type="Attention"
+                        text="Save"
+                        class="sapUiTinyMarginEnd"
+                        tooltip="Submit"
+                        icon="sap-icon://add-activity"
+                    />
+                    <OverflowToolbarButton
+                        text="Save and Continue"
+                        type="Attention"
+                        icon="sap-icon://save"
+                        press="onPressSaveAndContinue"
+                        class="sapUiTinyMarginEnd"
+                    />
+                    <OverflowToolbarButton
+                        text="Back"
+                        icon="sap-icon://nav-back"
+                        type="Attention"
+                        press="onPressBack"
+                    />
+                </contentRight>
+            </Bar>
+        </footer> -->
+    </Page>
+</mvc:View>

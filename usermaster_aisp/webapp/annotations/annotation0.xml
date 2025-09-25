@@ -54,6 +54,7 @@
 				<Annotation Term="Common.ValueList">
 					<Record Type="Common.ValueListType">
 						<PropertyValue Property="CollectionPath" String="EmailAndUsernameF4Help"/>
+						PropertyValue Property="SearchSupported" Bool="true"/>
 						<PropertyValue Property="Parameters">
 							<Collection>
 								<Record Type="Common.ValueListParameterInOut">
@@ -69,6 +70,7 @@
 				<Annotation Term="Common.ValueList">
 					<Record Type="Common.ValueListType">
 						<PropertyValue Property="CollectionPath" String="EmailAndUsernameF4Help"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
 						<PropertyValue Property="Parameters">
 							<Collection>
 								<Record Type="Common.ValueListParameterInOut">
@@ -84,6 +86,7 @@
 				<Annotation Term="Common.ValueList">
 					<Record Type="Common.ValueListType">
 						<PropertyValue Property="CollectionPath" String="CompanyCode"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
 						<PropertyValue Property="Parameters">
 							<Collection>
 								<Record Type="Common.ValueListParameterInOut">
@@ -102,6 +105,7 @@
 				<Annotation Term="Common.ValueList">
 					<Record Type="Common.ValueListType">
 						<PropertyValue Property="CollectionPath" String="UserRole"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
 						<PropertyValue Property="Parameters">
 							<Collection>
 								<Record Type="Common.ValueListParameterInOut">
@@ -115,6 +119,24 @@
 						</PropertyValue>
 					</Record>
 				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP.VMUsers/COMPANY_DESC">
+				<Annotation Term="Common.Label" String="Company Description"/>
+			</Annotations>
+			<Annotations Target="SAP.VMUsers/CREATED_ON">
+				<Annotation Term="Common.Label" String="Created On"/>
+			</Annotations>
+			<Annotations Target="SAP.VMUsers/UPDATED_ON">
+				<Annotation Term="Common.Label" String="Updated On"/>
+			</Annotations>
+			<Annotations Target="SAP.VMUsers/REVOKE_COMMENT">
+				<Annotation Term="Common.Label" String="Revoke Comment"/>
+			</Annotations>
+			<Annotations Target="SAP.VMUsers/DELETE_COMMENT">
+				<Annotation Term="Common.Label" String="Delete Comment"/>
+			</Annotations>
+			<Annotations Target="SAP.EmailAndUsernameF4Help/EMAIL">
+				<Annotation Term="Common.Label" String="User ID"/>
 			</Annotations>
         </Schema>
     </edmx:DataServices>

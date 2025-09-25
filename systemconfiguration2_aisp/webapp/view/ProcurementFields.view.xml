@@ -1,0 +1,200 @@
+<mvc:View
+    controllerName="com.sconfig.systemconfiguration2aisp.controller.ProcurementFields"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:dnd-grid="sap.f.dnd"
+    xmlns:layout="sap.ui.layout"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:table="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:sf="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:plugins="sap.m.plugins"
+    xmlns:columnmenu="sap.m.table.columnmenu"
+    xmlns:sap.ui.fl="sap.ui.fl"
+    xmlns:sap.ui.dt="sap.ui.dt"
+    xmlns:vm="sap.ui.fl.variants"
+    xmlns:dnd="sap.ui.core.dnd"
+>
+    <Page
+        title="Procurement Fields Configuration"
+        titleLevel="H1"
+        showNavButton="true"
+        navButtonPress="onNavHome"
+    >
+        <content>
+            <!-- <core:Fragment
+                fragmentName="com.sconfig.systemconfiguration2aisp.fragments.ProcurementFields"
+                type="XML"
+            /> -->
+            <sf:SimpleForm
+                title="Procurement Fields"
+                editable="true"
+                layout="ColumnLayout"
+                labelSpanXL="2"
+                labelSpanL="2"
+                labelSpanM="2"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="3"
+                columnsL="3"
+                width="99%"
+                columnsM="3"
+                class="sapUiSmallMarginBottom sapUiTinyMarginTop sapUiTinyMarginBeginEnd"
+            >
+                <Label text="Application" />
+                <ComboBox
+                    id="applicationCombo"
+                    selectedKey="{procFieldsModel>selectedApplication}"
+                    items="{path:'/PROCUREMENT_APPLICATION_NAME'}"
+                >
+                    <core:Item
+                        key="{APPLICATION_NAME}"
+                        text="{path: 'APPLICATION_NAME', formatter: '.formatSection'}"
+                    />
+                </ComboBox>
+
+                <!-- <Label text="Company Code" />
+            <ComboBox
+                id="idSourceCC"
+                selectedKey="{CompanyCode>BUKRS}"
+                items="{ path: '/CompanyCode' }"
+            >
+                <core:Item
+                    key="{BUKRS}"
+                    text="{BUKRS} - {BUTXT}"
+                />
+            </ComboBox> -->
+
+                <Label text="Submit" />
+                <!-- Filler label to align the button -->
+                <Button
+                    text="Go"
+                    type="Success"
+                    icon="sap-icon://refresh"
+                    press=".onApplicationChange"
+                    width="2rem"
+                />
+            </sf:SimpleForm>
+            <Table
+                id="idProcurementFieldsTable"
+                items="{procFieldsModel>/procurementFields}"
+                mode="None"
+                noDataText="Select an application to view fields"
+                sticky="HeaderToolbar,ColumnHeaders"
+                class="sapUiPanelRounded sapUiTinyMarginEnd sapUiTinyMarginBeginEnd"
+                width="99%"
+            >
+                <headerToolbar>
+                    <Toolbar>
+                        <Title
+                            text="Procurement Fields"
+                            level="H2"
+                            class="sapUiMediumFontWeight"
+                        />
+                    </Toolbar>
+                </headerToolbar>
+                <columns>
+                    <Column>
+                        <Text
+                            text="Field Name"
+                            class="sapUiMediumFontWeight"
+                        />
+                    </Column>
+                    <Column>
+                        <Text
+                            text="Section"
+                            class="sapUiMediumFontWeight"
+                        />
+                    </Column>
+                    <Column hAlign="Center">
+                        <Text
+                            text="Visible"
+                            class="sapUiMediumFontWeight"
+                        />
+                    </Column>
+                    <Column hAlign="Center">
+                        <Text
+                            text="Mandatory"
+                            class="sapUiMediumFontWeight"
+                        />
+                    </Column>
+                    <Column hAlign="End">
+                        <Text
+                            text="Action"
+                            class="sapUiMediumFontWeight"
+                        />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text
+                                text="{path: 'procFieldsModel>FIELD_NAME', formatter: '.formatSectiona'}"
+                            />
+                            <Text
+                                text="{path: 'procFieldsModel>SECTION', formatter: '.formatSectiona'}"
+                            />
+                            <ObjectStatus
+                                text="{= ${procFieldsModel>VISIBLE} ? 'Yes' : 'No'}"
+                                state="{= ${procFieldsModel>VISIBLE} ? 'Success' : 'Error'}"
+                                inverted="true"
+                            />
+                            <ObjectStatus
+                                text="{= ${procFieldsModel>MANDATORY} ? 'Yes' : 'No'}"
+                                state="{= ${procFieldsModel>MANDATORY} ? 'Success' : 'Error'}"
+                                inverted="true"
+                            />
+                            <!-- <Text text="{procFieldsModel>VISIBLE}" />
+                        <Text text="{procFieldsModel>MANDATORY}" /> -->
+                            <Button
+                                text=""
+                                icon="sap-icon://edit"
+                                press=".onRowEditPress"
+                                type="Attention"
+                                enabled="{= ${procFieldsModel>/selectedApplication} !== ''}"
+                                class="sapUiTinyMarginBeginEnd"
+                            />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+        <!-- <footer>
+            <Bar class='sapUiSmallMarginBottom'>
+                <contentRight>
+                    <OverflowToolbarButton
+                        press="onPressSave"
+                        type="Attention"
+                        text="Save"
+                        class="sapUiTinyMarginEnd"
+                        tooltip="Submit"
+                        icon="sap-icon://add-activity"
+                    />
+                    <OverflowToolbarButton
+                        text="Save and Continue"
+                        type="Attention"
+                        icon="sap-icon://save"
+                        press="onPressSaveAndContinue"
+                        class="sapUiTinyMarginEnd"
+                    />
+                    <OverflowToolbarButton
+                        text="Back"
+                        icon="sap-icon://nav-back"
+                        type="Attention"
+                        press="onPressBack"
+                    />
+                </contentRight>
+            </Bar>
+        </footer> -->
+    </Page>
+</mvc:View>

@@ -7,13 +7,13 @@
 					<Label id="_IDGenLabel1" text="User ID (Email ID)" labelFor="idUserId"/>
 					<Input id="idUserId" editable="true" valueHelpRequest="onValueHelpRequest" showValueHelp="true"  suggestionItems="{>/IasUsers}"
 						suggestionItemSelected=".onSuggestionItemSelected" required="true" liveChange=".onLiveChangeEmailValidation" change="onValueChangeUserId"
-						showSuggestion="true" suggest="onSuggest">
+						showSuggestion="true" suggest="onSuggest" valueHelpOnly="true">
 						<suggestionItems>
 							<core:ListItem id="_IDGenListItem" key="{FIRST_NAME}" text="{EMAIL}" additionalText="{EMAIL}"/>
 						</suggestionItems>
 					</Input>
 					<Label id="_IDGenLabel2" text="User Name" labelFor="idUserName"/>
-					<Input id="idUserName" required="true" editable="true" liveChange=".formatter.onValidateAlphabetInput"/>
+					<Input id="idUserName" required="true" editable="true" liveChange=".formatter.onValidateAlphabetInput" enabled="false"/>
 					<Label id="_IDGenLabel4" text="Company Code"/>
 					<MultiComboBox id="idCompanyCode" width="100%" showSecondaryValues="true" change="validateAllComboBoxes" items="{path: '/CompanyCode', templateShareable:true}">
 						 <core:ListItem id="_IDGenListItem2a" key="{BUKRS}" text="{BUTXT}" additionalText="{BUKRS}"/>

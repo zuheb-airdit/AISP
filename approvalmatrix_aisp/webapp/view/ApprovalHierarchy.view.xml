@@ -53,6 +53,7 @@
                     <ObjectPageSubSection
                         title="Company"
                         titleUppercase="false"
+                        class="sapUiSmallNegativeMarginBeginEnd"
                     >
                         <blocks>
                             <m:HBox>
@@ -91,7 +92,8 @@
 
             <ObjectPageSection
                 titleUppercase="false"
-                title="Hierarchy Approval"
+                title="Hierarchy Approvals"
+                class="sapUiSmallNegativeMarginBeginEnd"
             >
                 <subSections>
                     <ObjectPageSubSection
@@ -137,9 +139,9 @@
                                         hAlign="Begin"
                                         width="5rem"
                                     >
-                                        <m:Text text="Approval Level" />
+                                        <m:Text text="Level" />
                                     </m:Column>
-                                    <m:Column hAlign="Begin">
+                                    <m:Column hAlign="Begin" width="8rem">
                                         <m:Text text="Role" />
                                     </m:Column>
                                     <m:Column hAlign="Begin">

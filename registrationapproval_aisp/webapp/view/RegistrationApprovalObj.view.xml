@@ -49,6 +49,12 @@
                                                 press="onNavBack"
                                                 class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
                                             />
+                                             <Image
+                                                src="https://agpcgpdevqa.blob.core.windows.net/qam-files/moneyking%40gmail.com_company_logo_1757754485556.jpg"
+                                                alt="Company Logo"
+                                                width="50px"
+                                                height="50px"
+                                            />
                                             <Title
                                                 text="{requestInfo>/REQUEST_NO}"
                                                 wrapping="true"
@@ -75,10 +81,18 @@
 
                                     <u:snappedHeading>
                                         <VBox>
+                                        <HBox >
+                                            <Image
+                                                src="https://agpcgpdevqa.blob.core.windows.net/qam-files/moneyking%40gmail.com_company_logo_1757754485556.jpg"
+                                                alt="Company Logo"
+                                                width="50px"
+                                                height="50px"
+                                            />
                                             <Title
                                                 text="{requestInfo>/REQUEST_NO}"
                                                 wrapping="true"
                                             />
+                                            </HBox>
                                             <HBox alignItems="Center">
                                                 <Label
                                                     text="Request Type:"
@@ -489,11 +503,11 @@
                                 >
                                     <u:ObjectPageSubSection>
                                         <u:blocks>
-                                                <lyt:VerticalLayout
-                                                    id="DisclosureFormContainer"
-                                                    width="100%"
-                                                />
-                                            </u:blocks>
+                                            <lyt:VerticalLayout
+                                                id="DisclosureFormContainer"
+                                                width="100%"
+                                            />
+                                        </u:blocks>
                                     </u:ObjectPageSubSection>
                                 </u:ObjectPageSection>
                                 <u:ObjectPageSection
@@ -588,8 +602,10 @@
                                                         <Column>
                                                             <Text text="Name" />
                                                         </Column>
-                                                         <Column>
-                                                            <Text text="Description" />
+                                                        <Column>
+                                                            <Text
+                                                                text="Description"
+                                                            />
                                                         </Column>
                                                         <Column>
                                                             <Text
@@ -640,7 +656,7 @@
                                             visible="{= ${requestInfo>/REQUEST_TYPE} !== 'Create User'}"
                                         >
                                             <u:blocks>
-                                              <lyt:VerticalLayout
+                                                <lyt:VerticalLayout
                                                     id="SubmissionFormContainer"
                                                     width="100%"
                                                 />

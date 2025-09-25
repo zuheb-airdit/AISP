@@ -1,0 +1,50 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form">
+    <Dialog
+        title="Edit Supplier"
+        contentWidth="500px"
+        id="editDialog">
+        <content>
+            <f:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+                title="Supplier Details"
+                labelSpanL="12"
+                labelSpanM="12"
+                emptySpanL="0"
+                emptySpanM="0"
+                columnsL="1"
+                columnsM="1">
+                <f:content>
+                    <Label text="Supplier ID" />
+                    <Input value="{SupplierId}" id="editSid" editable="false" />
+
+                    <Label text="Supplier Email" />
+                    <Input value="{SupplierEmail}" id="sEmailId"/>
+                    
+                    <Label text="Communication Mode" />
+                    <ComboBox selectedKey="{CommunicationMode}" id="sCommModeId">
+                        <core:Item key="Email" text="Email" />
+                        <core:Item key="Portal" text="Portal" />
+                        <core:Item key="HardCopy" text="HardCopy" />
+                    </ComboBox>
+
+                    <Label text="Supplier Name" />
+                    <Input value="{SupplierName}" id="sNameId"/>
+
+                    <Label text="Active" />
+                    <CheckBox selected="{Active}" id="bActiveId"/>
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <beginButton>
+            <Button text="Save" press="onSaveChanges" id="editSaveButton" type="Emphasized" />
+        </beginButton>
+        <endButton>
+            <Button text="Cancel" press="onCancel" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

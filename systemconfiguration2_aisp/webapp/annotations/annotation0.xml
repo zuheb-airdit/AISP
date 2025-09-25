@@ -1,0 +1,90 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI" />
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication" />
+    </edmx:Reference>
+    <edmx:Reference Uri="v2/odata/v4/supplier-configuration/$metadata">
+        <edmx:Include Namespace="supplierConfiguration" Alias="SAP" />
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="local1">
+            <Annotations Target="SAP.supplierConfiguration">
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SupplierId" />
+                            <PropertyValue Property="Label" String="Supplier ID" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SupplierEmail" />
+                            <PropertyValue Property="Label" String="Supplier Email" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="CommunicationMode" />
+                            <PropertyValue Property="Label" String="Communication Mode" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SupplierName" />
+                            <PropertyValue Property="Label" String="Supplier Name" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Active" />
+                            <PropertyValue Property="Label" String="Active" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+
+            <Annotations Target="SAP.supplierConfiguration">
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>SupplierId</PropertyPath>
+                        <PropertyPath>SupplierId</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+
+            <Annotations Target="SAP.supplierConfiguration/SupplierId">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="CollectionPath" String="supplierConfigF4Help" />
+                        <PropertyValue Property="Label" String="Supplier Id" />
+                        <PropertyValue Property="SearchSupported" Bool="true" />
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="SupplierId" />
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartner" />
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+
+            <!-- <Annotations Target="SAP.GlobalMailConfig/EMAIL_EXCHANGE_SERVER">
+                  <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="CollectionPath" String="GlobalMailConfig" />
+                        <PropertyValue Property="Label" String="Mail ID" />
+                        <PropertyValue Property="SearchSupported" Bool="true" />
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="EMAIL_EXCHANGE_SERVER" />
+                                    <PropertyValue Property="ValueListProperty" String="EMAIL_EXCHANGE_SERVER" />
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.Label" String="Email Exchange Server"/>
+            </Annotations> -->
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

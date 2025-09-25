@@ -1,0 +1,33 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <TableSelectDialog
+        id="supplierValueHelpDialog"
+        noDataText="No Suppliers Found"
+        title="Select a Supplier"
+        confirm="onValueHelpConfirm"
+        cancel="onValueHelpCancel"
+        contentWidth="70%"
+        items="{/supplierConfigF4Help}">
+        <columns>
+            <Column>
+                <header>
+                    <Text text="Supplier ID"/>
+                </header>
+            </Column>
+            <Column>
+                <header>
+                    <Text text="Supplier Name"/>
+                </header>
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{BusinessPartner}"/>
+                    <Text text="{BusinessPartnerName}"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </TableSelectDialog>
+</core:FragmentDefinition>

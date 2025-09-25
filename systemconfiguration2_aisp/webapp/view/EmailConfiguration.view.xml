@@ -1,0 +1,215 @@
+<mvc:View
+    controllerName="com.sconfig.systemconfiguration2aisp.controller.EmailConfiguration"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:dnd-grid="sap.f.dnd"
+    xmlns:layout="sap.ui.layout"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:table="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:l="sap.ui.layout"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:plugins="sap.m.plugins"
+    xmlns:columnmenu="sap.m.table.columnmenu"
+    xmlns:sap.ui.fl="sap.ui.fl"
+    xmlns:sap.ui.dt="sap.ui.dt"
+    xmlns:vm="sap.ui.fl.variants"
+    xmlns:dnd="sap.ui.core.dnd"
+>
+    <Page
+        title="Email Configuration"
+        titleLevel="H1"
+        showNavButton="true"
+        navButtonPress="onNavHome"
+    >
+        <content>
+            <Panel
+                width="auto"
+                class="sapUiResponsiveMargin"
+                accessibleRole="Region"
+            >
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="SMTP Configuration" />
+                        	<ToolbarSpacer />
+                           <Button
+                                text="{i18n>TestEmail}"
+                                type="Emphasized"
+                                icon="sap-icon://email"
+                                press="onTestEmailPress"
+                                enabled="{= ${viewModel>/isEditing} ? false : true}"
+                            />
+                            <Button
+                                id="submitButton"
+                                text="{i18n>Submit}"
+                                type="Accept"
+                                press="onSubmitPress"
+                                visible="{viewModel>/isEditing}"
+                            />
+                            <Button
+                                id="editButton"
+                                text="{= ${viewModel>/isEditing} ? ${i18n>Cancel} : ${i18n>Edit}}"
+                                type="Emphasized"
+                                icon="{= ${viewModel>/isEditing} ? 'sap-icon://cancel' : 'sap-icon://edit'}"
+                                press="onEditPress"
+                            />
+                    </OverflowToolbar>
+                </headerToolbar>
+                <content>
+                    <f:GridContainer
+                        id="emailConfigForm"
+                        snapToRow="true"
+                        class="sapUiSmallMargin"
+                    >
+                        <f:layout>
+                            <f:GridContainerSettings
+                                rowSize="5rem"
+                                columnSize="20rem"
+                                gap="1rem"
+                            />
+                        </f:layout>
+
+                        <!-- SMTP & Credential Inputs -->
+                        <!-- Host -->
+                        <VBox class="customInputGroup">
+                            <Label
+                                text="{i18n>HostName}"
+                                required="true"
+                                design="Bold"
+                            />
+                            <Input
+                                id="hostNameInput"
+                                value="{emailConfigModel>/HOST}"
+                                valueState="{= ${emailConfigModel>/HOST} ? 'None' : 'Error'}"
+                                valueStateText="{i18n>HostNameRequired}"
+                                width="100%"
+                                editable="{= ${viewModel>/isEditing} }"
+                                class="sapUiTinyMarginBottom"
+                            />
+                        </VBox>
+
+                        <!-- Port -->
+                        <VBox class="customInputGroup">
+                            <Label
+                                text="{i18n>Port}"
+                                required="true"
+                                design="Bold"
+                            />
+                            <Input
+                                id="portInput"
+                                value="{emailConfigModel>/PORT}"
+                                valueState="{= ${emailConfigModel>/PORT} ? 'None' : 'Error'}"
+                                valueStateText="{i18n>PortRequired}"
+                                width="100%"
+                                editable="{= ${viewModel>/isEditing} }"
+                                class="sapUiTinyMarginBottom"
+                            />
+                        </VBox>
+
+                        <!-- Secure -->
+                        <VBox class="customInputGroup">
+                            <Label
+                                text="{i18n>Security}"
+                                required="true"
+                                design="Bold"
+                            />
+                            <Input
+                                id="securityInput"
+                                value="{emailConfigModel>/SECURE}"
+                                width="100%"
+                                editable="{= ${viewModel>/isEditing} }"
+                                class="sapUiTinyMarginBottom"
+                            />
+                        </VBox>
+
+                        <!-- Username -->
+                        <VBox class="customInputGroup">
+                            <Label
+                                text="{i18n>UserName}"
+                                required="true"
+                                design="Bold"
+                            />
+                            <Input
+                                id="userNameInput"
+                                value="{emailConfigModel>/USERNAME}"
+                                valueState="{= ${emailConfigModel>/USERNAME} ? 'None' : 'Error'}"
+                                valueStateText="{i18n>UserNameRequired}"
+                                width="100%"
+                                editable="{= ${viewModel>/isEditing} }"
+                                class="sapUiTinyMarginBottom"
+                            />
+                        </VBox>
+
+                        <!-- Password -->
+                        <VBox class="customInputGroup">
+                            <Label
+                                text="{i18n>Password}"
+                                required="true"
+                                design="Bold"
+                            />
+                            <Input
+                                id="passwordInput"
+                                type="Password"
+                                value="{emailConfigModel>/PASSWORD}"
+                                valueState="{= ${emailConfigModel>/PASSWORD} ? 'None' : 'Error'}"
+                                valueStateText="{i18n>PasswordRequired}"
+                                width="100%"
+                                editable="{= ${viewModel>/isEditing} }"
+                                class="sapUiTinyMarginBottom"
+                            />
+                        </VBox>
+
+                        <!-- Sender Email -->
+                        <VBox class="customInputGroup">
+                            <Label
+                                text="{i18n>SenderID}"
+                                required="true"
+                                design="Bold"
+                            />
+                            <Input
+                                id="senderEmailInput"
+                                value="{emailConfigModel>/SENDER_EMAIL}"
+                                valueState="{= ${emailConfigModel>/SENDER_EMAIL} ? 'None' : 'Error'}"
+                                valueStateText="{i18n>SenderIDRequired}"
+                                width="100%"
+                                editable="{= ${viewModel>/isEditing} }"
+                                class="sapUiTinyMarginBottom"
+                            />
+                        </VBox>
+                    </f:GridContainer>
+                </content>
+            </Panel>
+        </content>
+        <!-- <footer>
+            <Bar class='sapUiSmallMarginBottom'>
+                <contentRight>
+                    <OverflowToolbarButton
+                        press="onPressSave"
+                        type="Attention"
+                        text="Save"
+                        class="sapUiTinyMarginEnd"
+                        tooltip="Submit"
+                        icon="sap-icon://add-activity"
+                    />
+                    <OverflowToolbarButton
+                        text="Save and Continue"
+                        type="Attention"
+                        icon="sap-icon://save"
+                        press="onPressSaveAndContinue"
+                        class="sapUiTinyMarginEnd"
+                    />
+                    <OverflowToolbarButton
+                        text="Back"
+                        icon="sap-icon://nav-back"
+                        type="Attention"
+                        press="onPressBack"
+                    />
+                </contentRight>
+            </Bar>
+        </footer> -->
+    </Page>
+</mvc:View>

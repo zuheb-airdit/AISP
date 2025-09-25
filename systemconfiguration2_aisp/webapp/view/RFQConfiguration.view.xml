@@ -1,0 +1,621 @@
+<mvc:View
+    controllerName="com.sconfig.systemconfiguration2aisp.controller.RFQConfiguration"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:dnd-grid="sap.f.dnd"
+    xmlns:layout="sap.ui.layout"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:table="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:sf="sap.ui.layout.form"
+    xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:l="sap.ui.layout"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:plugins="sap.m.plugins"
+    xmlns:columnmenu="sap.m.table.columnmenu"
+    xmlns:sap.ui.fl="sap.ui.fl"
+    xmlns:sap.ui.dt="sap.ui.dt"
+    xmlns:vm="sap.ui.fl.variants"
+    xmlns:dnd="sap.ui.core.dnd"
+>
+    <Page
+        title="RFQ Configuration"
+        titleLevel="H1"
+        showNavButton="true"
+        navButtonPress="onNavHome"
+    >
+        <content>
+           
+                <l:Splitter
+                    id="idSplitter"
+                    visible="{/isSplitterView}"
+                    resize="false"
+                    class="sapUiTinyMarginTop"
+                >
+                    <l:contentAreas>
+                        <Table
+                            id="idRfqTableSplitter"
+                            items="{rfqModel>/results}"
+                            sticky="HeaderToolbar"
+                            mode="None"
+                            noDataText="No Vendor accounts are Present..."
+                            width="100%"
+                            class="sapUiTinyMarginTop"
+                            growing="true"
+                            growingThreshold="12"
+                        >
+                            <layoutData>
+                                <l:SplitterLayoutData
+                                    resizable="false"
+                                    size="{= ${rfqModel>/isSecondPaneVisible} ? '30%' : '103%'}"
+                                />
+                            </layoutData>
+                            <headerToolbar>
+                                <Toolbar>
+                                    <content>
+                                        <Title text="Vendor Account Groups" />
+                                        <ToolbarSpacer />
+                                    </content>
+                                </Toolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column width="auto">
+                                    <Text text="Code" />
+                                </Column>
+                                <Column width="auto">
+                                    <Text text="Description" />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem
+                                    press=".onVendorAccountClick"
+                                    type="Navigation"
+                                >
+                                    <cells>
+                                        <ObjectNumber
+                                            number="{rfqModel>CODE}"
+                                            state="None"
+                                        />
+                                        <Text text="{rfqModel>DESCRIPTION}" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                        <VBox
+                            width="100%"
+                            class="sapUiTinyMarginBeginEnd"
+                            visible="{rfqModel>/isSecondPaneVisible}"
+                        >
+                            <layoutData>
+                                <l:SplitterLayoutData
+                                    id="idSplitteraa"
+                                    resizable="false"
+                                    size="{= ${rfqModel>/isQuestionnaireFormVisible} || ${rfqModel>/isAttachmentFormVisible} ? '30%' : '70%'}"
+                                />
+                            </layoutData>
+                            <!-- Fixed SimpleForm Container -->
+                            <VBox class="fixedFormContainer">
+                                <sf:SimpleForm
+                                    id="idVendorForm"
+                                    title="{= ${rfqModel>/isEditMode} ? 'Edit Mode' : 'Create Vendor account group' }"
+                                    layout="ColumnLayout"
+                                    width="98%"
+                                    labelSpanXL="4"
+                                    labelSpanL="4"
+                                    labelSpanM="4"
+                                    labelSpanS="12"
+                                    maxContainerCols="2"
+                                    columnsXL="2"
+                                    columnsL="2"
+                                    columnsM="2"
+                                    singleContainerFullSize="false"
+                                    class="sapUiNoMarginTop sapUiTinyMarginBottom"
+                                >
+                                    <sf:toolbar>
+                                        <Toolbar id="TB1">
+                                            <Title
+                                                id="Title1"
+                                                text="{= ${rfqModel>/isEditMode} ? 'Edit Mode' : 'Create Vendor account group' }"
+                                            />
+                                            <ToolbarSpacer />
+                                            <Button
+                                                text="Submit"
+                                                press=".onSubmitPressRFQ"
+                                                type="Accept"
+                                                class="sapUiTinyMarginEnd"
+                                                enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                            />
+                                            <Button
+                                                text="Edit"
+                                                id="idEditBtnrfq"
+                                                press=".onEditPressrfq"
+                                                type="Attention"
+                                                class="sapUiTinyMarginEnd"
+                                                visible="{= ${rfqModel>/isEditMode} ? true : false }"
+                                            />
+                                            <Button
+                                                press=".onCancelPress"
+                                                type="Reject"
+                                                icon="sap-icon://decline"
+                                            />
+                                        </Toolbar>
+                                    </sf:toolbar>
+                                    <sf:content>
+                                        <Label
+                                            text="Code"
+                                            design="Bold"
+                                        />
+                                        <Text
+                                            text="{rfqModel>/newVendorGroup/CODE}"
+                                            class="sapUiTinyMarginBottom"
+                                        />
+                                        <Label
+                                            text="Description"
+                                            design="Bold"
+                                        />
+                                        <Text
+                                            text="{rfqModel>/newVendorGroup/DESCRIPTION}"
+                                            class="sapUiTinyMarginBottom"
+                                        />
+                                    </sf:content>
+                                </sf:SimpleForm>
+                            </VBox>
+                            <!-- Scrollable Content -->
+                            <VBox
+                                class="sapUiSmallMarginTopBottom"
+                                width="98%"
+                            >
+                                <Table
+                                    id="idQuestionnairesTable"
+                                    items="{rfqModel>/newVendorGroup/questionnaires}"
+                                    mode="None"
+                                    sticky="HeaderToolbar"
+                                    width="100%"
+                                    class="sapUiTinyMarginBottom"
+                                >
+                                    <headerToolbar>
+                                        <Toolbar>
+                                            <content>
+                                                <Title
+                                                    text="Questionnaires List"
+                                                />
+                                                <ToolbarSpacer />
+                                                <Button
+                                                    icon="sap-icon://add"
+                                                    tooltip="Add Questionnaire"
+                                                    press=".onAddQuestionnairePress"
+                                                    type="Transparent"
+                                                    enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                />
+                                            </content>
+                                        </Toolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column>
+                                            <Text text="SL No" />
+                                        </Column>
+                                        <Column>
+                                            <Text text="Questionnaire" />
+                                        </Column>
+                                        <Column>
+                                            <Text text="Question Type" />
+                                        </Column>
+                                        <Column
+                                            width="20%"
+                                            hAlign="Center"
+                                        >
+                                            <Text text="Action" />
+                                        </Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem
+                                            type="Navigation"
+                                            press=".onColumnListItemQuestionnairePress"
+                                        >
+                                            <cells>
+                                                <Text text="{rfqModel>slNo}" />
+                                                <Text
+                                                    text="{rfqModel>question}"
+                                                    width="100%"
+                                                />
+                                                <Text
+                                                    text="{rfqModel>QUESTION_TYPE}"
+                                                />
+                                                <HBox>
+                                                    <Button
+                                                        icon="sap-icon://delete"
+                                                        tooltip="Delete Questionnaire"
+                                                        press=".onColumnListItemRemovePress"
+                                                        type="Reject"
+                                                        visible="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                        enabled="{rfqModel>isExisting}"
+                                                        class="sapUiTinyMarginEnd"
+                                                    />
+                                                    <Button
+                                                        icon="sap-icon://decline"
+                                                        tooltip="Remove Questionnaire"
+                                                        press=".onColumnListItemLocalRemovePress"
+                                                        type="Reject"
+                                                        visible="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                        enabled="{= !${rfqModel>isExisting}}"
+                                                    />
+                                                </HBox>
+                                            </cells>
+                                            <VBox
+                                                visible="{= ${rfqModel>QUESTION_TYPE} === 'Dropdown' ? true : false}"
+                                                width="100%"
+                                            >
+                                                <Label
+                                                    text="Dropdown Options"
+                                                />
+                                                <List
+                                                    items="{rfqModel>DROPDOWN_OPTIONS}"
+                                                    mode="None"
+                                                    width="100%"
+                                                >
+                                                    <CustomListItem>
+                                                        <HBox>
+                                                            <Input
+                                                                value="{rfqModel>value}"
+                                                                placeholder="Enter Option Value"
+                                                                width="60%"
+                                                                enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                            />
+                                                            <Input
+                                                                value="{rfqModel>points}"
+                                                                placeholder="Enter Points"
+                                                                type="Number"
+                                                                width="30%"
+                                                                enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                            />
+                                                            <Button
+                                                                icon="sap-icon://delete"
+                                                                tooltip="Remove Option"
+                                                                press=".onRemoveDropdownOption"
+                                                                type="Reject"
+                                                                enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                            />
+                                                        </HBox>
+                                                    </CustomListItem>
+                                                </List>
+                                                <Button
+                                                    text="Add Option"
+                                                    press=".onAddDropdownOption"
+                                                    type="Transparent"
+                                                    enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                    visible="{= ${rfqModel>QUESTION_TYPE} === 'Dropdown' ? true : false}"
+                                                />
+                                            </VBox>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                            <VBox
+                                class="sapUiSmallMarginTopBottom"
+                                width="98%"
+                            >
+                                <Table
+                                    id="idAttachmentsTable"
+                                    items="{rfqModel>/newVendorGroup/attachments}"
+                                    mode="None"
+                                    width="100%"
+                                    class="sapUiTinyMarginBottom"
+                                >
+                                    <headerToolbar>
+                                        <Toolbar>
+                                            <content>
+                                                <Title
+                                                    text="Attachments List"
+                                                />
+                                                <ToolbarSpacer />
+                                                <Button
+                                                    icon="sap-icon://add"
+                                                    tooltip="Add Attachment"
+                                                    press=".onAddAttachmentPress"
+                                                    type="Transparent"
+                                                    enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                />
+                                            </content>
+                                        </Toolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column width="10%">
+                                            <Text text="SL No" />
+                                        </Column>
+                                        <Column width="30%">
+                                            <Text text="File Name" />
+                                        </Column>
+                                        <Column width="40%">
+                                            <Text text="Description" />
+                                        </Column>
+                                        <Column
+                                            width="20%"
+                                            hAlign="End"
+                                        >
+                                            <Text text="Action" />
+                                        </Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem
+                                            type="Navigation"
+                                            press=".onColumnListItemAttachmentPress"
+                                        >
+                                            <cells>
+                                                <Text text="{rfqModel>slNo}" />
+                                                <Text
+                                                    text="{rfqModel>docName}"
+                                                />
+                                                <Text
+                                                    text="{rfqModel>docDescription}"
+                                                />
+                                                <HBox>
+                                                    <Button
+                                                        icon="sap-icon://delete"
+                                                        tooltip="Delete Attachment"
+                                                        press=".onColumnListItemAttachmentRemovePress"
+                                                        type="Reject"
+                                                        visible="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                        enabled="{rfqModel>isExisting}"
+                                                        class="sapUiTinyMarginEnd"
+                                                    />
+                                                    <Button
+                                                        icon="sap-icon://decline"
+                                                        tooltip="Remove Attachment"
+                                                        press=".onColumnListItemAttachmentLocalRemovePress"
+                                                        type="Reject"
+                                                        visible="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                        enabled="{= !${rfqModel>isExisting}}"
+                                                    />
+                                                </HBox>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </VBox>
+                        <VBox class="sapUiTinyMarginBeginEnd">
+                            <sf:SimpleForm
+                                title="Add Questionnaire"
+                                visible="{rfqModel>/isQuestionnaireFormVisible}"
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="4"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                labelSpanS="12"
+                                columnsXL="1"
+                                columnsL="1"
+                                columnsM="1"
+                                singleContainerFullSize="false"
+                                class="sapUiMediumMarginBottom"
+                            >
+                                <sf:toolbar>
+                                    <Toolbar>
+                                        <Title
+                                            text="{= ${rfqModel>/isEditQuestionnaire} ? 'Edit Questionnaire' : 'Add Questionnaire'}"
+                                        />
+                                        <ToolbarSpacer />
+                                        <Button
+                                            id="idUpdateButton"
+                                            text="Update"
+                                            press="onUpdateQuestionnairePress"
+                                            visible="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                            type="Accept"
+                                            enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                        />
+                                        <Button
+                                            text="Add"
+                                            id="idSaveButton"
+                                            press="onSaveQuestionnairePress"
+                                            type="Accept"
+                                            enabled="{= ${rfqModel>/newQuestionnaire/question} ? true : false}"
+                                        />
+                                        <Button
+                                            icon="sap-icon://sys-minus"
+                                            press=".onCancelQuestionnairePress"
+                                            type="Reject"
+                                            class="sapUiTinyMarginEnd"
+                                        />
+                                    </Toolbar>
+                                </sf:toolbar>
+                                <sf:content>
+                                    <Label
+                                        text="Question"
+                                        design="Bold"
+                                        required="true"
+                                    />
+                                    <Input
+                                        id="idQuestionnaireQuestion"
+                                        placeholder="Enter Question"
+                                        value="{rfqModel>/newQuestionnaire/question}"
+                                        width="100%"
+                                        class="sapUiTinyMarginBottom"
+                                        enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                    />
+                                    <Label
+                                        text="Question Type"
+                                        design="Bold"
+                                        required="true"
+                                    />
+                                    <ComboBox
+                                        selectedKey="{rfqModel>/newQuestionnaire/QUESTION_TYPE}"
+                                        change=".onNewQuestionnaireTypeChange"
+                                        width="100%"
+                                        enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                    >
+                                        <items>
+                                            <core:Item
+                                                key="radio"
+                                                text="Radio"
+                                            />
+                                            <core:Item
+                                                key="dropdown"
+                                                text="Dropdown"
+                                            />
+                                        </items>
+                                    </ComboBox>
+                                    <Label
+                                        text="Allocated Points"
+                                        design="Bold"
+                                        visible="{= ${rfqModel>/newQuestionnaire/QUESTION_TYPE} === 'radio' ? true : false}"
+                                    />
+                                    <Input
+                                        value="{rfqModel>/newQuestionnaire/ALLOTTED_POINTS}"
+                                        placeholder="Enter Points"
+                                        type="Number"
+                                        width="100%"
+                                        class="sapUiTinyMarginBottom"
+                                        enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                        visible="{= ${rfqModel>/newQuestionnaire/QUESTION_TYPE} === 'radio' ? true : false}"
+                                    />
+
+                                    <VBox
+                                        visible="{= ${rfqModel>/newQuestionnaire/QUESTION_TYPE} === 'dropdown' ? true : false}"
+                                        width="100%"
+                                    >
+                                        <Label text="Dropdown Options" />
+                                        <List
+                                            items="{rfqModel>/newQuestionnaire/DROPDOWN_OPTIONS}"
+                                            mode="None"
+                                            width="100%"
+                                        >
+                                            <CustomListItem>
+                                                <HBox>
+                                                    <Input
+                                                        value="{rfqModel>VALUE}"
+                                                        placeholder="Enter Option Value"
+                                                        width="100%"
+                                                        enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                    />
+                                                    <Input
+                                                        value="{rfqModel>POINTS}"
+                                                        placeholder="Enter Points"
+                                                        enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                                        type="Number"
+                                                        width="30%"
+                                                    />
+                                                    <Button
+                                                        icon="sap-icon://delete"
+                                                        tooltip="Remove Option"
+                                                        press=".onRemoveDropdownOption"
+                                                        type="Reject"
+                                                    />
+                                                </HBox>
+                                            </CustomListItem>
+                                        </List>
+                                        <Button
+                                            text="Add Option"
+                                            press=".onAddNewDropdownOption"
+                                            enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                            type="Transparent"
+                                            visible="{= ${rfqModel>/newQuestionnaire/QUESTION_TYPE} === 'dropdown' ? true : false}"
+                                        />
+                                    </VBox>
+                                </sf:content>
+                            </sf:SimpleForm>
+                            <sf:SimpleForm
+                                title="Add Attachment"
+                                visible="{rfqModel>/isAttachmentFormVisible}"
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="4"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                labelSpanS="12"
+                                columnsXL="1"
+                                columnsL="1"
+                                columnsM="1"
+                                singleContainerFullSize="false"
+                                class="sapUiMediumMarginBottom"
+                            >
+                                <sf:toolbar>
+                                    <Toolbar>
+                                        <Title text="Add Attachment" />
+                                        <ToolbarSpacer />
+                                        <Button
+                                            id="idAddattachmentButton"
+                                            text="Add"
+                                            press="onSaveAttachmentPress"
+                                            type="Accept"
+                                            enabled="{= ${rfqModel>/newAttachment/docName} &amp;&amp; ${rfqModel>/newAttachment/docDescription} ? true : false}"
+                                        />
+                                        <Button
+                                            id="idUpdateAttachmentButton"
+                                            text="Update"
+                                            press="onUpdateAttachmentPress"
+                                            visible="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                            type="Accept"
+                                            enabled="{= ${rfqModel>/newQuestionnaire/question} ? true : false}"
+                                        />
+
+                                        <Button
+                                            icon="sap-icon://sys-minus"
+                                            press=".onCancelAttachmentPress"
+                                            type="Reject"
+                                            class="sapUiTinyMarginEnd"
+                                        />
+                                    </Toolbar>
+                                </sf:toolbar>
+                                <sf:content>
+                                    <Label
+                                        text="File Name"
+                                        design="Bold"
+                                        required="true"
+                                    />
+                                    <Input
+                                        id="idAttachmentFileName"
+                                        placeholder="Enter File Name"
+                                        value="{rfqModel>/newAttachment/docName}"
+                                        width="100%"
+                                        class="sapUiTinyMarginBottom"
+                                        enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                    />
+                                    <Label
+                                        text="Description"
+                                        design="Bold"
+                                        required="true"
+                                    />
+                                    <Input
+                                        id="idAttachmentDescription"
+                                        placeholder="Enter Description"
+                                        value="{rfqModel>/newAttachment/docDescription}"
+                                        width="100%"
+                                        class="sapUiTinyMarginBottom"
+                                        enabled="{= ${rfqModel>/isInputVisible} ? false : true}"
+                                    />
+                                </sf:content>
+                            </sf:SimpleForm>
+                        </VBox>
+                    </l:contentAreas>
+                </l:Splitter>
+        </content>
+        <!-- <footer>
+            <Bar class='sapUiSmallMarginBottom'>
+                <contentRight>
+                    <OverflowToolbarButton
+                        press="onPressSave"
+                        type="Attention"
+                        text="Save"
+                        class="sapUiTinyMarginEnd"
+                        tooltip="Submit"
+                        icon="sap-icon://add-activity"
+                    />
+                    <OverflowToolbarButton
+                        text="Save and Continue"
+                        type="Attention"
+                        icon="sap-icon://save"
+                        press="onPressSaveAndContinue"
+                        class="sapUiTinyMarginEnd"
+                    />
+                    <OverflowToolbarButton
+                        text="Back"
+                        icon="sap-icon://nav-back"
+                        type="Attention"
+                        press="onPressBack"
+                    />
+                </contentRight>
+            </Bar>
+        </footer> -->
+    </Page>
+</mvc:View>

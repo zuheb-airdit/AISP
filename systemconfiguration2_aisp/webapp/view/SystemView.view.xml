@@ -7,582 +7,216 @@
     displayBlock="true"
     xmlns:f="sap.f"
     xmlns:sf="sap.ui.layout.form"
+    xmlns:t="sap.ui.table"
     xmlns:l="sap.ui.layout"
     xmlns:table="sap.ui.table"
     xmlns:core="sap.ui.core"
 >
-    <f:DynamicPage
-        id="idDynamicPage"
-        showFooter="false"
+    <Page
+        id="pageId"
+        title="Supplier Management Configuration"
+        showHeader="true"
+        backgroundDesign="Solid"
     >
-        <f:title>
-            <f:DynamicPageTitle>
-                <f:heading>
-                    <Title
-                        text="Supplier Management Configuration"
-                        level="H4"
-                        id="idTitle"
-                    />
-                </f:heading>
-            </f:DynamicPageTitle>
-        </f:title>
-
-        <f:content>
-            <IconTabBar
-                id="test"
-                expanded="{device>/isNoPhone}"
-                class="noHorizontalPadding"
-                select="onIconTabBarSelectEmail"
+        <content>
+            <l:VerticalLayout
+                width="100%"
+                class="gridWrapper"
             >
-                <items>
-                    <!-- Email Configuration Tab -->
-                    <IconTabFilter
-                        icon="sap-icon://email"
-                        key="email"
-                        text="Email Configuration"
-                        tooltip="Email Configuration"
+                <!-- <l:Grid containerQuery="true" defaultSpan="XL2 L2" vSpacing="0.5">
+                    <GenericTile
+                        class="sapUiTinyMargin tileLayout"
+                        header="Email Configuration"
+                        press="onEmailConfiguration"
+                        frameType="OneByOne"
+                        width="102%"
+                        state="Loaded"
+                        headerImage="./Images/EmailIcon.png"
                     >
-                        <VBox class="customCard">
-                            <FlexBox justifyContent="SpaceBetween">
-                                <Title
-                                    text="{i18n>SMTPConfiguration}"
-                                    level="H3"
-                                    class="sapUiSmallMarginBegin sapUiTinyMarginTopBottom"
-                                />
-                                <HBox
-                                    class="sapUiSmallMarginBegin sapUiTinyMarginTopBottom"
-                                >
-                                    <Button
-                                        text="{i18n>TestEmail}"
-                                        type="Emphasized"
-                                        icon="sap-icon://email"
-                                        press="onTestEmailPress"
-                                        enabled="{= ${viewModel>/isEditing} ? false : true}"
-                                        class="sapUiSmallMarginEnd"
-                                    />
-                                    <Button
-                                        id="submitButton"
-                                        text="{i18n>Submit}"
-                                        type="Accept"
-                                        press="onSubmitPress"
-                                        visible="{viewModel>/isEditing}"
-                                        class="sapUiSmallMarginEnd"
-                                    />
-                                    <Button
-                                        id="editButton"
-                                        text="{= ${viewModel>/isEditing} ? ${i18n>Cancel} : ${i18n>Edit}}"
-                                        type="Default"
-                                        icon="{= ${viewModel>/isEditing} ? 'sap-icon://cancel' : 'sap-icon://edit'}"
-                                        press="onEditPress"
-                                    />
-                                </HBox>
-                            </FlexBox>
-
-                            <f:GridContainer
-                                id="emailConfigForm"
-                                snapToRow="true"
-                                class="sapUiSmallMargin"
-                            >
-                                <f:layout>
-                                    <f:GridContainerSettings
-                                        rowSize="5rem"
-                                        columnSize="20rem"
-                                        gap="1rem"
-                                    />
-                                </f:layout>
-
-                                <!-- SMTP & Credential Inputs -->
-                                <!-- Host -->
-                                <VBox class="customInputGroup">
-                                    <Label
-                                        text="{i18n>HostName}"
-                                        required="true"
-                                        design="Bold"
-                                    />
-                                    <Input
-                                        id="hostNameInput"
-                                        value="{emailConfigModel>/HOST}"
-                                        valueState="{= ${emailConfigModel>/HOST} ? 'None' : 'Error'}"
-                                        valueStateText="{i18n>HostNameRequired}"
-                                        width="100%"
-                                        editable="{= ${viewModel>/isEditing} }"
-                                        class="sapUiTinyMarginBottom"
-                                    />
-                                </VBox>
-
-                                <!-- Port -->
-                                <VBox class="customInputGroup">
-                                    <Label
-                                        text="{i18n>Port}"
-                                        required="true"
-                                        design="Bold"
-                                    />
-                                    <Input
-                                        id="portInput"
-                                        value="{emailConfigModel>/PORT}"
-                                        valueState="{= ${emailConfigModel>/PORT} ? 'None' : 'Error'}"
-                                        valueStateText="{i18n>PortRequired}"
-                                        width="100%"
-                                        editable="{= ${viewModel>/isEditing} }"
-                                        class="sapUiTinyMarginBottom"
-                                    />
-                                </VBox>
-
-                                <!-- Secure -->
-                                <VBox class="customInputGroup">
-                                    <Label
-                                        text="{i18n>Security}"
-                                        required="true"
-                                        design="Bold"
-                                    />
-                                    <Input
-                                        id="securityInput"
-                                        value="{emailConfigModel>/SECURE}"
-                                        width="100%"
-                                        editable="{= ${viewModel>/isEditing} }"
-                                        class="sapUiTinyMarginBottom"
-                                    />
-                                </VBox>
-
-                                <!-- Username -->
-                                <VBox class="customInputGroup">
-                                    <Label
-                                        text="{i18n>UserName}"
-                                        required="true"
-                                        design="Bold"
-                                    />
-                                    <Input
-                                        id="userNameInput"
-                                        value="{emailConfigModel>/USERNAME}"
-                                        valueState="{= ${emailConfigModel>/USERNAME} ? 'None' : 'Error'}"
-                                        valueStateText="{i18n>UserNameRequired}"
-                                        width="100%"
-                                        editable="{= ${viewModel>/isEditing} }"
-                                        class="sapUiTinyMarginBottom"
-                                    />
-                                </VBox>
-
-                                <!-- Password -->
-                                <VBox class="customInputGroup">
-                                    <Label
-                                        text="{i18n>Password}"
-                                        required="true"
-                                        design="Bold"
-                                    />
-                                    <Input
-                                        id="passwordInput"
-                                        type="Password"
-                                        value="{emailConfigModel>/PASSWORD}"
-                                        valueState="{= ${emailConfigModel>/PASSWORD} ? 'None' : 'Error'}"
-                                        valueStateText="{i18n>PasswordRequired}"
-                                        width="100%"
-                                        editable="{= ${viewModel>/isEditing} }"
-                                        class="sapUiTinyMarginBottom"
-                                    />
-                                </VBox>
-
-                                <!-- Sender Email -->
-                                <VBox class="customInputGroup">
-                                    <Label
-                                        text="{i18n>SenderID}"
-                                        required="true"
-                                        design="Bold"
-                                    />
-                                    <Input
-                                        id="senderEmailInput"
-                                        value="{emailConfigModel>/SENDER_EMAIL}"
-                                        valueState="{= ${emailConfigModel>/SENDER_EMAIL} ? 'None' : 'Error'}"
-                                        valueStateText="{i18n>SenderIDRequired}"
-                                        width="100%"
-                                        editable="{= ${viewModel>/isEditing} }"
-                                        class="sapUiTinyMarginBottom"
-                                    />
-                                </VBox>
-                            </f:GridContainer>
-                        </VBox>
-                    </IconTabFilter>
-
-                    <!-- Masters Tab -->
-                    <IconTabFilter
-                        icon="sap-icon://e-learning"
-                        key="Masters"
-                        iconColor="Neutral"
-                        tooltip="Masters"
-                        text="Masters"
-                        class="sapUiTinyMarginBegin"
-                    >
-                        <Table
-                            id="idProductsTable"
-                            inset="false"
-                            items="{ path: 'mastJsonModel>/results' }"
-                            growing="true"
-                            growingThreshold="7"
-                            growingScrollToLoad="false"
+                        <TileContent
+                            footerColor="Good"
+                            footer="Mange SMTP"
                         >
-                            <headerToolbar>
-                                <OverflowToolbar>
-                                    <Title
-                                        text="Items"
-                                        level="H2"
-                                    />
-                                    <SearchField
-                                        id="searchFieldS"
-                                        width="20rem"
-                                        search="onSearchProducts"
-                                    />
-                                    <ToolbarSpacer />
-                                    <Label
-                                        text="Master Table"
-                                        required="true"
-                                    />
-                                    <Select
-                                        id="selectControl"
-                                        change="onComboBoxChangeMaster"
-                                    >
-                                    <core:Item
-                                            key="approvalType"
-                                            text="Approval Types"
-                                        />
-                                        <core:Item
-                                            key="country"
-                                            text="Country"
-                                        />
-                                        <core:Item
-                                            key="currency"
-                                            text="Currency"
-                                        />
-                                        
-                                        <core:Item
-                                            key="companyCode"
-                                            text="Company Code"
-                                        />
-                                        <core:Item
-                                            key="RequestType"
-                                            text="Request Type"
-                                        />
-                                        <core:Item
-                                            key="userRole"
-                                            text="User Role"
-                                        />
-                                    </Select>
-                                    <Button
-                                        id="idCreateButton"
-                                        text="Create"
-                                        press="onAddProduct"
-                                        icon="sap-icon://add"
-                                    />
-                                </OverflowToolbar>
-                            </headerToolbar>
-
-                            <columns>
-                                <Column>
-                                    <Text text="Code" />
-                                </Column>
-                                <Column>
-                                    <Text text="Description" />
-                                </Column>
-                                <Column>
-                                    <Text class ="textControl" text="Short Text" />
-                                </Column>
-                                <Column>
-                                    <Text text="Action" />
-                                </Column>
-                            </columns>
-
-                            <items>
-                                <ColumnListItem vAlign="Middle">
-                                    <cells>
-                                        <Text text="{mastJsonModel>CODE}" />
-                                        <Text
-                                            text="{mastJsonModel>DESCRIPTION}"
-                                        />
-                                        <Text
-                                            text="{mastJsonModel>SHORTTEXT}"
-                                        />
-                                        <HBox>
-                                            <Button
-                                                icon="sap-icon://delete"
-                                                press="onDeleteFunction"
-                                            />
-                                            <Button
-                                                icon="sap-icon://edit"
-                                                press="onEditFunction"
-                                                class="sapUiTinyMarginBegin"
-                                            />
-                                        </HBox>
-                                    </cells>
-                                </ColumnListItem>
-                            </items>
-                        </Table>
-                    </IconTabFilter>
-
-                    <IconTabFilter
-                        icon="sap-icon://developer-settings"
-                        key="fieldconfig"
-                        iconColor="Neutral"
-                        tooltip="Form Configuration"
-                        text="Form Fields"
-                        class="sapUiTinyMarginBegin"
-                    >
-                        <sf:SimpleForm
-                            id="registrationForm"
-                            title="Registration Form Fields"
-                            editable="true"
-                            layout="ColumnLayout"
-                            labelSpanXL="2"
-                            labelSpanL="2"
-                            labelSpanM="2"
-                            labelSpanS="12"
-                            adjustLabelSpan="false"
-                            emptySpanXL="0"
-                            emptySpanL="0"
-                            emptySpanM="0"
-                            emptySpanS="0"
-                            columnsXL="3"
-                            columnsL="3"
-                            columnsM="3"
-                            class="sapUiSmallMarginBottom"
-                        >
-                            <!-- <Title
-                                text="Registration Form Fields"
-                                level="H3"
-                            /> -->
-
-                            <Label text="Request Type" />
-                            <ComboBox
-                                id="requestTypeCombo"
-                                selectedKey="{RequestType>SUPPLIER_TYPE}"
-                                items="{path:'/RequestType'}"
-                            >
-                                <core:Item
-                                    key="{SUPPLIER_TYPE}"
-                                    text="{SUPPLIER_TYPE}"
-                                />
-                                
-                            </ComboBox>
-
-                            <Label text="Company Code" />
-                            <ComboBox
-                                id="idSourceCC"
-                                selectedKey="{CompanyCode>BUKRS}"
-                                items="{ path: '/CompanyCode' }"
-                            >
-                                <core:Item
-                                    key="{BUKRS}"
-                                    text="{BUKRS} - {BUTXT}"
-                                />
-                            </ComboBox>
-
-                            <Label text="Submit/Refresh" />
-                            <!-- Filler label to align the button -->
-                            <Button
-                                text="Go"
-                                type="Emphasized"
-                                icon="sap-icon://refresh"
-                                press="onSubmitRefreshPress"
-                                width="2rem"
+                            <ImageContent
+                                src="sap-icon://display-more"
+                                tooltip="Email Configuration"
                             />
-                        </sf:SimpleForm>
-                        <Table
-                            id="fieldConfigTable"
-                            inset="true"
-                            items="{ path: 'fieldConfigModel>/results' }"
-                            growing="true"
-                            growingThreshold="10"
-                            mode="None"
-                            sticky="ColumnHeaders"
-                        >
-                            <headerToolbar>
-                                <OverflowToolbar
-                                    design="Solid"
-                                    class="customToolbar"
-                                >
-                                    <Title
-                                        text="Form Items"
-                                        level="H2"
-                                        class="sapUiTinyMarginBegin"
-                                    />
-                                    <ToolbarSpacer />
-                                    <SearchField
-                                        id="searchField"
-                                        width="20rem"
-                                        placeholder="Search by Section, Field ID or Description"
-                                        search="onSearchFields"
-                                        class="sapUiSmallMarginBeginEnd"
-                                    />
-                                    <Button
-                                        icon="sap-icon://filter"
-                                        tooltip="Filter Fields"
-                                        press="onOpenFilterDialog"
-                                        type="Transparent"
-                                        enabled="{fieldConfigModel>/buttonsEnabled}"
+                        </TileContent>
+                    </GenericTile>
 
-                                    />
-                                    <!-- <Button
-                                        icon="sap-icon://sort"
-                                        tooltip="Sort Table"
-                                        press="onSortTable"
-                                        type="Transparent"
-                                    /> -->
-                                    <Button
-                                        icon="sap-icon://download"
-                                        tooltip="Export to CSV"
-                                        press="onExportToCSV"
-                                        type="Transparent"
-                                        enabled="{fieldConfigModel>/buttonsEnabled}"
+                    <GenericTile
+                        class="sapUiTinyMargin tileLayout"
+                        header="Master Configuration"
+                        width="102%"
+                        press="onNavToMasterScreen"
+                        headerImage="./Images/MasterIcon.png"
+                        state="Loaded"
+                    >
+                        <TileContent footer="Manage Master Data" footerColor="Good">
+                            <ImageContent
+                                src="sap-icon://display-more"
+                                tooltip="Master Configuration"
+                            />
+                        </TileContent>
+                    </GenericTile>
 
-                                    />
-                                    <Button
-                                        text="Create"
-                                        type="Emphasized"
-                                        icon="sap-icon://add-product"
-                                        press="onNavigateNew"
-                                        class="customButton customCreateButton"
-                                        enabled="{fieldConfigModel>/buttonsEnabled}"
-                                    />
-                                    <Button
-                                        text="Copy"
-                                        type="Emphasized"
-                                        icon="sap-icon://copy"
-                                        press="onCreateFieldPress"
-                                        class="customButton customCreateButton"
-                                        enabled="{fieldConfigModel>/buttonsEnabled}"
-                                    />
-                                </OverflowToolbar>
-                            </headerToolbar>
+                    <GenericTile
+                        class="sapUiTinyMargin tileLayout"
+                        header="Supplier Invitation Form"
+                        width="102%"
+                        headerImage="./Images/SupplierFormIcon.png"
+                        press="onNavToSuppForm"
+                        state="Loaded"
+                    >
+                        <TileContent footer="Supplier form fields" footerColor="Good">
+                            <ImageContent
+                                src="sap-icon://display-more"
+                                tooltip="Supplier Form"
+                            />
+                        </TileContent>
+                    </GenericTile>
 
-                            <columns>
-                                <Column
-                                    width="auto"
-                                    hAlign="Begin"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
-                                >
-                                    <Text
-                                        text="Section / Category"
-                                        class="customColumnHeader"
-                                    />
-                                </Column>
-                                <Column
-                                    width="auto"
-                                    hAlign="Begin"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
-                                >
-                                    <Text
-                                        text="Label"
-                                        class="customColumnHeader"
-                                    />
-                                </Column>
-                                <Column
-                                    width="auto"
-                                    hAlign="Begin"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
-                                >
-                                    <Text
-                                        text="Description"
-                                        class="customColumnHeader"
-                                    />
-                                </Column>
-                                <Column
-                                    width="auto"
-                                    hAlign="Center"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
-                                >
-                                    <Text
-                                        text="Visibility"
-                                        class="customColumnHeader"
-                                    />
-                                </Column>
-                                <Column
-                                    width="auto"
-                                    hAlign="Center"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
-                                >
-                                    <Text
-                                        text="Mandatory"
-                                        class="customColumnHeader"
-                                    />
-                                </Column>
-                                <Column
-                                    width="auto"
-                                    hAlign="Begin"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
-                                >
-                                    <Text
-                                        text="Action"
-                                        class="customColumnHeader"
-                                    />
-                                </Column>
-                            </columns>
+                    <GenericTile
+                        class="sapUiTinyMargin tileLayout"
+                        header="RFQ Configurations"
+                        width="102%"
+                        headerImage="./Images/RFQIcon.png"
+                        press="onNavToRFQConfiguration"
+                        state="Loaded"
+                    >
+                        <TileContent footer="Configure Questions and Attachments" footerColor="Good">
+                            <ImageContent
+                                src="sap-icon://display-more"
+                                tooltip="RFQ Configuration"
+                            />
+                        </TileContent>
+                    </GenericTile>
 
-                            <items>
-                                <ColumnListItem
-                                    type="Active"
-                                    class="customTableRow"
-                                >
-                                    <cells>
-                                        <VBox>
-                                            <Text
-                                                text="{fieldConfigModel>SECTION}"
-                                                class="customSectionText"
-                                            />
-                                            <Text
-                                                text="{fieldConfigModel>CATEGORY}"
-                                            />
-                                        </VBox>
-                                        <Text
-                                            text="{fieldConfigModel>FIELD_LABEL}"
-                                        />
-                                        <Text
-                                            text="{fieldConfigModel>DESCRIPTION}"
-                                        />
-                                        <ObjectStatus
-                                            text="{= ${fieldConfigModel>IS_VISIBLE} ? 'Yes' : 'No'}"
-                                            state="{= ${fieldConfigModel>IS_VISIBLE} ? 'Success' : 'Error'}"
-                                        />
-                                        <ObjectStatus
-                                            text="{= ${fieldConfigModel>IS_MANDATORY} ? 'Yes' : 'No'}"
-                                            state="{= ${fieldConfigModel>IS_MANDATORY} ? 'Success' : 'Error'}"
-                                        />
-                                        <HBox alignContent="Center">
-                                            <Button
-                                                type="Default"
-                                                icon="sap-icon://edit"
-                                                press="onEditFieldPress"
-                                                tooltip="Edit"
-                                            />
-                                        </HBox>
-                                    </cells>
-                                </ColumnListItem>
-                            </items>
-                            <noData>
-                                <VBox
-                                    justifyContent="Center"
-                                    alignItems="Center"
-                                    height="200px"
-                                    class="sapUiMediumMargin"
-                                >
-                                    <core:Icon
-                                        src="sap-icon://table-view"
-                                        size="4rem"
-                                        class="sapUiMediumMarginBottom"
+                    <GenericTile
+                        class="sapUiTinyMargin tileLayout"
+                        header="Procurement Fields"
+                        width="102%"
+                        press="onNavToProcurementFields"
+                        headerImage="./Images/ProcurementIcon.png"
+                        state="Loaded"
+                    >
+                        <TileContent footer="Manage Fields Visibilty" footerColor="Good">
+                            <ImageContent
+                                src="sap-icon://display-more"
+                                tooltip="Procurement Fields"
+                            />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        class="sapUiTinyMargin tileLayout"
+                        header="Global Mail Configuration"
+                        width="102%"
+                        press="onNavToBuyerMail"
+                        headerImage="./Images/BuyerMailIcon.png"
+                        state="Loaded"
+                    >
+                        <TileContent footer="Configure Email Credentials" footerColor="Good">
+                            <ImageContent
+                                src="sap-icon://display-more"
+                                tooltip="Buyer Mail"
+                            />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        class="sapUiTinyMargin tileLayout"
+                        header="Supplier Communication"
+                        headerImage="./Images/SupplierCommIcon.png"
+                        width="102%"
+                        press="onNavToSupplierComm"
+                        state="Loaded"
+                    >
+                        <TileContent footer="Configure communication mode" footerColor="Good">
+                            <ImageContent
+                                src="sap-icon://display-more"
+                                tooltip="Supplier Communication"
+                            />
+                        </TileContent>
+                    </GenericTile>
+                </l:Grid> -->
+                <VBox class="integrationContainer">
+                    <HBox
+                        width="100%"
+                        class="sapUiMediumMarginBottom"
+                    >
+                        <VBox width="85%">
+                            <SearchField
+                                placeholder="Search Integrations..."
+                                class="searchField"
+                            />
+                        </VBox>
+                        <VBox>
+                            <ComboBox
+                                selectedKey="All Categories"
+                                class="categoryDropdown"
+                            >
+                                <items>
+                                    <core:Item
+                                        key="All Categories"
+                                        text="All Categories"
                                     />
-                                    <Text
-                                        text="No fields available. Please select a Company Code and Request Type to fetch data."
-                                        class="sapUiSmallMarginBottom"
-                                        textAlign="Center"
+                                </items>
+                            </ComboBox>
+                        </VBox>
+                    </HBox>
+                    <f:GridList
+                        id="gridLisst"
+                        items="{integrations>/items}"
+                    >
+                        <f:GridListItem>
+                            <VBox class="sapUiSmallMargin">
+                                <layoutData>
+                                    <FlexItemData
+                                        growFactor="1"
+                                        shrinkFactor="0"
                                     />
-                                </VBox>
-                            </noData>
-                        </Table>
-                    </IconTabFilter>
-                </items>
-            </IconTabBar>
-        </f:content>
-    </f:DynamicPage>
+                                </layoutData>
+
+                                <!-- Icon for the integration -->
+                                <!-- <core:Icon
+                                    src="./Images/test.png"
+                                    size="2.625rem"
+                                    color="Default"
+                                    class="sapUiTinyMarginBottom"
+                                /> -->
+                                <Image
+                                    src="{integrations>icon}"
+                                    width="2.625rem"
+                                    height="2.625rem"
+                                    class="sapUiMediumMarginBottom"
+                                />
+
+                                <!-- Title for the integration -->
+                                <Title
+                                    text="{integrations>title}"
+                                    wrapping="true"
+                                    level="H4"
+                                    class="sapUiMediumMarginBottom"
+                                />
+
+                                <!-- Subtitle for the integration -->
+                                <Label
+                                    text="{integrations>subtitle}"
+                                    wrapping="true"
+                                />
+
+                                <!-- Manage button -->
+                                <Button
+                                    text="Manage"
+                                    press="onManagePress"
+                                    class="sapUiTinyMarginTop"
+                                />
+                            </VBox>
+                        </f:GridListItem>
+                    </f:GridList>
+                </VBox>
+            </l:VerticalLayout>
+        </content>
+    </Page>
 </mvc:View>

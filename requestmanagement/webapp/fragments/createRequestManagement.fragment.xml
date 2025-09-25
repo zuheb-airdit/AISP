@@ -28,10 +28,11 @@
                         id="idReqType"
                         width="100%"
                         showSecondaryValues="true"
+                        items="{ path : '/RequestType'}"
                     >
                         <core:ListItem
-                            key="Create Supplier"
-                            text="Create Supplier"
+                            key="{SUPPLIER_TYPE}"
+                            text="{SUPPLIER_TYPE}"
                         />
                     </ComboBox>
                     <Label text="Company" />

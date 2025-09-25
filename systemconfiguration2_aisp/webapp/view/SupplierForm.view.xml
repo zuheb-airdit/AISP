@@ -1,0 +1,302 @@
+<mvc:View
+    controllerName="com.sconfig.systemconfiguration2aisp.controller.SupplierForm"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:dnd-grid="sap.f.dnd"
+    xmlns:layout="sap.ui.layout"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:table="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:l="sap.ui.layout"
+    xmlns:sf="sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:plugins="sap.m.plugins"
+    xmlns:columnmenu="sap.m.table.columnmenu"
+    xmlns:sap.ui.fl="sap.ui.fl"
+    xmlns:sap.ui.dt="sap.ui.dt"
+    xmlns:vm="sap.ui.fl.variants"
+    xmlns:dnd="sap.ui.core.dnd"
+>
+    <Page
+        title="Supplier Invitation Form"
+        titleLevel="H1"
+        navButtonPress="onNavHome"
+        showNavButton="true"
+    >
+        <content>
+            <sf:SimpleForm
+                id="registrationForm"
+                title="Registration Form Fields"
+                editable="true"
+                layout="ColumnLayout"
+                labelSpanXL="2"
+                labelSpanL="2"
+                labelSpanM="2"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="3"
+                columnsL="3"
+                columnsM="3"
+                class="sapUiTinyMarginTopBottom"
+            >
+                <Label text="Request Type" />
+                <ComboBox
+                    id="requestTypeCombo"
+                    selectedKey="{RequestType>SUPPLIER_TYPE}"
+                    items="{path:'/RequestType'}"
+                >
+                    <core:Item
+                        key="{SUPPLIER_TYPE}"
+                        text="{SUPPLIER_TYPE}"
+                    />
+                </ComboBox>
+
+                <Label text="Company Code" />
+                <ComboBox
+                    id="idSourceCC"
+                    selectedKey="{CompanyCode>BUKRS}"
+                    items="{ path: '/CompanyCode' }"
+                >
+                    <core:Item
+                        key="{BUKRS}"
+                        text="{BUKRS} - {BUTXT}"
+                    />
+                </ComboBox>
+
+                <Label text="Submit/Refresh" />
+                <!-- Filler label to align the button -->
+                <Button
+                    text="Go"
+                    type="Success"
+                    icon="sap-icon://refresh"
+                    press="onSubmitRefreshPress"
+                    width="2rem"
+                />
+            </sf:SimpleForm>
+            <Table
+                id="fieldConfigTable"
+                inset="true"
+                items="{ path: 'fieldConfigModel>/results' }"
+                growing="true"
+                growingThreshold="10"
+                mode="None"
+                sticky="ColumnHeaders"
+            >
+                <headerToolbar>
+                    <OverflowToolbar
+                        design="Solid"
+                        class="customToolbar"
+                    >
+                        <Title
+                            text="Form Items"
+                            level="H2"
+                            class="sapUiTinyMarginBegin"
+                        />
+                        <ToolbarSpacer />
+                        <SearchField
+                            id="searchField"
+                            width="20rem"
+                            placeholder="Search by Section, Field ID or Description"
+                            search="onSearchFields"
+                            class="sapUiSmallMarginBeginEnd"
+                        />
+                        <Button
+                            icon="sap-icon://filter"
+                            tooltip="Filter Fields"
+                            press="onOpenFilterDialog"
+                            type="Transparent"
+                            enabled="{fieldConfigModel>/buttonsEnabled}"
+                        />
+                        <!-- <Button
+                                        icon="sap-icon://sort"
+                                        tooltip="Sort Table"
+                                        press="onSortTable"
+                                        type="Transparent"
+                                    /> -->
+                        <Button
+                            icon="sap-icon://download"
+                            tooltip="Export to CSV"
+                            press="onExportToCSV"
+                            type="Transparent"
+                            enabled="{fieldConfigModel>/buttonsEnabled}"
+                        />
+                        <Button
+                            text="Create"
+                            type="Emphasized"
+                            icon="sap-icon://add-product"
+                            press="onNavigateNew"
+                            class="customButton customCreateButton"
+                            enabled="{fieldConfigModel>/buttonsEnabled}"
+                        />
+                        <Button
+                            text="Copy"
+                            type="Emphasized"
+                            icon="sap-icon://copy"
+                            press="onCreateFieldPress"
+                            class="customButton customCreateButton"
+                            enabled="{fieldConfigModel>/buttonsEnabled}"
+                        />
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <columns>
+                    <Column
+                        width="auto"
+                        hAlign="Begin"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                    >
+                        <Text
+                            text="Section / Category"
+                            class="customColumnHeader"
+                        />
+                    </Column>
+                    <Column
+                        width="auto"
+                        hAlign="Begin"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                    >
+                        <Text
+                            text="Label"
+                            class="customColumnHeader"
+                        />
+                    </Column>
+                    <Column
+                        width="auto"
+                        hAlign="Begin"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                    >
+                        <Text
+                            text="Description"
+                            class="customColumnHeader"
+                        />
+                    </Column>
+                    <Column
+                        width="auto"
+                        hAlign="Center"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                    >
+                        <Text
+                            text="Visibility"
+                            class="customColumnHeader"
+                        />
+                    </Column>
+                    <Column
+                        width="auto"
+                        hAlign="Center"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                    >
+                        <Text
+                            text="Mandatory"
+                            class="customColumnHeader"
+                        />
+                    </Column>
+                    <Column
+                        width="auto"
+                        hAlign="Begin"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                    >
+                        <Text
+                            text="Action"
+                            class="customColumnHeader"
+                        />
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem
+                        type="Active"
+                        class="customTableRow"
+                    >
+                        <cells>
+                            <VBox>
+                                <Text
+                                    text="{fieldConfigModel>SECTION}"
+                                    class="customSectionText"
+                                />
+                                <Text text="{fieldConfigModel>CATEGORY}" />
+                            </VBox>
+                            <Text text="{fieldConfigModel>FIELD_LABEL}" />
+                            <Text text="{fieldConfigModel>DESCRIPTION}" />
+                            <ObjectStatus
+                                text="{= ${fieldConfigModel>IS_VISIBLE} ? 'Yes' : 'No'}"
+                                state="{= ${fieldConfigModel>IS_VISIBLE} ? 'Success' : 'Error'}"
+                            />
+                            <ObjectStatus
+                                text="{= ${fieldConfigModel>IS_MANDATORY} ? 'Yes' : 'No'}"
+                                state="{= ${fieldConfigModel>IS_MANDATORY} ? 'Success' : 'Error'}"
+                            />
+                            <HBox alignContent="Center">
+                                <Button
+                                    type="Default"
+                                    icon="sap-icon://edit"
+                                    press="onEditFieldPress"
+                                    tooltip="Edit"
+                                />
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+                <noData>
+                    <VBox
+                        justifyContent="Center"
+                        alignItems="Center"
+                        height="200px"
+                        class="sapUiMediumMargin"
+                    >
+                        <core:Icon
+                            src="sap-icon://table-view"
+                            size="4rem"
+                            class="sapUiMediumMarginBottom"
+                        />
+                        <Text
+                            text="No fields available. Please select a Company Code and Request Type to fetch data."
+                            class="sapUiSmallMarginBottom"
+                            textAlign="Center"
+                        />
+                    </VBox>
+                </noData>
+            </Table>
+        </content>
+        <!-- <footer>
+            <Bar class='sapUiSmallMarginBottom'>
+                <contentRight>
+                    <OverflowToolbarButton
+                        press="onPressSave"
+                        type="Attention"
+                        text="Save"
+                        class="sapUiTinyMarginEnd"
+                        tooltip="Submit"
+                        icon="sap-icon://add-activity"
+                    />
+                    <OverflowToolbarButton
+                        text="Save and Continue"
+                        type="Attention"
+                        icon="sap-icon://save"
+                        press="onPressSaveAndContinue"
+                        class="sapUiTinyMarginEnd"
+                    />
+                    <OverflowToolbarButton
+                        text="Back"
+                        icon="sap-icon://nav-back"
+                        type="Attention"
+                        press="onPressBack"
+                    />
+                </contentRight>
+            </Bar>
+        </footer> -->
+    </Page>
+</mvc:View>

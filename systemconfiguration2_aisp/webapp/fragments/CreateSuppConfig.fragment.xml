@@ -1,0 +1,132 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="createSupplierDialog"
+        title="Create New Supplier"
+        resizable="false"
+        draggable="true"
+    >
+        <content>
+            <f:SimpleForm
+                id="supplierForm"
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="3"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="2"
+                columnsL="1"
+                columnsM="1"
+            >
+                <f:content>
+                    <Label
+                        text="Supplier ID"
+                        required="true"
+                    />
+                    <Input
+                        id="supplierIdInput"
+                        valueLiveUpdate="true"
+                        type="Text"
+                        placeholder="Enter Supplier ID"
+                        showValueHelp="true"
+                        valueHelpRequest="formValueHelp"
+                    />
+
+                    <Label
+                        text="Supplier Name"
+                        required="true"
+						
+                    />
+                    <Input
+                        id="supplierNameInput"
+                        valueLiveUpdate="true"
+                        type="Text"
+                        placeholder="Enter Supplier Name"
+						editable="false"
+                    />
+
+                    <Label
+                        text="Supplier Email"
+                        required="true"
+                    />
+                    <Input
+                        id="supplierEmailInput"
+                        valueLiveUpdate="true"
+                        type="Email"
+                        placeholder="Enter Supplier Email"
+                    />
+
+                    <Label
+                        text="Configuration Mode"
+                        required="true"
+                    />
+                    <ComboBox
+                        id="configurationModeMultiComboBox"
+                        placeholder="Select modes"
+                    >
+                        <core:Item
+                            key="Portal"
+                            text="Portal"
+                        />
+                        <core:Item
+                            key="Email"
+                            text="Email"
+                        />
+                        <core:Item
+                            key="HardCopy"
+                            text="HardCopy"
+                        />
+                    </ComboBox>
+
+                    <Label
+                        text="Active"
+                        required="true"
+                    />
+                    <RadioButtonGroup
+                        id="activeRadio"
+                        columns="2"
+                    >
+                        <buttons>
+                            <RadioButton
+                                id="trueRadio"
+                                text="true"
+                                selected="true"
+                            />
+                            <RadioButton
+                                id="falseRadio"
+                                text="false"
+                            />
+                        </buttons>
+                    </RadioButtonGroup>
+
+                    <Label text="Notes" />
+                    <TextArea
+                        id="notesTextArea"
+                        rows="4"
+                        placeholder="Enter notes..."
+                    />
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <buttons>
+            <Button
+                text="Submit"
+                type="Emphasized"
+                press="onSubmitPress"
+            />
+            <Button
+                text="Cancel"
+                press="onCancelPress"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

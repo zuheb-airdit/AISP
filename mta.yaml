@@ -66,10 +66,6 @@ modules:
       - comsconfigsystemconfiguration2aisp.zip
       name: comsconfigsystemconfiguration2aisp
       target-path: resources/
-    # - artifacts:
-    #   - comdemoworkflowmanagement.zip
-    #   name: comdemoworkflowmanagement
-    #   target-path: resources/
     - artifacts:
       - comreqreportsaispreqreportsaisp.zip
       name: comreqreportsaispreqreportsaisp
@@ -134,16 +130,6 @@ modules:
     - npm install
     - npm run build:cf
     supported-platforms: []
-# - name: comdemoworkflowmanagement
-#   type: html5
-#   path: workflowmanagement
-#   build-parameters:
-#     build-result: dist
-#     builder: custom
-#     commands:
-#     - npm install
-#     - npm run build:cf
-#     supported-platforms: []
 - name: comreqreportsaispreqreportsaisp
   type: html5
   path: reqreports_aisp
