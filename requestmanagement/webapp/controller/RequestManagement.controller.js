@@ -12,7 +12,7 @@ sap.ui.define(
     return Controller.extend(
       "com.requestmanagement.requestmanagement.controller.RequestManagement",
       {
-        onInit() {},
+        onInit() { },
 
         statusFormatter: function (status, role) {
           switch (status) {
@@ -57,6 +57,8 @@ sap.ui.define(
 
         onCloseReqManagement: function () {
           this.vhFragmentReqManagement.close();
+          this.vhFragmentReqManagement.destroy();
+          this.vhFragmentReqManagement = undefined;
         },
 
         onCreateRquestManagement: function () {
@@ -474,7 +476,8 @@ sap.ui.define(
           //     text: "Submitting request...",
           //     title: "Processing",
           //   });
-          this.getView().setBusy(true);
+
+
           const sRequestType = sap.ui
             .getCore()
             .byId("idReqType")
@@ -488,37 +491,61 @@ sap.ui.define(
             .getCore()
             .byId("idVendorEmail")
             .getValue();
-          const sVendorType = sap.ui
-            .getCore()
-            .byId("idVendorTypes")
-            .getValue()
-            .split("-")[0]
-            .trim();
-          const sVendorTypeDesc = sap.ui
-            .getCore()
-            .byId("idVendorTypes")
-            .getValue()
-            .split("-")[1]
-            .trim();
-          const sVendorSubType = sap.ui
-            .getCore()
-            .byId("idSubVendorTypes")
-            .getValue()
-            .split("-")[0]
-            .trim();
-          const sVendorSubTypeDesc = sap.ui
-            .getCore()
-            .byId("idSubVendorTypes")
-            .getValue()
-            .split("-")[1]
-            .trim();
+
+          const sVendor = sap.ui.getCore().byId("idVendorTypes").getValue();
+          let sVendorType = "";
+          let sVendorTypeDesc = "";
+          if (sVendor) {
+            const parts = sVendor.split("-");
+            sVendorType = parts[0] ? parts[0].trim() : "";
+            sVendorTypeDesc = parts[1] ? parts[1].trim() : "";
+          }
+          const sVendorSub = sap.ui.getCore().byId("idSubVendorTypes").getValue();
+          let sVendorSubType = "";
+          let sVendorSubTypeDesc = "";
+          if (sVendorSub) {
+            const sVendorSubparts = sVendorSub.split("-");
+            sVendorSubType = sVendorSubparts[0] ? sVendorSubparts[0].trim() : "";
+            sVendorSubTypeDesc = sVendorSubparts[1] ? sVendorSubparts[1].trim() : "";
+          }
+          // const sVendorType = sap.ui
+          //   .getCore()
+          //   .byId("idVendorTypes")
+          //   .getValue()
+          //   .split("-")[0]
+          //   .trim();
+          // const sVendorTypeDesc = sap.ui
+          //   .getCore()
+          //   .byId("idVendorTypes")
+          //   .getValue()
+          //   .split("-")[1]
+          //   .trim();
+          // const sVendorSubType = sap.ui
+          //   .getCore()
+          //   .byId("idSubVendorTypes")
+          //   .getValue()
+          //   .split("-")[0]
+          //   .trim();
+          // const sVendorSubTypeDesc = sap.ui
+          //   .getCore()
+          //   .byId("idSubVendorTypes")
+          //   .getValue()
+          //   .split("-")[1]
+          //   .trim();
           const sComment = sap.ui.getCore().byId("idTextArea").getValue();
 
           if (!sVendorName || !sVendorEmail || !aCompanyCodes.length) {
-            MessageToast.show("Please fill all required fields");
+            MessageBox.error("Please fill all required fields");
             return;
           }
 
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(sVendorEmail)) {
+            sap.m.MessageBox.error("Please enter a valid email address.");
+            return;
+          }
+          sap.ui.getCore().byId("DialogId").setBusy(true);
+          // this.getView().setBusy(true);
           // Join company codes into a single comma-separated string
           const sCompanyCodesString = aCompanyCodes.join(",");
 
@@ -527,15 +554,15 @@ sap.ui.define(
             action: "CREATE",
             inputData: [
               {
-                REGISTERED_ID: sVendorEmail,
-                VENDOR_NAME1: sVendorName,
-                COMPANY_CODE: sCompanyCodesString,
-                SUPPL_TYPE_DESC: sVendorTypeDesc,
-                SUPPL_TYPE: sVendorType,
-                BP_TYPE_CODE: sVendorSubType,
-                BP_TYPE_DESC: sVendorSubTypeDesc,
-                REQUEST_TYPE: sRequestType,
-                COMMENT: sComment,
+                REGISTERED_ID: sVendorEmail || "",
+                VENDOR_NAME1: sVendorName || "",
+                COMPANY_CODE: sCompanyCodesString || "",
+                SUPPL_TYPE_DESC: sVendorTypeDesc || "",
+                SUPPL_TYPE: sVendorType || "",
+                BP_TYPE_CODE: sVendorSubType || "",
+                BP_TYPE_DESC: sVendorSubTypeDesc || "",
+                REQUEST_TYPE: sRequestType || "",
+                COMMENT: sComment || "",
                 REQUESTER_ID: "vai@gmail.com",
               },
             ],
@@ -545,14 +572,16 @@ sap.ui.define(
           const oModel = this.getView().getModel();
 
           // Show busy dialog before request
-        //   oBusyDialog.open();
+          //   oBusyDialog.open();
 
           // Make the POST request
+          var that = this;
           oModel.create("/RequestProcess", oPayload, {
             success: function (oData, oResponse) {
               // Close busy dialog first
               //   oBusyDialog.close();
-              this.getView().setBusy(false);
+              sap.ui.getCore().byId("DialogId").setBusy(false);
+              // this.getView().setBusy(false);
               sap.ui.getCore().byId("idReqType").setSelectedKey("");
               sap.ui.getCore().byId("idVendorEntity").setSelectedKeys([]);
               sap.ui.getCore().byId("idVendorName").setValue("");
@@ -560,12 +589,18 @@ sap.ui.define(
               sap.ui.getCore().byId("idVendorTypes").setValue("");
               sap.ui.getCore().byId("idSubVendorTypes").setValue("");
               sap.ui.getCore().byId("idTextArea").setValue("");
-              MessageBox.success("Request created successfully");
+              MessageBox.success(oData.RequestProcess, {
+                onClose: function () {
+                  that.getView().byId("idSmartTableReqManagementInvidted").rebindTable();
+                }
+              });
               this.vhFragmentReqManagement.close();
+
             }.bind(this), // Bind this to maintain controller context
             error: function (oError) {
               // Close busy dialog on error
-              this.getView().setBusy(false);
+              sap.ui.getCore().byId("DialogId").setBusy(false);
+              // this.getView().setBusy(false);
               this.vhFragmentReqManagement.close();
 
               let sMessage = "Error submitting request";
@@ -576,6 +611,13 @@ sap.ui.define(
               } catch (e) {
                 // Handle parsing error, keep default message
               }
+              sap.ui.getCore().byId("idReqType").setSelectedKey("");
+              sap.ui.getCore().byId("idVendorEntity").setSelectedKeys([]);
+              sap.ui.getCore().byId("idVendorName").setValue("");
+              sap.ui.getCore().byId("idVendorEmail").setValue("");
+              sap.ui.getCore().byId("idVendorTypes").setValue("");
+              sap.ui.getCore().byId("idSubVendorTypes").setValue("");
+              sap.ui.getCore().byId("idTextArea").setValue("");
               MessageBox.error(sMessage);
             }.bind(this), // Bind this to maintain controller context
           });

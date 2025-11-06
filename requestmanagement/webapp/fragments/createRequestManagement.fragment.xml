@@ -10,6 +10,7 @@
         title="Request Form"
         contentWidth="60%"
         titleAlignment="Start"
+        id="DialogId"
     >
         <content>
             <f:SimpleForm
@@ -38,6 +39,7 @@
                     <Label text="Company" />
                     <MultiComboBox
                         id="idVendorEntity"
+                        required="true"
                         width="100%"
                         showSecondaryValues="true"
                         items="{ path: '/CompanyCode', templateShareable: true }"
