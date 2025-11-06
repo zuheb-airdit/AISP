@@ -6,6 +6,8 @@
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
     xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns="sap.m"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+
 >
     <Page
         id="pageId"
@@ -17,6 +19,7 @@
             <f:DynamicPage
                 id="dynamicPageId"
                 class="sapUiSizeCompact"
+                
             >
                 <f:header>
                     <f:DynamicPageHeader
@@ -77,6 +80,7 @@
                         enableAutoBinding="true"
                         ignoredFields="APPR_TYPE,COMPANY_CODE"
                         class="sapUiSmallNegativeMarginBeginEnd"
+                        app:useSmartToggle="true"
                     >
                         <smartTable:customToolbar>
                             <OverflowToolbar

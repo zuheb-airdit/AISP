@@ -1991,10 +1991,7 @@ sap.ui.define(
                           titleStyle: "H5",
                         }),
                         new sap.m.ToolbarSpacer(),
-                        new sap.m.Button({
-                          text: "Add More Bank Details",
-                          press: this.onAddOtherBankDetails.bind(this),
-                        }),
+                       
                       ],
                     });
                     oFormVBox.addItem(oToolbar);

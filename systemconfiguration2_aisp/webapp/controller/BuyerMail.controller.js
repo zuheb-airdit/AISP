@@ -38,7 +38,7 @@ sap.ui.define(
             EMAIL_EXCHANGE_SERVER: "N",
             MAIL_ID: "",
             POLL_INTERVAL: "",
-            FILE_TYPES: "",
+            FILE_TYPES: [],
             FILE_SIZE_MB: "",
             MAIL_SUBJECT_PATTERN: "",
             CLIENT_ID: "",
@@ -77,7 +77,7 @@ sap.ui.define(
                   POLL_INTERVAL: oConfig.POLL_INTERVAL
                     ? oConfig.POLL_INTERVAL.toString()
                     : "",
-                  FILE_TYPES: oConfig.FILE_TYPES || "",
+                  FILE_TYPES: oConfig.FILE_TYPES.split(',') || [],
                   FILE_SIZE_MB: oConfig.FILE_SIZE_MB
                     ? oConfig.FILE_SIZE_MB.toString()
                     : "",
@@ -110,7 +110,7 @@ sap.ui.define(
         },
 
         onFileTypesChange: function (oEvent) {
-          var sSelectedKey = oEvent.getSource().getSelectedKey();
+          var sSelectedKey = oEvent.getSource().getSelectedKeys();
           var oBuyerModel = this.getView().getModel("BuyerModel");
           oBuyerModel.setProperty("/FILE_TYPES", sSelectedKey);
         },
@@ -199,7 +199,7 @@ sap.ui.define(
             MAIL_ID: this.byId("mailIdInput").getValue(),
             EMAIL_EXCHANGE_SERVER: this.byId("emailExchangeServerComboBox").getSelectedKey(),
             POLL_INTERVAL: this.byId("pollIntervalInput").getValue(),
-            FILE_TYPES: this.byId("fileTypesComboBox").getSelectedKey(),
+            FILE_TYPES: this.byId("fileTypesComboBox").getSelectedKeys().join(","),
             FILE_SIZE_MB: this.byId("fileSizeInput").getValue(),
             MAIL_SUBJECT_PATTERN: this.byId("mailSubjectPatternInput").getValue(),
             DESCRIPTION: this.byId("descriptionInput").getValue(),

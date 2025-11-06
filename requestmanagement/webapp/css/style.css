@@ -281,8 +281,12 @@
     padding: 0px !important;
 }
 
-#__step5-nextButton-BDI-content{
-    visibility: ;
+.usermasterColo{
+    color: crimson !important;
+}
+
+#__step5-nextButton{
+    visibility: hidden !important;
 }
 
 

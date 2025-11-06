@@ -1,677 +1,633 @@
 <mvc:View
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
-    xmlns:smartTable="sap.ui.comp.smarttable"
-    xmlns:f="sap.f"
-    xmlns:l="sap.ui.layout"
-    xmlns:core="sap.ui.core"
-    xmlns="sap.m"
-    xmlns:u="sap.uxap"
-    xmlns:g="sap.suite.ui.commons.networkgraph"
-    xmlns:html="sap.ui.core"
-    xmlns:tL="sap.suite.ui.commons"
-    xmlns:layout="sap.suite.ui.commons.networkgraph.layout"
-    xmlns:lyt="sap.ui.layout"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:f="sap.f"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	xmlns:u="sap.uxap"
+	xmlns:g="sap.suite.ui.commons.networkgraph"
+	xmlns:html="sap.ui.core"
+	xmlns:tL="sap.suite.ui.commons"
+	xmlns:layout="sap.suite.ui.commons.networkgraph.layout"
+	xmlns:lyt="sap.ui.layout"
     controllerName="com.reqreportsaisp.reqreportsaisp.controller.RequestDetails"
 >
-    <Page
+	<Page
         title="Edit Details"
         enableScrolling="false"
         showHeader="false"
     >
-        <content>
-            <l:Splitter
+		<content>
+			<l:Splitter
                 width="100%"
                 class="noSplitterGrip"
             >
-                <Page showHeader="false">
-                    <layoutData>
-                        <l:SplitterLayoutData
+				<Page showHeader="false">
+					<layoutData>
+						<l:SplitterLayoutData
                             size="100%"
                             id="previewSplitterLayout"
                         />
-                    </layoutData>
-                    <content>
-                        <u:ObjectPageLayout
+					</layoutData>
+					<content>
+						<u:ObjectPageLayout
                             id="ObjectPageLayout"
                             showTitleInHeaderContent="true"
                             upperCaseAnchorBar="false"
                         >
-                            <u:headerTitle>
-                                <u:ObjectPageDynamicHeaderTitle>
-                                    <u:expandedHeading>
-                                        <HBox
+							<u:headerTitle>
+								<u:ObjectPageDynamicHeaderTitle>
+									<!-- <u:expandedHeading>
+										<HBox
                                             justifyContent="Start"
                                             alignItems="Center"
                                         >
-                                            <Button
+											<Button
                                                 icon="sap-icon://nav-back"
                                                 press="onNavBack"
                                                 class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
                                             />
-                                            <Title
+											<Title
                                                 text="{requestInfo>/REQUEST_NO}"
                                                 wrapping="true"
                                                 id="idReqTitle"
                                                 class="sapUiSmallMarginStart sapUiTinyMarginBottom"
                                             />
+										</HBox>
+									</u:expandedHeading> -->
+                                    <u:expandedHeading>
+                                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                            <!-- Back Button -->
+                                            <Button icon="sap-icon://nav-back" press="onNavBack" type="Transparent" class="sapUiTinyMarginEnd" />
+                                            <!-- Logo -->
+                                            <Image src="{requestInfo>/UPLOAD_LOGO}" alt="Company Logo" width="58px" height="58px" class="sapUiSmallMarginEnd rounded-image" />
+                                            <!-- Vendor Info -->
+                                            <VBox class="sapUiSmallMarginBegin">
+                                                <Title level="H2" text="{requestInfo>/VENDOR_NAME1}" wrapping="true" class="sapUiTinyMarginBottom title-text" />
+                                                <HBox alignItems="Center">
+                                                    <ObjectIdentifier title="Request No:" text="{requestInfo>/REQUEST_NO}" class="sapUiTinyMarginEnd" />
+                                                </HBox>
+                                            </VBox>
                                         </HBox>
                                     </u:expandedHeading>
-
-                                    <u:expandedContent>
-                                        <HBox
+									<u:expandedContent>
+										<HBox
                                             alignItems="Center"
                                             class="sapUiTinyMarginTop"
                                         >
-                                            <Label
+											<Label
                                                 text="Request Type:"
                                                 class="sapUiTinyMarginEnd customText"
                                             />
-                                            <Title
+											<Title
                                                 text="{requestInfo>/REQUEST_TYPE}"
                                             />
-                                        </HBox>
-                                    </u:expandedContent>
-
-                                    <u:snappedHeading>
-                                        <VBox>
-                                            <Title
+										</HBox>
+									</u:expandedContent>
+									<!-- <u:snappedHeading>
+										<VBox>
+											<Title
                                                 text="{requestInfo>/REQUEST_NO}"
                                                 wrapping="true"
                                             />
-                                            <HBox alignItems="Center">
-                                                <Label
+											<HBox alignItems="Center">
+												<Label
                                                     text="Request Type:"
                                                     class="sapUiSmallMarginEnd"
                                                 />
-                                                <Text
+												<Text
                                                     text="{requestInfo>/REQUEST_TYPE}"
                                                 />
+											</HBox>
+										</VBox>
+									</u:snappedHeading> -->
+                                    <u:snappedHeading>
+                                        <VBox class="sapUiSmallMargin">
+                                            <!-- Header Row -->
+                                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                                                <HBox alignItems="Center">
+                                                    <Image src="https://agpcgpdevqa.blob.core.windows.net/qam-files/moneyking%40gmail.com_company_logo_1757754485556.jpg" alt="Company Logo" width="32px" height="32px" class="sapUiTinyMarginEnd" />
+                                                    <Title level="H3" text="{requestInfo>/REQUEST_NO}" wrapping="false" />
+                                                </HBox>
                                             </HBox>
+                                            <!-- Vendor Info -->
+                                            <VBox>
+                                                <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                                    <Label text="Vendor:" design="Bold" class="sapUiTinyMarginEnd label-min-width" />
+                                                    <Text text="{requestInfo>/VENDOR_NAME1}" wrapping="true" />
+                                                </HBox>
+                                            </VBox>
                                         </VBox>
                                     </u:snappedHeading>
-
-                                    <u:actions>
-                                        <Button
+									<u:actions>
+										<Button
                                             text="Log"
                                             type="Transparent"
                                             icon="sap-icon://history"
                                             press="onPressLog"
                                         />
-                                    </u:actions>
-                                </u:ObjectPageDynamicHeaderTitle>
-                            </u:headerTitle>
-
-                            <u:headerContent>
-                                <HeaderContainer
+									</u:actions>
+								</u:ObjectPageDynamicHeaderTitle>
+							</u:headerTitle>
+							<u:headerContent>
+								<HeaderContainer
                                     id="headerContainer"
                                     scrollStep="200"
                                     showDividers="false"
                                 >
-                                    <HBox
+									<HBox
                                         class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                                     >
-                                        <VBox class="sapUiSmallMarginBottom">
-                                            <HBox
+										<VBox class="sapUiSmallMarginBottom">
+											<HBox
                                                 class="sapUiTinyMarginBottom"
                                                 renderType="Bare"
                                             >
-                                                <Label
+												<Label
                                                     text="Company:"
                                                     class="sapUiSmallMarginEnd customLabelBold"
                                                 />
-                                                <Text
+												<Text
                                                     text="{requestInfo>/COMPANY_CODE}"
                                                     class="customText"
                                                 />
-                                            </HBox>
-                                        </VBox>
-                                    </HBox>
-
-                                    <HBox
+											</HBox>
+										</VBox>
+									</HBox>
+									<HBox
                                         class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                                     >
-                                        <VBox class="sapUiSmallMarginBottom">
-                                            <HBox
+										<VBox class="sapUiSmallMarginBottom">
+											<HBox
                                                 class="sapUiTinyMarginBottom"
                                                 renderType="Bare"
                                             >
-                                                <Label
+												<Label
                                                     text="Created By:"
                                                     class="sapUiSmallMarginEnd customLabelBold"
                                                 />
-                                                <Text
+												<Text
                                                     text="{requestInfo>/REQUESTER_ID}"
                                                     class="customText"
                                                 />
-                                            </HBox>
-                                        </VBox>
-                                    </HBox>
-                                    <HBox
+											</HBox>
+										</VBox>
+									</HBox>
+									<HBox
                                         class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                                     >
-                                        <VBox class="sapUiSmallMarginBottom">
-                                            <HBox
+										<VBox class="sapUiSmallMarginBottom">
+											<HBox
                                                 class="sapUiTinyMarginBottom"
                                                 renderType="Bare"
                                             >
-                                                <Label
+												<Label
                                                     text="Created On:"
                                                     class="sapUiSmallMarginEnd customLabelBold"
                                                 />
-                                                <Text
+												<Text
                                                     text="{path: 'requestInfo>/CREATED_ON', formatter: '.formatDate'}"
                                                     class="customText"
                                                 />
-                                            </HBox>
-                                        </VBox>
-                                    </HBox>
-                                </HeaderContainer>
-                            </u:headerContent>
-
-                            <u:sections>
-                                <u:ObjectPageSection
+											</HBox>
+										</VBox>
+									</HBox>
+								</HeaderContainer>
+							</u:headerContent>
+							<u:sections>
+								<u:ObjectPageSection
                                     titleUppercase="false"
                                     title="Supplier Information"
                                 >
-                                    <u:subSections>
-                                        <u:ObjectPageSubSection
+									<u:subSections>
+										<u:ObjectPageSubSection
                                             title="Supplier Information"
                                             titleUppercase="false"
                                         >
-                                            <u:blocks>
-                                                <lyt:VerticalLayout
+											<u:blocks>
+												<lyt:VerticalLayout
                                                     id="SupplierInformationFormContainer"
                                                     width="100%"
                                                 />
-                                            </u:blocks>
-                                        </u:ObjectPageSubSection>
-                                    </u:subSections>
-                                </u:ObjectPageSection>
-
-                                <u:ObjectPageSection
+											</u:blocks>
+										</u:ObjectPageSubSection>
+									</u:subSections>
+								</u:ObjectPageSection>
+								<u:ObjectPageSection
                                     titleUppercase="false"
                                     title="Bank Information"
                                 >
-                                    <u:subSections>
-                                        <u:ObjectPageSubSection
+									<u:subSections>
+										<u:ObjectPageSubSection
                                             title="Bank Information"
                                             titleUppercase="false"
                                         >
-                                            <u:blocks>
-                                                <!-- <VBox class="customVBox">
-                                                    <HBox>
-                                                        <Label
+											<u:blocks>
+												<!-- <VBox class="customVBox"><HBox><Label
                                                             text="Account Number:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/ACCOUNT_NO}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/ACCOUNT_NO}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
+                                                        /><VBox width="2rem" /><Label
                                                             text="Swift Code:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/SWIFT_CODE}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/SWIFT_CODE}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
+                                                        /></HBox><HBox><Label
                                                             text="Branch:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/BRANCH_NAME}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/BRANCH_NAME}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
+                                                        /><VBox width="2rem" /><Label
                                                             text="Bank Name:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/BANK_NAME}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/BANK_NAME}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
+                                                        /></HBox><HBox><Label
                                                             text="Bank Section:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/BANK_SECTION}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/BANK_SECTION}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
+                                                        /><VBox width="2rem" /><Label
                                                             text="Bank Country:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/BANK_COUNTRY}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/BANK_COUNTRY}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
+                                                        /></HBox><HBox><Label
                                                             text="Beneficiary:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/BENEFICIARY}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/BENEFICIARY}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
+                                                        /><VBox width="2rem" /><Label
                                                             text="Account Name:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/ACCOUNT_NAME}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/ACCOUNT_NAME}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
+                                                        /></HBox><HBox><Label
                                                             text="IBAN Number:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/IBAN_NUMBER}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/IBAN_NUMBER}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
+                                                        /><VBox width="2rem" /><Label
                                                             text="Routing Code:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/ROUTING_CODE}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/ROUTING_CODE}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
+                                                        /></HBox><HBox><Label
                                                             text="Bank Currency:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/BANK_CURRENCY}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/BANK_CURRENCY}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
+                                                        /><VBox width="2rem" /><Label
                                                             text="GST:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/GST}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/GST}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                    </HBox>
-                                                    <HBox>
-                                                        <Label
+                                                        /></HBox><HBox><Label
                                                             text="GST Yes/No:"
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text="{requestInfo>/TO_BANKS/results/0/GSTYES_NO}"
                                                             width="20rem"
                                                             visible="{= !${requestInfo>/editable} }"
                                                             class="customText_obj"
-                                                        />
-                                                        <Input
+                                                        /><Input
                                                             value="{requestInfo>/TO_BANKS/results/0/GSTYES_NO}"
                                                             width="20rem"
                                                             visible="{requestInfo>/editable}"
                                                             class="customInput"
-                                                        />
-                                                        <VBox width="2rem" />
-                                                        <Label
+                                                        /><VBox width="2rem" /><Label
                                                             text=""
                                                             width="12rem"
                                                             class="customLabel_obj"
-                                                        />
-                                                        <Text
+                                                        /><Text
                                                             text=""
                                                             width="20rem"
                                                             class="customText_obj"
-                                                        />
-                                                    </HBox>
-                                                </VBox> -->
-                                                <lyt:VerticalLayout
+                                                        /></HBox></VBox> -->
+												<lyt:VerticalLayout
                                                     id="FinanceInformationFormContainer"
                                                     width="100%"
                                                 />
-                                            </u:blocks>
-                                        </u:ObjectPageSubSection>
-                                    </u:subSections>
-                                </u:ObjectPageSection>
-
-                                <u:ObjectPageSection
+											</u:blocks>
+										</u:ObjectPageSubSection>
+									</u:subSections>
+								</u:ObjectPageSection>
+								<u:ObjectPageSection
                                     titleUppercase="false"
                                     title="Operational Information"
                                     showTitle="true"
                                 >
-                                    <u:subSections>
-                                        <u:ObjectPageSubSection
+									<u:subSections>
+										<u:ObjectPageSubSection
                                             title="Operational Information"
                                             titleUppercase="false"
                                         >
-                                            <u:blocks>
-                                                <lyt:VerticalLayout
+											<u:blocks>
+												<lyt:VerticalLayout
                                                     id="OperationalInformationFormContainer"
                                                     width="100%"
                                                 />
-                                            </u:blocks>
-                                        </u:ObjectPageSubSection>
-                                    </u:subSections>
-                                </u:ObjectPageSection>
-
-                                <u:ObjectPageSection
+											</u:blocks>
+										</u:ObjectPageSubSection>
+									</u:subSections>
+								</u:ObjectPageSection>
+								<u:ObjectPageSection
                                     title="Disclosure Fields"
                                     id="disclosureSection"
                                     titleUppercase="false"
                                 >
-                                    <u:ObjectPageSubSection>
-                                        <u:blocks>
-                                                <lyt:VerticalLayout
+									<u:ObjectPageSubSection>
+										<u:blocks>
+											<lyt:VerticalLayout
                                                     id="DisclosureFormContainer"
                                                     width="100%"
                                                 />
-                                            </u:blocks>
-                                    </u:ObjectPageSubSection>
-                                </u:ObjectPageSection>
-                                <u:ObjectPageSection
+										</u:blocks>
+									</u:ObjectPageSubSection>
+								</u:ObjectPageSection>
+								<u:ObjectPageSection
                                     title="Quality Certificates"
                                     id="qualityCertSection"
                                     titleUppercase="false"
                                 >
-                                    <u:ObjectPageSubSection>
-                                        <Table
+									<u:ObjectPageSubSection>
+										<Table
                                             id="qualityCertTable"
                                             items="{requestInfo>/TO_QA_CERTIFICATES/results}"
                                             inset="false"
                                             fixedLayout="false"
                                             width="100%"
                                         >
-                                            <columns>
-                                                <Column>
-                                                    <Text text="Description" />
-                                                </Column>
-                                                <Column>
-                                                    <Text text="Action" />
-                                                </Column>
-                                                <Column>
-                                                    <Text text="Done By" />
-                                                </Column>
-                                            </columns>
-
-                                            <items>
-                                                <ColumnListItem>
-                                                    <cells>
-                                                        <!-- Description (always read-only) -->
-                                                        <Text
+											<columns>
+												<Column>
+													<Text text="Description" />
+												</Column>
+												<Column>
+													<Text text="Action" />
+												</Column>
+												<Column>
+													<Text text="Done By" />
+												</Column>
+											</columns>
+											<items>
+												<ColumnListItem>
+													<cells>
+														<!-- Description (always read-only) -->
+														<Text
                                                             text="{requestInfo>CERTI_NAME}"
                                                         />
-
-                                                        <!-- Action: editable when /editable = true -->
-                                                        <VBox>
-                                                            <Text
+														<!-- Action: editable when /editable = true -->
+														<VBox>
+															<Text
                                                                 text="{requestInfo>AVAILABLE}"
                                                                 visible="{= !${requestInfo>/editable} }"
                                                             />
-                                                            <Select
+															<Select
                                                                 selectedKey="{requestInfo>AVAILABLE}"
                                                                 visible="{requestInfo>/editable}"
                                                             >
-                                                                <items>
-                                                                    <core:Item
+																<items>
+																	<core:Item
                                                                         key="YES"
                                                                         text="YES"
                                                                     />
-                                                                    <core:Item
+																	<core:Item
                                                                         key="NO"
                                                                         text="NO"
                                                                     />
-                                                                </items>
-                                                            </Select>
-                                                        </VBox>
-                                                        <!-- Done By: editable when /editable = true -->
-                                                        <VBox>
-                                                            <Text
+																</items>
+															</Select>
+														</VBox>
+														<!-- Done By: editable when /editable = true -->
+														<VBox>
+															<Text
                                                                 text="{requestInfo>DONE_BY}"
                                                                 visible="{= !${requestInfo>/editable} }"
                                                             />
-                                                            <Input
+															<Input
                                                                 value="{requestInfo>DONE_BY}"
                                                                 visible="{requestInfo>/editable}"
                                                                 class="customInput"
                                                             />
-                                                        </VBox>
-                                                    </cells>
-                                                </ColumnListItem>
-                                            </items>
-                                        </Table>
-                                    </u:ObjectPageSubSection>
-                                </u:ObjectPageSection>
-
-                                <u:ObjectPageSection
+														</VBox>
+													</cells>
+												</ColumnListItem>
+											</items>
+										</Table>
+									</u:ObjectPageSubSection>
+								</u:ObjectPageSection>
+								<u:ObjectPageSection
                                     titleUppercase="false"
                                     title="Attachment"
                                 >
-                                    <u:subSections>
-                                        <u:ObjectPageSubSection
+									<u:subSections>
+										<u:ObjectPageSubSection
                                             title="Attachment"
                                             titleUppercase="false"
                                         >
-                                            <u:blocks>
-                                                <Table
+											<u:blocks>
+												<Table
                                                     inset="false"
                                                     items="{path:'requestInfo>/TO_ATTACHMENTS/results'}"
                                                 >
-                                                    <columns>
-                                                        <Column>
-                                                            <Text text="Name" />
-                                                        </Column>
-                                                         <Column>
-                                                            <Text text="Description" />
-                                                        </Column>
-                                                        <Column>
-                                                            <Text
+													<columns>
+														<Column>
+															<Text text="Name" />
+														</Column>
+														<Column>
+															<Text text="Description" />
+														</Column>
+														<Column>
+															<Text
                                                                 text="Preview"
                                                             />
-                                                        </Column>
-                                                    </columns>
-                                                    <items>
-                                                        <ColumnListItem
+														</Column>
+													</columns>
+													<items>
+														<ColumnListItem
                                                             vAlign="Middle"
                                                         >
-                                                            <cells>
-                                                                <Text
+															<cells>
+																<Text
                                                                     text="{requestInfo>IMAGE_FILE_NAME}"
                                                                 />
-                                                                <Text
+																<Text
                                                                     text="{requestInfo>DESCRIPTION}"
                                                                 />
-                                                                <Button
+																<Button
                                                                     press="onPreviewAttachment"
                                                                     icon="sap-icon://show"
                                                                 >
-                                                                    <customData>
-                                                                        <core:CustomData
+																	<customData>
+																		<core:CustomData
                                                                             key="customData"
                                                                             value="{requestInfo>IMAGEURL}"
                                                                             writeToDom="false"
                                                                         />
-                                                                    </customData>
-                                                                </Button>
-                                                            </cells>
-                                                        </ColumnListItem>
-                                                    </items>
-                                                </Table>
-                                            </u:blocks>
-                                        </u:ObjectPageSubSection>
-                                    </u:subSections>
-                                </u:ObjectPageSection>
-
-                                <u:ObjectPageSection
+																	</customData>
+																</Button>
+															</cells>
+														</ColumnListItem>
+													</items>
+												</Table>
+											</u:blocks>
+										</u:ObjectPageSubSection>
+									</u:subSections>
+								</u:ObjectPageSection>
+								<u:ObjectPageSection
                                     titleUppercase="false"
                                     title="Submission"
                                 >
-                                    <u:subSections>
-                                        <u:ObjectPageSubSection
+									<u:subSections>
+										<u:ObjectPageSubSection
                                             title="Submission"
                                             titleUppercase="false"
                                             visible="{= ${requestInfo>/REQUEST_TYPE} !== 'Create User'}"
                                         >
-                                            <u:blocks>
-                                              <lyt:VerticalLayout
+											<u:blocks>
+												<lyt:VerticalLayout
                                                     id="SubmissionFormContainer"
                                                     width="100%"
                                                 />
-                                            </u:blocks>
-                                        </u:ObjectPageSubSection>
-                                    </u:subSections>
-                                </u:ObjectPageSection>
-                            </u:sections>
-                        </u:ObjectPageLayout>
-                    </content>
-                  
-                </Page>
-                <Page
+											</u:blocks>
+										</u:ObjectPageSubSection>
+									</u:subSections>
+								</u:ObjectPageSection>
+							</u:sections>
+						</u:ObjectPageLayout>
+					</content>
+				</Page>
+				<Page
                     showNavButton="false"
                     showHeader="true"
                     navButtonPress="onNavBack"
                     class="sapUiContentPadding"
                     backgroundDesign="Solid"
-                    xmlns:tL="sap.suite.ui.commons"
-                    xmlns:m="sap.m"
+					xmlns:tL="sap.suite.ui.commons"
+					xmlns:m="sap.m"
                 >
-                    <headerContent>
-                        <Button
+					<headerContent>
+						<Button
                             icon="sap-icon://decline"
                             type="Reject"
                             press=".onDeclinePress"
                             class="sapUiTinyMarginEnd"
                         />
-                    </headerContent>
-                    <content>
-                        <tL:Timeline
+					</headerContent>
+					<content>
+						<tL:Timeline
                             id="idTimeline"
                             enableDoubleSided="true"
                             growingThreshold="10"
@@ -679,8 +635,8 @@
                             content="{graphModel>/logs}"
                             class="customTimeline"
                         >
-                            <tL:content>
-                                <tL:TimelineItem
+							<tL:content>
+								<tL:TimelineItem
                                     id="idTemplateItem"
                                     dateTime="{graphModel>rawTimestamp}"
                                     title="Level {graphModel>level} - {graphModel>action}"
@@ -690,39 +646,39 @@
                                     filterValue="{graphModel>action}"
                                     status="{graphModel>status}"
                                 >
-                                    <tL:embeddedControl>
-                                        <m:VBox class="timelineEmbeddedContent">
-                                            <m:items>
-                                                <m:HBox>
-                                                    <m:Label
+									<tL:embeddedControl>
+										<m:VBox class="timelineEmbeddedContent">
+											<m:items>
+												<m:HBox>
+													<m:Label
                                                         text="Role:"
                                                         class="label"
                                                     />
-                                                    <m:Text
+													<m:Text
                                                         text="{graphModel>role}"
                                                         class="value"
                                                     />
-                                                </m:HBox>
-                                                <m:HBox>
-                                                    <m:Label
+												</m:HBox>
+												<m:HBox>
+													<m:Label
                                                         text="Comment:"
                                                         class="label"
                                                     />
-                                                    <m:Text
+													<m:Text
                                                         text="{graphModel>comment}"
                                                         class="value"
                                                         wrapping="true"
                                                     />
-                                                </m:HBox>
-                                            </m:items>
-                                        </m:VBox>
-                                    </tL:embeddedControl>
-                                </tL:TimelineItem>
-                            </tL:content>
-                        </tL:Timeline>
-                    </content>
-                </Page>
-            </l:Splitter>
-        </content>
-    </Page>
+												</m:HBox>
+											</m:items>
+										</m:VBox>
+									</tL:embeddedControl>
+								</tL:TimelineItem>
+							</tL:content>
+						</tL:Timeline>
+					</content>
+				</Page>
+			</l:Splitter>
+		</content>
+	</Page>
 </mvc:View>

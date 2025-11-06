@@ -2,7 +2,7 @@
 	xmlns:sf="sap.ui.comp.smartfield" xmlns:l="sap.ui.layout.form">
 	<Dialog id="idDailogCreated" title="Create User" titleAlignment="Start" contentWidth="50%" >
 		<content>
-			<VBox class="sapUiMediumMargin">
+			<VBox class="sapUiSmallMargin">
 				<l:SimpleForm id="_IDGenSimpleForm" editable="true" layout="ColumnLayout" columnsM="2" columnsL="3" columnsXL="4">
 					<Label id="_IDGenLabel1" text="User ID (Email ID)" labelFor="idUserId"/>
 					<Input id="idUserId" editable="true" valueHelpRequest="onValueHelpRequest" showValueHelp="true"  suggestionItems="{>/IasUsers}"

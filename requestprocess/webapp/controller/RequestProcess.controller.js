@@ -63,6 +63,10 @@ sap.ui.define([
         },
 
         _openActionCommentDialog: function () {
+            let inpVal = sap.ui.getCore().byId("commentInput");
+            if(inpVal){
+                inpVal.setValue("");
+            }
             if (!this._pActionCommentDialog) {
                 this._pActionCommentDialog = Fragment.load({
                     name: "com.requestapproval.requestprocess.fragments.ActionComment", // update this to your fragment path

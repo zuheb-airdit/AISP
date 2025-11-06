@@ -205,7 +205,7 @@
                                         </Column>
                                         <Column
                                             width="20%"
-                                            hAlign="Center"
+                                            hAlign="Begin"
                                         >
                                             <Text text="Action" />
                                         </Column>

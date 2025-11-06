@@ -147,7 +147,7 @@
                             <!-- Poll Interval -->
                             <VBox class="customInputGroup">
                                 <Label
-                                    text="Poll Interval(Mins)"
+                                    text="Poll Interval(Seconds)"
                                     required="true"
                                     design="Bold"
                                 />
@@ -169,9 +169,9 @@
                                     required="true"
                                     design="Bold"
                                 />
-                                <ComboBox
+                                <MultiComboBox
                                     id="fileTypesComboBox"
-                                    selectedKey="{BuyerModel>/FILE_TYPES}"
+                                    selectedKeys="{BuyerModel>/FILE_TYPES}"
                                     
                                     selectionChange=".onFileTypesChange"
                                     enabled="{= ${viewModel>/isEditing} }"
@@ -188,7 +188,7 @@
                                         key="pdf"
                                         text="PDF"
                                     />
-                                </ComboBox>
+                                </MultiComboBox>
                             </VBox>
 
                             <!-- File Size -->

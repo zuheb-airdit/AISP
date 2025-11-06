@@ -34,7 +34,7 @@
                                             <VBox class="sapUiSmallMarginBegin">
                                                 <Title level="H2" text="{requestInfo>/VENDOR_NAME1}" wrapping="true" class="sapUiTinyMarginBottom title-text" />
                                                 <HBox alignItems="Center">
-                                                    <ObjectIdentifier title="Request No:" text="{requestInfo>/REQUEST_NO}" class="sapUiTinyMarginEnd" />
+                                                    <ObjectIdentifier text="{requestInfo>/REQUEST_NO}" class="sapUiTinyMarginEnd" />
                                                 </HBox>
                                             </VBox>
                                         </HBox>
@@ -51,19 +51,22 @@
                                     <u:snappedHeading>
                                         <VBox class="sapUiSmallMargin">
                                             <!-- Header Row -->
-                                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                                            <HBox alignItems="Center" justifyContent="SpaceBetween">
                                                 <HBox alignItems="Center">
-                                                    <Image src="https://agpcgpdevqa.blob.core.windows.net/qam-files/moneyking%40gmail.com_company_logo_1757754485556.jpg" alt="Company Logo" width="32px" height="32px" class="sapUiTinyMarginEnd" />
-                                                    <Title level="H3" text="{requestInfo>/REQUEST_NO}" wrapping="false" />
+                                                    <!-- <Image src="https://agpcgpdevqa.blob.core.windows.net/qam-files/moneyking%40gmail.com_company_logo_1757754485556.jpg" alt="Company Logo" width="32px" height="32px" class="sapUiTinyMarginEnd" /> -->
+                                                    <Image src="{requestInfo>/UPLOAD_LOGO}" alt="Company Logo" width="58px" height="58px" class="sapUiSmallMarginEnd rounded-image" />
+
+                                                    <Title level="H3" text="{requestInfo>/VENDOR_NAME1}" wrapping="false" />
                                                 </HBox>
                                             </HBox>
                                             <!-- Vendor Info -->
-                                            <VBox>
-                                                <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                                    <Label text="Vendor:" design="Bold" class="sapUiTinyMarginEnd label-min-width" />
-                                                    <Text text="{requestInfo>/VENDOR_NAME1}" wrapping="true" />
+                                            
+                                                <HBox alignItems="Center">
+                                                    <Label text="Request No:" design="Bold" class="sapUiTinyMarginEnd sapUiTinyMarginBottom label-min-width" />
+                                                    <!-- <Text text="{requestInfo>/REQUEST_NO}" wrapping="true" class="sapUiMarginBottom"/> -->
+                                                    <ObjectNumber number="{requestInfo>/REQUEST_NO}"  class="sapUiTinyMarginBottom"></ObjectNumber>
                                                 </HBox>
-                                            </VBox>
+                                        
                                         </VBox>
                                     </u:snappedHeading>
                                     <u:actions>

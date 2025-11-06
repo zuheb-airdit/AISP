@@ -1,0 +1,19 @@
+<core:FragmentDefinition
+  xmlns:core="sap.ui.core"
+  xmlns="sap.m">
+  <Popover
+    id="customErrorPopover"
+    title="{customErrorModel>/title}"
+    placement="Bottom">
+    <content>
+      <Text text="{customErrorModel>/message}" />
+    </content>
+    <footer>
+      <Bar>
+        <contentRight>
+          <Button text="Close" press=".onCloseCustomError" />
+        </contentRight>
+      </Bar>
+    </footer>
+  </Popover>
+</core:FragmentDefinition>

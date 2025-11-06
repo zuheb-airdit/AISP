@@ -25,7 +25,7 @@
                 </heading>
 
                 <snappedTitleOnMobile>
-                    <m:Title text="New Company" />
+                    <m:Title text="New Company" id="idObjTitle" />
                 </snappedTitleOnMobile>
 
                 <actions>
@@ -37,7 +37,7 @@
                     />
                     <m:Button
                         icon="sap-icon://decline"
-                        type="Emphasized"
+                        type="Reject"
                         press="onCloseApprovalSplit"
                     />
                 </actions>
@@ -270,7 +270,7 @@
                 <m:Button
                     id="idCreateFooterButton"
                     text="Create"
-                    type="Emphasized"
+                    type="Success"
                     press="onFooterCreatePress"
                 />
             </m:Toolbar>

@@ -3,7 +3,7 @@
 	<Dialog id="idDeleteCommentDialog" title="📝 Please write comment" type="Message" afterClose="onDialogClose">
 		<content>
 			<VBox class="sapUiSmallMargin" width="30rem">
-				<Label text="📢 Comment" labelFor="instructionInput"/>
+				<Label text="📢 Comment" labelFor="instructionInput" required="true"/>
 				<TextArea id="idcomment" width="100%" height="" cols="20" rows="5" placeholder="💬 Max Characters 500" maxLength="500"/>
 			</VBox>
 		</content>

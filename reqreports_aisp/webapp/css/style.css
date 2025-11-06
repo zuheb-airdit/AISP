@@ -1,4 +1,9 @@
 /* Enter your custom styles here */
+.rounded-image {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .noWrapText {
     white-space: nowrap;
     margin: auto;

@@ -446,7 +446,7 @@ sap.ui.define(
           }
 
           if (!sEntityCode || sEntityCode === "") {
-            sap.m.MessageBox.error("Please select an Entity Code.");
+            sap.m.MessageBox.error("Please select an Company Code.");
             this.getView().setBusy(false);
             return; // Stop further execution
           }

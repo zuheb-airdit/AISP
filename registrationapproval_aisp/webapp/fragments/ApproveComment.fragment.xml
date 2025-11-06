@@ -8,7 +8,7 @@
         contentHeight="220px">
         
         <VBox class="sapUiSmallMargin">
-            <Text text="Please provide a reason for approve:" class="sapUiSmallMarginBottom" />
+            <Label text="Please provide a reason for approve:" class="sapUiSmallMarginBottom" required="true"/>
             
             <TextArea
                 id="approveCommentTextArea"
@@ -16,6 +16,7 @@
                 width="100%"
                 maxLength="500"
                 liveChange=".onRejectCommentLiveChange"
+                required="true"
                 placeholder="Enter up to 500 characters..."
             />
 

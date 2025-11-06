@@ -21,8 +21,6 @@
                             entitySet="RequestInfoWithoutFilter"
                             persistencyKey="SmartFilter_Explored"
                             considerAnalyticalParameters="true"
-                            search="onGoPress"
-                            initialized="initialized"
                             showRestoreButton="true"
                         >
                             <smartFilterBar:controlConfiguration />
@@ -33,7 +31,7 @@
                     <smartTable:SmartTable
                         entitySet="RequestInfoWithoutFilter"
                         id="idSmartTableApprovalRegister"
-                        smartFilterId="idSmartFilterRqgApp"
+                        smartFilterId="smartFilterBar"
                         backgroundDesign="Solid"
                         showRowCount="true"
                         tableType="ResponsiveTable"
@@ -55,7 +53,6 @@
                         <Table
                             id="idTest"
                             selectionChange="selectionChangeHandlerRregister"
-                            mode="SingleSelectLeft"
                             growing="true"
                             growingThreshold="20"
                         >
@@ -74,7 +71,7 @@
                                         />
                                     </customData>
                                     <Label
-                                        text="Profile Image"
+                                        text="Company Image"
                                         wrapping="true"
                                     />
                                 </Column>
@@ -188,7 +185,7 @@
                                         vAlign="Inherit"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     hAlign="Begin"
                                     demandPopin="true"
                                     minScreenWidth="Tablet"
@@ -205,7 +202,7 @@
                                         text="Created On"
                                         wrapping="true"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     hAlign="Begin"
                                     demandPopin="true"
@@ -282,10 +279,10 @@
                                                 class=""
                                             />
                                         </VBox>
-                                        <Text
+                                        <!-- <Text
                                             text="{path: 'CREATED_ON', formatter: '.createdOnAndByFormatter'}"
                                             class=""
-                                        />
+                                        /> -->
                                         <ObjectStatus
                                             text="{ parts :[{path: 'STATUS'},{path: 'APPROVER_ROLE'}], formatter: '.statusFormatter'}"
                                             state="Indication15"

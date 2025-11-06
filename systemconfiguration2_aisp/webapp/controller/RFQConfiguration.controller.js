@@ -153,6 +153,7 @@ sap.ui.define(
         },
 
         getVendorAccountGroupData: function () {
+          this.getView().setBusy(true)
           let oModel = this.getOwnerComponent().getModel();
           oModel.read("/VENDOR_ACCOUNT_GROUP", {
             success: function (res) {
@@ -178,9 +179,11 @@ sap.ui.define(
               };
               let jModel = new JSONModel(data);
               this.getView().setModel(jModel, "rfqModel");
+                        this.getView().setBusy(false)
             }.bind(this),
             error: function (err) {
               debugger;
+                        this.getView().setBusy(false)
               MessageBox.error("Something went wrong");
             },
           });
@@ -221,7 +224,7 @@ sap.ui.define(
           oModel.setProperty("/isAttachmentFormVisible", false);
           oModel.setProperty("/newQuestionnaire", {
             question: "",
-            QUESTION_TYPE: "Radio",
+            QUESTION_TYPE: "",
             ALLOTTED_POINTS: 0,
             IS_MANDATORY: true,
             SECTION: "General Info",
@@ -573,10 +576,11 @@ sap.ui.define(
             MessageToast.show("Description is mandatory");
             return;
           }
-          if (!oNewVendorGroup.attachments.length) {
-            MessageToast.show("At least one attachment is mandatory");
+          if (!oNewVendorGroup.attachments.length && !oNewVendorGroup.questionnaires.length) {
+            MessageToast.show("No attachments or questionnaires are added");
             return;
           }
+
 
           // Prepare payload
           var oPayload = {

@@ -75,6 +75,12 @@
 .sapUiTinyMarginBegin.sapUiTinyMarginTop {
     margin: 0.5rem 0.5rem 0 0.5rem !important;
 }
+.integrationContainer {
+    width: 100%;
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+
 
 
 

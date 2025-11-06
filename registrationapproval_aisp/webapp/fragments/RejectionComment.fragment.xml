@@ -1,20 +1,28 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
     <Dialog
         id="rejectCommentDialog"
         title="Reject Request"
         draggable="true"
         resizable="true"
         contentWidth="600px"
-        contentHeight="220px">
-        
+        contentHeight="220px"
+    >
         <VBox class="sapUiSmallMargin">
-            <Text text="Please provide a reason for rejection:" class="sapUiSmallMarginBottom" />
-            
+            <Label
+                text="Please provide a reason for rejection:"
+                class="sapUiSmallMarginBottom"
+                                required="true"
+            />
+
             <TextArea
                 id="rejectCommentTextArea"
                 rows="4"
                 width="100%"
                 maxLength="500"
+                required="true"
                 liveChange=".onRejectCommentLiveChange"
                 placeholder="Enter up to 500 characters..."
             />
@@ -28,10 +36,17 @@
         </VBox>
 
         <beginButton>
-            <Button text="Reject" type="Reject" press=".onRejectCommentConfirm" />
+            <Button
+                text="Reject"
+                type="Reject"
+                press=".onRejectCommentConfirm"
+            />
         </beginButton>
         <endButton>
-            <Button text="Cancel" press=".onRejectCommentCancel" />
+            <Button
+                text="Cancel"
+                press=".onRejectCommentCancel"
+            />
         </endButton>
     </Dialog>
 </core:FragmentDefinition>

@@ -866,7 +866,22 @@ sap.ui.define(
         },
 
         onCountryDialogClose: function () {
-          this.byId("countryCreateDialog").close();
+           if (this._oCreateDepartmentDialog) {
+            this._oCreateDepartmentDialog.close();
+            this._oCreateDepartmentDialog.destroy(); // Destroy the fragment
+            this._oCreateDepartmentDialog = null; // Reset to null to recreate next time
+          }
+          // this.byId("countryCreateDialog").close();
+          // this.byId("countryCreateDialog").destroy();
+          // this.byId("countryCreateDialog") = null;
+        },
+
+        onCurrDialogClose: function () {
+           if (this._oCreateCurrencyDialog) {
+            this._oCreateCurrencyDialog.close();
+            this._oCreateCurrencyDialog.destroy(); // Destroy the fragment
+            this._oCreateCurrencyDialog = null; // Reset to null to recreate next time
+          }
         },
 
         onUpdateCountrySubmit: function () {
@@ -1527,7 +1542,8 @@ sap.ui.define(
               sap.m.MessageBox.success(" Request Type created successfully!");
               this.getMastertabledata("RequestType");
 
-              sap.ui.getCore().byId("RequestTypeCreateDialog").close();
+              // sap.ui.getCore().byId("RequestTypeCreateDialog").close();
+              this._RequestTypeCreateDialog.close();
               // Optionally refresh your master table data
             }.bind(this),
             error: function () {
@@ -1537,19 +1553,33 @@ sap.ui.define(
         },
 
         onApprovalTypeCreateDialogClose: function () {
-          sap.ui.getCore().byId("approvalTypeCreateDialog").close();
+          if (this._approvalTypeCreateDialog) {
+            this._approvalTypeCreateDialog.close();
+            this._approvalTypeCreateDialog.destroy(); // Destroy the fragment
+            this._approvalTypeCreateDialog = null; // Reset to null to recreate next time
+          }
         },
+
+        // onApprovalTypeCreateDialogClose: function () {
+        //   sap.ui.getCore().byId("approvalTypeCreateDialog").close();
+        // },
 
         onVendorAccountEditDialogClose: function () {
           sap.ui.getCore().byId("vendorEditDialog").close();
+          sap.ui.getCore().byId("vendorEditDialog").destroy();
         },
 
         onRequestTypeCreateDialogClose: function () {
-          sap.ui.getCore().byId("RequestTypeCreateDialog").close();
+           if (this._RequestTypeCreateDialog) {
+            this._RequestTypeCreateDialog.close();
+            this._RequestTypeCreateDialog.destroy(); // Destroy the fragment
+            this._RequestTypeCreateDialog = null; // Reset to null to recreate next time
+          }
+
         },
-        onRequestTypeCreateDialogClose: function () {
-          sap.ui.getCore().byId("RequestTypeCreateDialog").close();
-        },
+        // onRequestTypeCreateDialogClose: function () {
+        //   sap.ui.getCore().byId("RequestTypeCreateDialog").close();
+        // },
         onRequestTypeEditDialogClose: function () {
           sap.ui.getCore().byId("RequestTypeEditDialog").close();
         },
@@ -1755,7 +1785,8 @@ sap.ui.define(
 
           oModel.create("/createVendorAccountGroup", oPayload, {
             success: function () {
-              sap.ui.getCore().byId("vendorCreateDialog").close();
+              // sap.ui.getCore().byId("vendorCreateDialog").close();
+              this.onvendorAccountDialogClose();
               sap.m.MessageBox.success(
                 "Vendor Account Group created successfully!"
               );
@@ -1768,11 +1799,21 @@ sap.ui.define(
         },
 
         onUserRoleCreateDialogClose: function () {
-          sap.ui.getCore().byId("userRoleCreateDialog").close();
+          // sap.ui.getCore().byId("userRoleCreateDialog").close();
+           if (this._userRoleCreateDialog) {
+            this._userRoleCreateDialog.close();
+            this._userRoleCreateDialog.destroy(); // Destroy the fragment
+            this._userRoleCreateDialog = null; // Reset to null to recreate next time
+          }
         },
 
         onCompanyCodeCreateDialogClose: function () {
-          sap.ui.getCore().byId("companyCodeCreateDialog").close();
+          // sap.ui.getCore().byId("companyCodeCreateDialog").close();
+           if (this._companyCodeCreateDialog) {
+            this._companyCodeCreateDialog.close();
+            this._companyCodeCreateDialog.destroy(); // Destroy the fragment
+            this._companyCodeCreateDialog = null; // Reset to null to recreate next time
+          }
         },
 
         onEditCompanyCodeSubmit: function () {
@@ -1951,13 +1992,17 @@ sap.ui.define(
           oBinding.filter(aFilters);
         },
 
-        onvendorAccountDialogClose: function(){
-          this._vendoraccountGroupCreateDialog.close();
+        onvendorAccountDialogClose: function () {
+           if (this._vendoraccountGroupCreateDialog) {
+            this._vendoraccountGroupCreateDialog.close();
+            this._vendoraccountGroupCreateDialog.destroy(); // Destroy the fragment
+            this._vendoraccountGroupCreateDialog = null; // Reset to null to recreate next time
+          }
         },
 
-        onNavHome: function(){
-          this.getOwnerComponent().getRouter().navTo("RouteSystemView")
-        }
+        onNavHome: function () {
+          this.getOwnerComponent().getRouter().navTo("RouteSystemView");
+        },
       }
     );
   }

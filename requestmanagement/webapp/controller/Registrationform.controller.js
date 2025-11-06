@@ -23,6 +23,8 @@ sap.ui.define(
     "sap/m/ColumnListItem",
     "sap/ui/core/Core",
     "sap/ui/core/Fragment",
+    "sap/m/Select",
+    "sap/ui/core/Item",
   ],
   function (
     Controller,
@@ -47,7 +49,9 @@ sap.ui.define(
     HBox,
     ColumnListItem,
     Core,
-    Fragment
+    Fragment,
+    Select,
+    Item
   ) {
     "use strict";
 
@@ -347,6 +351,30 @@ sap.ui.define(
             }
           });
 
+          // Initialize INVOICE_EMAIL as a default field under Finance Information/TAX-VAT-GST
+          if (!model["Finance Information"]) model["Finance Information"] = {};
+          if (!model["Finance Information"]["TAX-VAT-GST"]) {
+            model["Finance Information"]["TAX-VAT-GST"] = {};
+          }
+          if (!model["Finance Information"]["TAX-VAT-GST"]["INVOICE_EMAIL"]) {
+            model["Finance Information"]["TAX-VAT-GST"]["INVOICE_EMAIL"] = {
+              label: "Invoice Email",
+              mandatory: false,
+              visible: false, // Initially hidden until "Email" mode is selected
+              type: "text",
+              description: "",
+              value: "",
+              fieldId: "",
+              companyCode: "",
+              requestType: "",
+              minimum: "",
+              maximum: "",
+              placeholder: "Enter invoice email",
+              dropdownValues: "",
+              newDynamicFormField: true,
+            };
+          }
+
           if (type === "sendback") {
             const r = this.responseData;
 
@@ -544,7 +572,7 @@ sap.ui.define(
                 pCon["LAST_NAME"].value = c.LAST_NAME || "";
                 pCon["CITY"].value = c.CITY || "";
                 pCon["STATE"].value = c.STATE || "";
-                pCon["COUNTRY"].value = c.COUNTRY || "";
+                pCon["Country"].value = c.COUNTRY || "";
                 pCon["POSTAL_CODE"].value = c.POSTAL_CODE || "";
                 pCon["DESIGNATION"].value = c.DESIGNATION || "";
                 pCon["EMAIL"].value = c.EMAIL || "";
@@ -637,6 +665,11 @@ sap.ui.define(
                   }
                   trg[field].value = src[field] ?? "";
                 });
+              }
+
+              // Update INVOICE_EMAIL value if present in response data
+              if (r.INVOICE_EMAIL) {
+                fin["TAX-VAT-GST"]["INVOICE_EMAIL"].value = r.INVOICE_EMAIL;
               }
             }
 
@@ -898,514 +931,6 @@ sap.ui.define(
 
           return model;
         },
-
-        // buildFormDataBySectionCategory: function (fields, type) {
-        //     this.currentType = type;
-        //     const model = {
-        //         Attachments: [] // Initialize Attachments at the root level
-        //     };
-        //     console.log("Building form data from fields:", fields, type);
-
-        //     fields.forEach(field => {
-        //         const section = field.SECTION;
-        //         const category = field.CATEGORY;
-        //         const key = field.FIELD_PATH;
-
-        //         if (section === "Attachments" && field.IS_VISIBLE) {
-        //             model.Attachments.push({
-        //                 title: field.FIELD_LABEL,
-        //                 description: "",
-        //                 fileName: "",
-        //                 uploaded: false,
-        //                 fieldPath: field.FIELD_PATH,
-        //                 fieldId: field.FIELD_ID,
-        //                 imageUrl: "",
-        //                 mandatory: !!field.IS_MANDATORY,
-        //                 visible: !!field.IS_VISIBLE,
-        //             });
-        //             return;
-        //         }
-
-        //         if (!model[section]) model[section] = {};
-        //         if (!model[section][category]) {
-        //             if (category === "Address") {
-        //                 model[section][category] = [{ ADDRESS_TYPE: "Primary" }];
-        //             } else if (category === "Primary Bank details") {
-        //                 model[section][category] = [{ BANK_TYPE: "Primary" }];
-        //             } else {
-        //                 model[section][category] = {};
-        //             }
-        //         }
-
-        //         const fieldData = {
-        //             label: field.FIELD_LABEL,
-        //             mandatory: !!field.IS_MANDATORY,
-        //             visible: !!field.IS_VISIBLE,
-        //             type: field.FIELD_TYPE || "",
-        //             description: field.DESCRIPTION || "",
-        //             value: field.DEFAULT_VALUE || "",
-        //             fieldId: field.FIELD_ID || "",
-        //             companyCode: field.COMPANY_CODE || "",
-        //             requestType: field.REQUEST_TYPE || "",
-        //             minimum: field.MINIMUM || "",
-        //             maximum: field.MAXIMUM || "",
-        //             placeholder: field.PLACEHOLDER || "",
-        //             dropdownValues: field.DROPDOWN_VALUES || "",
-        //             newDynamicFormField: !!field.NEW_DYANAMIC_FORM_FIELD
-        //         };
-
-        //         if (category === "Address" && key !== "ADDRESS_TYPE") {
-        //             model[section][category][0][key] = fieldData;
-        //         } else if (category === "Primary Bank details" && key !== "BANK_TYPE") {
-        //             model[section][category][0][key] = fieldData;
-        //         } else if (category !== "Address" && category !== "Primary Bank details") {
-        //             model[section][category][key] = fieldData;
-        //         }
-        //     });
-
-        //     if (type === "registration") {
-        //         model["Supplier Information"]["Supplier Information"]["COMPANY_CODE"].value = this.COMPANY_CODE;
-
-        //         //filling Dummy data for Testing
-        //         if (model["Supplier Information"]) {
-        //             if (model["Supplier Information"]["Supplier Information"]) {
-        //                 model["Supplier Information"]["Supplier Information"]["VENDOR_NAME1"].value = "Innovent Solutions Pvt. Ltd.";
-        //                 model["Supplier Information"]["Supplier Information"]["WEBSITE"].value = "https://innoventsolutions.in";
-        //                 model["Supplier Information"]["Supplier Information"]["REGISTERED_ID"].value = "REG123456789";
-        //                 model["Supplier Information"]["Supplier Information"]["COMPANY_CODE"].value = this.COMPANY_CODE;
-        //             }
-
-        //             if (model["Supplier Information"]["Address"]) {
-        //                 model["Supplier Information"]["Address"][0]["HOUSE_NUM1"].value = "456";
-        //                 model["Supplier Information"]["Address"][0]["STREET1"].value = "Innovation Tower";
-        //                 model["Supplier Information"]["Address"][0]["STREET2"].value = "Sector 5";
-        //                 model["Supplier Information"]["Address"][0]["STREET3"].value = "Technocity";
-        //                 model["Supplier Information"]["Address"][0]["STREET4"].value = "Bangalore";
-        //                 model["Supplier Information"]["Address"][0]["COUNTRY"].value = "India";
-        //                 model["Supplier Information"]["Address"][0]["STATE"].value = "Karnataka";
-        //                 model["Supplier Information"]["Address"][0]["CITY"].value = "Bangalore";
-        //                 model["Supplier Information"]["Address"][0]["POSTAL_CODE"].value = "560103";
-        //                 model["Supplier Information"]["Address"][0]["EMAIL"].value = "contact@innoventsolutions.in";
-        //                 model["Supplier Information"]["Address"][0]["CONTACT_NO"].value = "08012345678";
-        //             }
-
-        //             if (model["Supplier Information"]["Primary Contact"]) {
-        //                 model["Supplier Information"]["Primary Contact"]["FIRST_NAME"].value = "Rahul Verma";
-        //                 model["Supplier Information"]["Primary Contact"]["LAST_NAME"].value = "";
-        //                 model["Supplier Information"]["Primary Contact"]["CITY"].value = "Bangalore";
-        //                 model["Supplier Information"]["Primary Contact"]["STATE"].value = "Karnataka";
-        //                 model["Supplier Information"]["Primary Contact"]["COUNTRY"].value = "India";
-        //                 model["Supplier Information"]["Primary Contact"]["POSTAL_CODE"].value = "560103";
-        //                 model["Supplier Information"]["Primary Contact"]["DESIGNATION"].value = "Vendor Manager";
-        //                 model["Supplier Information"]["Primary Contact"]["EMAIL"].value = "rahul.verma@innoventsolutions.in";
-        //                 model["Supplier Information"]["Primary Contact"]["CONTACT_NUMBER"].value = "+918061234567";
-        //                 model["Supplier Information"]["Primary Contact"]["MOBILE"].value = "+919876543210";
-        //             }
-        //         }
-
-        //         if (model["Finance Information"]) {
-        //             if (model["Finance Information"]["Primary Bank details"]) {
-        //                 model["Finance Information"]["Primary Bank details"][0]["SWIFT_CODE"].value = "HDFCINBBXXX";
-        //                 model["Finance Information"]["Primary Bank details"][0]["BRANCH_NAME"].value = "HDFC Koramangala Branch";
-        //                 model["Finance Information"]["Primary Bank details"][0]["BANK_COUNTRY"].value = "India";
-        //                 model["Finance Information"]["Primary Bank details"][0]["BANK_NAME"].value = "HDFC Bank";
-        //                 model["Finance Information"]["Primary Bank details"][0]["BENEFICIARY"].value = "Innovent Solutions Pvt. Ltd.";
-        //                 model["Finance Information"]["Primary Bank details"][0]["ACCOUNT_NO"].value = "987654321001";
-        //                 model["Finance Information"]["Primary Bank details"][0]["IBAN_NUMBER"].value = "IN91HDFC000987654321001";
-        //                 model["Finance Information"]["Primary Bank details"][0]["ROUTING_CODE"].value = "HDFC0000987";
-        //                 model["Finance Information"]["Primary Bank details"][0]["BANK_CURRENCY"].value = "INR";
-        //                 model["Finance Information"]["TAX-VAT-GST"].GST_NO.value = "29AACCI1234M1Z5";
-        //             }
-        //         }
-
-        //         if (model["Operational Information"]) {
-        //             if (model["Operational Information"]["Product-Service Description"]) {
-        //                 model["Operational Information"]["Product-Service Description"]["PRODUCT_NAME"].value = "Smart Sensor Kits";
-        //                 model["Operational Information"]["Product-Service Description"]["PRODUCT_DESCRIPTION"].value = "IoT-based smart sensors for industrial automation";
-        //                 model["Operational Information"]["Product-Service Description"]["PRODUCT_TYPE"].value = "Electronics";
-        //                 model["Operational Information"]["Product-Service Description"]["PRODUCT_CATEGORY"].value = "Sensors & Automation";
-        //             }
-
-        //             if (model["Operational Information"]["Operational Capacity"]) {
-        //                 model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MIN"].value = "100 Units";
-        //                 model["Operational Information"]["Operational Capacity"]["ORDER_SIZE_MAX"].value = "10000 Units";
-        //                 model["Operational Information"]["Operational Capacity"]["PRODUCTION_CAPACITY"].value = "50000 Units/Year";
-        //                 model["Operational Information"]["Operational Capacity"]["PRODUCTION_LOCATION"].value = "Bangalore Industrial Estate";
-        //             }
-        //         }
-
-        //         // if (model["Quality Certificates"]) {
-        //         //     if (model["Quality Certificates"]["Standard Certifications"]) {
-        //         //         Object.keys(model["Quality Certificates"]["Standard Certifications"]).forEach(key => {
-        //         //             model["Quality Certificates"]["Standard Certifications"][key].value = "Rahul Verma";
-        //         //             model["Quality Certificates"]["Standard Certifications"][key].isCertified = "Yes";
-        //         //         });
-        //         //     }
-        //         // }
-
-        //         // if (model["Submission"]) {
-        //         //     if (model["Submission"]["Declaration"]) {
-        //         //         model["Submission"]["Declaration"]["COMPLETED_BY"].value = "Rahul Verma";
-        //         //         model["Submission"]["Declaration"]["DESIGNATION"].value = "Vendor Manager";
-        //         //         model["Submission"]["Declaration"]["SUBMISSION_DATE"].value = "2025-05-16";
-        //         //         model["Submission"]["Declaration"]["ACK_VALIDATION"].value = true;
-        //         //     }
-        //         // }
-        //     } else if (type === "sendback") {
-        //         const r = this.responseData;
-
-        //         const sInfo = model["Supplier Information"];
-        //         if (sInfo) {
-        //             const sup = sInfo["Supplier Information"];
-        //             if (sup) {
-        //                 sup["VENDOR_NAME1"].value = r.VENDOR_NAME1 || "";
-        //                 sup["WEBSITE"].value = r.WEBSITE || "";
-        //                 sup["REGISTERED_ID"].value = r.REGISTERED_ID || "";
-        //                 sup["COMPANY_CODE"].value = r.COMPANY_CODE || "";
-        //                 sup["VENDOR_TYPE"].value = `${r.SUPPL_TYPE} - ${r.SUPPL_TYPE_DESC}` || "";
-        //                 sup["VENDOR_SUB_TYPE"].value = `${r.BP_TYPE_CODE} - ${r.BP_TYPE_DESC}` || "";
-        //             }
-
-        //             const addressRows = sInfo["Address"] || [];
-        //             const addressResults = r.TO_ADDRESS?.results || [];
-
-        //             if (addressRows[0] && addressResults[0]) {
-        //                 const src = addressResults[0];
-        //                 const trg = addressRows[0];
-
-        //                 trg.ADDRESS_TYPE = "Primary";
-        //                 trg["HOUSE_NUM1"].value = src.STREET ?? "";
-        //                 trg["STREET1"].value = src.STREET1 ?? "";
-        //                 trg["STREET2"].value = src.STREET2 ?? "";
-        //                 trg["STREET3"].value = src.STREET3 ?? "";
-        //                 trg["STREET4"].value = src.STREET4 ?? "";
-        //                 trg["COUNTRY"].value = src.COUNTRY ?? "";
-        //                 trg["STATE"].value = src.STATE ?? "";
-        //                 trg["CITY"].value = src.CITY ?? "";
-        //                 trg["POSTAL_CODE"].value = src.POSTAL_CODE ?? "";
-        //                 trg["EMAIL"].value = src.EMAIL ?? "";
-        //                 trg["CONTACT_NO"].value = src.CONTACT_NO ?? "";
-        //             }
-
-        //             if (addressResults[1]) {
-        //                 if (!addressRows[1]) {
-        //                     const copy = JSON.parse(JSON.stringify(addressRows[0]));
-        //                     Object.keys(copy).forEach(k => { if (k !== "ADDRESS_TYPE") copy[k].value = ""; });
-        //                     copy.ADDRESS_TYPE = "Other Office Address";
-        //                     addressRows.push(copy);
-        //                 }
-
-        //                 const src = addressResults[1];
-        //                 const trg = addressRows[1];
-
-        //                 trg.ADDRESS_TYPE = "Other Office Address";
-        //                 trg["HOUSE_NUM1"] = trg["HOUSE_NUM1"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["STREET1"] = trg["STREET1"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["STREET2"] = trg["STREET2"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["STREET3"] = trg["STREET3"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["STREET4"] = trg["STREET4"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["COUNTRY"] = trg["COUNTRY"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["STATE"] = trg["STATE"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["CITY"] = trg["CITY"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["POSTAL_CODE"] = trg["POSTAL_CODE"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["EMAIL"] = trg["EMAIL"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-        //                 trg["CONTACT_NO"] = trg["CONTACT_NO"] || { value: "", fieldId: "", companyCode: "", requestType: "", mandatory: false, visible: true, type: "", description: "", minimum: "", maximum: "", placeholder: "", dropdownValues: "", newDynamicFormField: false };
-
-        //                 trg["HOUSE_NUM1"].value = src.STREET ?? "";
-        //                 trg["STREET1"].value = src.STREET1 ?? "";
-        //                 trg["STREET2"].value = src.STREET2 ?? "";
-        //                 trg["STREET3"].value = src.STREET3 ?? "";
-        //                 trg["STREET4"].value = src.STREET4 ?? "";
-        //                 trg["COUNTRY"].value = src.COUNTRY ?? "";
-        //                 trg["STATE"].value = src.STATE ?? "";
-        //                 trg["CITY"].value = src.CITY ?? "";
-        //                 trg["POSTAL_CODE"].value = src.POSTAL_CODE ?? "";
-        //                 trg["EMAIL"].value = src.EMAIL ?? "";
-        //                 trg["CONTACT_NO"].value = src.CONTACT_NO ?? "";
-        //             }
-
-        //             const pCon = sInfo["Primary Contact"];
-        //             if (pCon) {
-        //                 const c = r.TO_CONTACTS?.results?.[0] || {};
-        //                 pCon["FIRST_NAME"].value = c.FIRST_NAME || "";
-        //                 pCon["LAST_NAME"].value = c.LAST_NAME || "";
-        //                 pCon["CITY"].value = c.CITY || "";
-        //                 pCon["STATE"].value = c.STATE || "";
-        //                 pCon["COUNTRY"].value = c.COUNTRY || "";
-        //                 pCon["POSTAL_CODE"].value = c.POSTAL_CODE || "";
-        //                 pCon["DESIGNATION"].value = c.DESIGNATION || "";
-        //                 pCon["EMAIL"].value = c.EMAIL || "";
-        //                 pCon["CONTACT_NUMBER"].value = c.CONTACT_NO || "";
-        //                 pCon["MOBILE"].value = c.MOBILE_NO || "";
-        //             }
-        //         }
-
-        //         const fin = model["Finance Information"];
-        //         if (fin) {
-        //             const bankRows = fin["Primary Bank details"] || [];
-        //             const bankResults = r.TO_BANKS?.results || [];
-
-        //             if (bankRows[0] && bankResults[0]) {
-        //                 const src = bankResults[0];
-        //                 const trg = bankRows[0];
-
-        //                 trg.BANK_TYPE = "Primary";
-        //                 trg["SWIFT_CODE"].value = src.SWIFT_CODE ?? "";
-        //                 trg["BRANCH_NAME"].value = src.BRANCH_NAME ?? "";
-        //                 trg["BANK_COUNTRY"].value = src.BANK_COUNTRY ?? "";
-        //                 trg["BANK_NAME"].value = src.BANK_NAME ?? "";
-        //                 trg["BENEFICIARY"].value = src.BENEFICIARY ?? "";
-        //                 trg["ACCOUNT_NO"].value = src.ACCOUNT_NO ?? "";
-        //                 trg["IBAN_NUMBER"].value = src.IBAN_NUMBER ?? "";
-        //                 trg["ROUTING_CODE"].value = src.ROUTING_CODE ?? "";
-        //                 trg["BANK_CURRENCY"].value = src.BANK_CURRENCY ?? "";
-        //                 fin["TAX-VAT-GST"].GST_NO.value = src.GST ?? "";
-        //             }
-
-        //             if (bankResults[1]) {
-        //                 if (!bankRows[1]) {
-        //                     const copy = JSON.parse(JSON.stringify(bankRows[0]));
-        //                     Object.keys(copy).forEach(k => { if (k !== "BANK_TYPE") copy[k].value = ""; });
-        //                     copy.BANK_TYPE = "Other Bank Details";
-        //                     bankRows.push(copy);
-        //                 }
-
-        //                 const src = bankResults[1];
-        //                 const trg = bankRows[1];
-
-        //                 trg["SWIFT_CODE"].value = src.SWIFT_CODE ?? "";
-        //                 trg["BRANCH_NAME"].value = src.BRANCH_NAME ?? "";
-        //                 trg["BANK_COUNTRY"].value = src.BANK_COUNTRY ?? "";
-        //                 trg["BANK_NAME"].value = src.BANK_NAME ?? "";
-        //                 trg["BENEFICIARY"].value = src.BENEFICIARY ?? "";
-        //                 trg["ACCOUNT_NO"].value = src.ACCOUNT_NO ?? "";
-        //                 trg["IBAN_NUMBER"].value = src.IBAN_NUMBER ?? "";
-        //                 trg["ROUTING_CODE"].value = src.ROUTING_CODE ?? "";
-        //                 trg["BANK_CURRENCY"].value = src.BANK_CURRENCY ?? "";
-        //             }
-        //         }
-
-        //         const op = model["Operational Information"];
-        //         if (op) {
-        //             const prod = op["Product-Service Description"];
-        //             if (prod) {
-        //                 const p = r.TO_REG_PRODUCT_SERVICE?.results?.[0] || {};
-        //                 prod["PRODUCT_NAME"].value = p.PROD_NAME || "";
-        //                 prod["PRODUCT_DESCRIPTION"].value = p.PROD_DESCRIPTION || "";
-        //                 prod["PRODUCT_TYPE"].value = p.PROD_TYPE || "";
-        //                 prod["PRODUCT_CATEGORY"].value = p.PROD_CATEGORY || "";
-        //             }
-        //             const cap = op["Operational Capacity"];
-        //             if (cap) {
-        //                 const c = r.TO_REG_CAPACITY?.results?.[0] || {};
-        //                 cap["ORDER_SIZE_MIN"].value = c.MINIMUM_ORDER_SIZE || "";
-        //                 cap["PRODUCTION_CAPACITY"].value = c.TOTAL_PROD_CAPACITY || "";
-        //                 cap["PRODUCTION_LOCATION"].value = c.CITY || "";
-        //                 cap["ORDER_SIZE_MAX"].value = c.MAXMIMUM_ORDER_SIZE || "";
-        //             }
-        //         }
-
-        //         // Handle dynamic fields from TO_DYNAMIC_FIELDS
-        //         if (r && r.TO_DYNAMIC_FIELDS && r.TO_DYNAMIC_FIELDS.results && r.TO_DYNAMIC_FIELDS.results.length > 0) {
-        //             r.TO_DYNAMIC_FIELDS.results.forEach(dynamicField => {
-        //                 const section = dynamicField.SECTION;
-        //                 const category = dynamicField.CATEGORY;
-        //                 let data;
-
-        //                 try {
-        //                     data = JSON.parse(dynamicField.DATA);
-        //                 } catch (e) {
-        //                     console.error(`Failed to parse DATA for SECTION: ${section}, CATEGORY: ${category}`, dynamicField.DATA, e);
-        //                     return;
-        //                 }
-
-        //                 console.log(`Processing dynamic field - SECTION: ${section}, CATEGORY: ${category}, DATA:`, data);
-
-        //                 // Ensure section and category exist in the model
-        //                 if (!model[section]) {
-        //                     console.warn(`Section ${section} not found in model. Creating it.`);
-        //                     model[section] = {};
-        //                 }
-        //                 if (!model[section][category]) {
-        //                     console.warn(`Category ${category} not found in model for section ${section}. Creating it.`);
-        //                     if (category === "Address") {
-        //                         model[section][category] = [{ ADDRESS_TYPE: "Primary" }];
-        //                     } else if (category === "Primary Bank details") {
-        //                         model[section][category] = [{ BANK_TYPE: "Primary" }];
-        //                     } else {
-        //                         model[section][category] = {};
-        //                     }
-        //                 }
-
-        //                 // Update fields with dynamic data, ensuring they are applied to the correct category
-        //                 Object.keys(data).forEach(fieldKey => {
-        //                     let fieldValue = data[fieldKey];
-        //                     const normalizedFieldKey = fieldKey.replace(/\s+/g, '_'); // Normalize spaces to underscores
-
-        //                     // Reformat date fields to YYYY-MM-DD only if the field is explicitly a date field
-        //                     if (normalizedFieldKey.toLowerCase().includes("date") && fieldValue) {
-        //                         try {
-        //                             const parsedDate = new Date(fieldValue);
-        //                             if (!isNaN(parsedDate.getTime())) {
-        //                                 fieldValue = parsedDate.toISOString().split('T')[0]; // YYYY-MM-DD
-        //                                 console.log(`Reformatted date for ${fieldKey}: ${fieldValue}`);
-        //                             } else {
-        //                                 console.warn(`Invalid date format for ${fieldKey}: ${fieldValue}`);
-        //                             }
-        //                         } catch (e) {
-        //                             console.error(`Error parsing date for ${fieldKey}: ${fieldValue}`, e);
-        //                         }
-        //                     }
-
-        //                     if (category === "Address" || category === "Primary Bank details") {
-        //                         const index = 0; // Assume first entry (e.g., "Primary")
-        //                         if (!model[section][category][index]) {
-        //                             model[section][category][index] = category === "Address" ? { ADDRESS_TYPE: "Primary" } : { BANK_TYPE: "Primary" };
-        //                         }
-
-        //                         // Check if the field exists in the model, if not create it
-        //                         if (!model[section][category][index][normalizedFieldKey]) {
-        //                             model[section][category][index][normalizedFieldKey] = {
-        //                                 value: "",
-        //                                 label: fieldKey,
-        //                                 mandatory: false,
-        //                                 visible: true,
-        //                                 type: normalizedFieldKey.toLowerCase().includes("date") ? "Date" : "",
-        //                                 description: "",
-        //                                 fieldId: "",
-        //                                 companyCode: "",
-        //                                 requestType: "",
-        //                                 minimum: "",
-        //                                 maximum: "",
-        //                                 placeholder: "",
-        //                                 dropdownValues: "",
-        //                                 newDynamicFormField: true
-        //                             };
-        //                         }
-
-        //                         // Update the value and mark as dynamic
-        //                         model[section][category][index][normalizedFieldKey].value = fieldValue;
-        //                         model[section][category][index][normalizedFieldKey].newDynamicFormField = true;
-        //                         console.log(`Updated dynamic field in ${section}/${category}[${index}]: ${normalizedFieldKey} = ${fieldValue}`);
-        //                     } else {
-        //                         // Non-array category (like Product-Service Description)
-        //                         if (!model[section][category][normalizedFieldKey]) {
-        //                             model[section][category][normalizedFieldKey] = {
-        //                                 value: "",
-        //                                 label: fieldKey,
-        //                                 mandatory: false,
-        //                                 visible: true,
-        //                                 type: normalizedFieldKey.toLowerCase().includes("date") ? "Date" : "",
-        //                                 description: "",
-        //                                 fieldId: "",
-        //                                 companyCode: "",
-        //                                 requestType: "",
-        //                                 minimum: "",
-        //                                 maximum: "",
-        //                                 placeholder: "",
-        //                                 dropdownValues: "",
-        //                                 newDynamicFormField: true
-        //                             };
-        //                         }
-
-        //                         // Update the value and mark as dynamic
-        //                         model[section][category][normalizedFieldKey].value = fieldValue;
-        //                         model[section][category][normalizedFieldKey].newDynamicFormField = true;
-        //                         console.log(`Updated dynamic field in ${section}/${category}: ${normalizedFieldKey} = ${fieldValue}`);
-        //                     }
-        //                 });
-        //             });
-        //         } else {
-        //             console.warn("No dynamic fields found in response.");
-        //         }
-
-        //         var oDisclosureModelData = new JSONModel({});
-        //         const disclosure = model["Disclosures"];
-        //         const disclosureKeys = Object.keys(disclosure);
-        //         const fieldMapping = {
-        //             "Conflict of Interest": "INTEREST_CONFLICT",
-        //             "Legal Case Disclosure": "ANY_LEGAL_CASES",
-        //             "Anti-Corruption Regulation": "ABAC_REG",
-        //             "Export Control": "CONTROL_REGULATION"
-        //         };
-
-        //         const valueMapping = {
-        //             "YES": 0,
-        //             "NO": 1,
-        //             "NA": 2
-        //         };
-
-        //         disclosureKeys.forEach(function (fieldKey) {
-        //             const field = disclosure[fieldKey];
-        //             if (field && fieldKey) {
-        //                 let propertyName = "/" + fieldKey.toLowerCase().replace(/ /g, '').replace('&', '').replace('-', '');
-        //                 const mappedField = fieldMapping[fieldKey];
-
-        //                 if (r && r.TO_DISCLOSURE_FIELDS && r.TO_DISCLOSURE_FIELDS.results.length > 0) {
-        //                     const disclosureData = r.TO_DISCLOSURE_FIELDS.results[0];
-        //                     let fieldValue = disclosureData[mappedField] || "NA";
-        //                     fieldValue = valueMapping[fieldValue];
-        //                     oDisclosureModelData.setProperty(`/${propertyName}`, fieldValue);
-        //                     console.log(`Set disclosure field ${fieldKey} (mapped to ${mappedField}):`, propertyName, "with value:", fieldValue);
-        //                 } else {
-        //                     console.error(`Disclosure data for ${mappedField} not found in response.`);
-        //                 }
-        //             } else {
-        //                 console.error(`Missing or invalid data for field: ${fieldKey}. Full field data:`, field);
-        //             }
-        //         });
-
-        //         this.getView().setModel(oDisclosureModelData, "existModel");
-
-        //         if (model["Quality Certificates"]) {
-        //             if (model["Quality Certificates"]["Standard Certifications"]) {
-        //                 if (r && r.TO_QA_CERTIFICATES && r.TO_QA_CERTIFICATES.results && r.TO_QA_CERTIFICATES.results.length > 0) {
-        //                     r.TO_QA_CERTIFICATES.results.forEach(cert => {
-        //                         const certName = `${cert.CERTI_NAME.replace(/ /g, '_')}_DONE_BY`;
-        //                         if (model["Quality Certificates"]["Standard Certifications"][certName]) {
-        //                             model["Quality Certificates"]["Standard Certifications"][certName].value = cert.DONE_BY || "N/A";
-        //                             model["Quality Certificates"]["Standard Certifications"][certName].isCertified = cert.AVAILABLE === "YES" ? "Yes" : "No";
-        //                             console.log(`Updated certification: ${certName}, DONE_BY: ${cert.DONE_BY}, AVAILABLE: ${cert.AVAILABLE}`);
-        //                         } else {
-        //                             console.warn(`No matching certification found in model for: ${cert.CERTI_NAME}`);
-        //                         }
-        //                     });
-        //                 } else {
-        //                     console.error("No QA certificates found in response.");
-        //                 }
-        //             }
-        //         }
-
-        //         if (model["Attachments"]) {
-        //             if (r && r.TO_ATTACHMENTS && r.TO_ATTACHMENTS.results && r.TO_ATTACHMENTS.results.length > 0) {
-        //                 r.TO_ATTACHMENTS.results.forEach((attachment, index) => {
-        //                     const attachmentData = model["Attachments"][index];
-        //                     if (attachmentData) {
-        //                         attachmentData.fileName = attachment.IMAGE_FILE_NAME || "";
-        //                         attachmentData.imageUrl = attachment.IMAGEURL || "";
-        //                         attachmentData.title = attachment.ATTACH_SHORT_DEC;
-        //                         attachmentData.description = attachment.DESCRIPTION;
-        //                         attachmentData.uploaded = true;
-        //                     }
-        //                 });
-        //                 this.getView().getModel("formDataModel").setProperty("/Attachments", model["Attachments"]);
-        //             } else {
-        //                 console.error("No attachments found in response.");
-        //             }
-        //         }
-
-        //         const sub = model["Submission"]?.["Declaration"];
-        //         if (sub) {
-        //             sub["COMPLETED_BY"].value = r.COMPLETED_BY || "";
-        //             sub["DESIGNATION"].value = r.DESIGNATION || "";
-        //             sub["SUBMISSION_DATE"].value = r.SUBMISSION_DATE || "";
-        //             sub["ACK_VALIDATION"].value = true;
-        //         }
-        //     }
-
-        //     console.log("Final model:", JSON.stringify(model, null, 2));
-        //     return model;
-        // },
 
         createDynamicForm: function (data, type) {
           console.log("Creating dynamic form with data:", data, type);
@@ -1738,6 +1263,7 @@ sap.ui.define(
                                 ? "Tel"
                                 : "Text",
                               required: field.mandatory,
+
                               visible: field.visible,
                               valueState: "None",
                               minLength: field.minimum
@@ -1927,35 +1453,61 @@ sap.ui.define(
                         oField = new Input(inputProps);
                         break;
                       case "dropdown":
-                        const dropdownOptions = field.dropdownValues
-                          ? field.dropdownValues
-                              .split(",")
-                              .map((opt) => opt.trim())
-                          : ["Option 1", "Option 2"];
-                        const items = [
-                          new sap.ui.core.Item({
-                            key: "",
-                            text: field.placeholder || "Select an option",
-                          }),
-                          ...dropdownOptions.map(
-                            (opt) =>
-                              new sap.ui.core.Item({ key: opt, text: opt })
-                          ),
-                        ];
-                        oField = new sap.m.Select({
-                          required: field.mandatory,
-                          selectedKey: field.defaultValue || field.value || "",
-                          items: items,
-                          change: function (oEvent) {
-                            const selectedKey = oEvent
-                              .getSource()
-                              .getSelectedKey();
-                            const oModel =
-                              this.getView().getModel("formDataModel");
-                            const path = `/Supplier Information/${sectionName}/${fieldKey}/value`;
-                            oModel.setProperty(path, selectedKey);
-                          }.bind(this),
-                        });
+                        if (fieldKey === "COUNTRY") {
+                          oField = new sap.m.Select({
+                            required: field.mandatory,
+                            selectedKey:
+                              field.defaultValue || field.value || "IN",
+                            items: {
+                              path: "/Country",
+                              sorter: new sap.ui.model.Sorter("LANDX", false),
+                              template: new sap.ui.core.Item({
+                                key: "{LAND1}",
+                                text: "{LANDX}",
+                              }),
+                            },
+                            change: function (oEvent) {
+                              const selectedKey = oEvent
+                                .getSource()
+                                .getSelectedKey();
+                              const oModel =
+                                this.getView().getModel("formDataModel");
+                              const path = `/Supplier Information/${sectionName}/${fieldKey}/value`;
+                              oModel.setProperty(path, selectedKey);
+                            }.bind(this),
+                          });
+                        } else {
+                          const dropdownOptions = field.dropdownValues
+                            ? field.dropdownValues
+                                .split(",")
+                                .map((opt) => opt.trim())
+                            : ["Option 1", "Option 2"];
+                          const items = [
+                            new sap.ui.core.Item({
+                              key: "",
+                              text: field.placeholder || "Select an option",
+                            }),
+                            ...dropdownOptions.map(
+                              (opt) =>
+                                new sap.ui.core.Item({ key: opt, text: opt })
+                            ),
+                          ];
+                          oField = new sap.m.Select({
+                            required: field.mandatory,
+                            selectedKey:
+                              field.defaultValue || field.value || "",
+                            items: items,
+                            change: function (oEvent) {
+                              const selectedKey = oEvent
+                                .getSource()
+                                .getSelectedKey();
+                              const oModel =
+                                this.getView().getModel("formDataModel");
+                              const path = `/Supplier Information/${sectionName}/${fieldKey}/value`;
+                              oModel.setProperty(path, selectedKey);
+                            }.bind(this),
+                          });
+                        }
                         break;
                       case "checkbox":
                         oField = new sap.m.CheckBox({
@@ -2048,6 +1600,7 @@ sap.ui.define(
                             : "Text",
                           required: field.mandatory,
                           visible: field.visible,
+
                           valueState: "None",
                           minLength: field.minimum
                             ? parseInt(field.minimum)
@@ -2689,7 +2242,7 @@ sap.ui.define(
                           case "dropdown":
                             if (
                               fieldKey === "BANK_COUNTRY" ||
-                              fieldKey === "BANK_COUNTRY"
+                              fieldKey === "BANK_CURRENCY"
                             ) {
                               const items = field.dropdownValues
                                 ? [
@@ -2908,7 +2461,6 @@ sap.ui.define(
                                 ? `${field.label} is required`
                                 : "",
                               change: function (oEvent) {
-                                debugger;
                                 const value = oEvent.getSource().getValue();
                                 const oModel =
                                   this.getView().getModel("formDataModel");
@@ -2951,6 +2503,67 @@ sap.ui.define(
               columnsM: 2,
             });
 
+            // Initialize Invoice Email and Same as Registered Email fields with visibility control
+            var oInvoiceEmailLabel = new Label({
+              text: "Invoice Email",
+              required: true,
+              design: "Bold",
+              visible: false,
+            });
+            var oInvoiceEmailInput = new Input({
+              value: "",
+              type: "Email",
+              required: false,
+              visible: false,
+              placeholder: "Enter invoice email",
+              valueStateText: "Invoice Email is required",
+              change: function (oEvent) {
+                const value = oEvent.getSource().getValue();
+                const oModel = this.getView().getModel("formDataModel");
+                const path = `/Finance Information/TAX-VAT-GST/INVOICE_EMAIL/value`;
+                oModel.setProperty(path, value);
+              }.bind(this),
+            });
+
+            var oSameAsRegEmailLabel = new Label({
+              text: "Same as Registered Email",
+              design: "Bold",
+              visible: false,
+            });
+            var oSameAsRegEmailCheckBox = new sap.m.CheckBox({
+              selected: false,
+              visible: false,
+              select: function (oEvent) {
+                const selected = oEvent.getSource().getSelected();
+                const oModel = this.getView().getModel("formDataModel");
+                const path = `/Finance Information/TAX-VAT-GST/SAME_AS_REG_EMAIL/value`;
+                oModel.setProperty(path, selected);
+                if (selected) {
+                  const registeredId =
+                    oModel.getProperty(
+                      "/Supplier Information/Supplier Information/REGISTERED_ID/value"
+                    ) || "";
+                  oModel.setProperty(
+                    `/Finance Information/TAX-VAT-GST/INVOICE_EMAIL/value`,
+                    registeredId
+                  );
+                  if (oInvoiceEmailInput) {
+                    oInvoiceEmailInput.setValue(registeredId);
+                    oInvoiceEmailInput.setEnabled(false);
+                  }
+                } else {
+                  if (oInvoiceEmailInput) {
+                    oInvoiceEmailInput.setEnabled(true);
+                    oInvoiceEmailInput.setValue("");
+                    oModel.setProperty(
+                      `/Finance Information/TAX-VAT-GST/INVOICE_EMAIL/value`,
+                      ""
+                    );
+                  }
+                }
+              }.bind(this),
+            });
+
             Object.keys(taxData).forEach(
               function (fieldKey) {
                 var field = taxData[fieldKey];
@@ -2958,40 +2571,97 @@ sap.ui.define(
                   var oLabel = new Label({
                     text: field.label,
                     required: field.mandatory,
+                    design: "Bold",
                   });
                   var oControl;
 
                   switch (field.type.toLowerCase()) {
                     case "dropdown":
-                      const dropdownOptions = field.dropdownValues
-                        ? field.dropdownValues
-                            .split(",")
-                            .map((opt) => opt.trim())
-                        : ["Option 1", "Option 2"];
-                      oControl = new sap.m.Select({
-                        required: field.mandatory,
-                        visible: field.visible,
-                        selectedKey: field.defaultValue || field.value || "",
-                        items: [
-                          new sap.ui.core.Item({
-                            key: "",
-                            text: field.placeholder || "Select an option",
-                          }),
-                          ...dropdownOptions.map(
-                            (opt) =>
-                              new sap.ui.core.Item({ key: opt, text: opt })
-                          ),
-                        ],
-                        change: function (oEvent) {
-                          const selectedKey = oEvent
-                            .getSource()
-                            .getSelectedKey();
-                          const oModel =
-                            this.getView().getModel("formDataModel");
-                          const path = `formDataModel>/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
-                          oModel.setProperty(path, selectedKey);
-                        }.bind(this),
-                      });
+                      if (fieldKey === "Supplier Communication Mode") {
+                        const dropdownOptions = [
+                          { key: "01", text: "Email" },
+                          { key: "02", text: "Portal" },
+                          { key: "03", text: "HardCopy" },
+                        ];
+                        oControl = new sap.m.Select({
+                          required: field.mandatory,
+                          visible: field.visible,
+                          selectedKey: field.defaultValue || field.value || "",
+                          items: [
+                            new sap.ui.core.Item({
+                              key: "",
+                              text: field.placeholder || "Select an option",
+                            }),
+                            ...dropdownOptions.map(
+                              (opt) =>
+                                new sap.ui.core.Item({
+                                  key: opt.key,
+                                  text: opt.text,
+                                })
+                            ),
+                          ],
+                          change: function (oEvent) {
+                            const selectedKey = oEvent
+                              .getSource()
+                              .getSelectedKey();
+                            const oModel =
+                              this.getView().getModel("formDataModel");
+                            const path = `/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
+                            oModel.setProperty(path, selectedKey);
+
+                            // Handle visibility of dynamic fields
+                            const isEmailSelected = selectedKey === "01";
+                            oInvoiceEmailLabel.setVisible(isEmailSelected);
+                            oInvoiceEmailInput.setVisible(isEmailSelected);
+                            oSameAsRegEmailLabel.setVisible(isEmailSelected);
+                            oSameAsRegEmailCheckBox.setVisible(isEmailSelected);
+
+                            // Reset values when hiding
+                            if (!isEmailSelected) {
+                              oModel.setProperty(
+                                `/Finance Information/TAX-VAT-GST/INVOICE_EMAIL/value`,
+                                ""
+                              );
+                              oModel.setProperty(
+                                `/Finance Information/TAX-VAT-GST/SAME_AS_REG_EMAIL/value`,
+                                false
+                              );
+                              oInvoiceEmailInput.setValue("");
+                              oInvoiceEmailInput.setEnabled(true);
+                            }
+                          }.bind(this),
+                        });
+                      } else {
+                        const dropdownOptions = field.dropdownValues
+                          ? field.dropdownValues
+                              .split(",")
+                              .map((opt) => opt.trim())
+                          : ["Option 1", "Option 2"];
+                        oControl = new sap.m.Select({
+                          required: field.mandatory,
+                          visible: field.visible,
+                          selectedKey: field.defaultValue || field.value || "",
+                          items: [
+                            new sap.ui.core.Item({
+                              key: "",
+                              text: field.placeholder || "Select an option",
+                            }),
+                            ...dropdownOptions.map(
+                              (opt) =>
+                                new sap.ui.core.Item({ key: opt, text: opt })
+                            ),
+                          ],
+                          change: function (oEvent) {
+                            const selectedKey = oEvent
+                              .getSource()
+                              .getSelectedKey();
+                            const oModel =
+                              this.getView().getModel("formDataModel");
+                            const path = `/Finance Information/TAX-VAT-GST/${fieldKey}/value`;
+                            oModel.setProperty(path, selectedKey);
+                          }.bind(this),
+                        });
+                      }
                       break;
 
                     case "checkbox":
@@ -3018,7 +2688,7 @@ sap.ui.define(
                             ? 1
                             : -1,
                         visible: field.visible,
-                        columns: 2, // Set to 2 for horizontal arrangement
+                        columns: 2,
                         buttons: [
                           new RadioButton({ text: "Yes" }),
                           new RadioButton({ text: "No" }),
@@ -3120,6 +2790,12 @@ sap.ui.define(
                 }
               }.bind(this)
             );
+
+            // Add the pre-initialized dynamic fields to the form
+            oTaxForm.addContent(oInvoiceEmailLabel);
+            oTaxForm.addContent(oInvoiceEmailInput);
+            oTaxForm.addContent(oSameAsRegEmailLabel);
+            oTaxForm.addContent(oSameAsRegEmailCheckBox);
 
             oContainer.addContent(oTaxForm);
             console.log("Added form for TAX-VAT-GST");
@@ -4839,7 +4515,18 @@ sap.ui.define(
                     ?.split("-")[1]
                     ?.trim() || "",
                 REQUEST_TYPE: this.REQUEST_TYPE,
-                UPLOAD_LOGO: oFormData["Supplier Information"]["Supplier Information"]["Upload Logo"]?.value || "",
+                UPLOAD_LOGO:
+                  oFormData["Supplier Information"]["Supplier Information"][
+                    "Upload Logo"
+                  ]?.value || "",
+                MODE_OF_INVOICE:
+                  oFormData["Finance Information"]["TAX-VAT-GST"][
+                    "Supplier Communication Mode"
+                  ]?.value || "",
+                INVOICE_EMAIL:
+                  oFormData["Finance Information"]["TAX-VAT-GST"][
+                    "INVOICE_EMAIL"
+                  ]?.value || "",
               },
             ],
             addressData: oFormData["Supplier Information"]["Address"].map(
@@ -4864,11 +4551,11 @@ sap.ui.define(
                 FIRST_NAME:
                   oFormData["Supplier Information"]["Primary Contact"][
                     "FIRST_NAME"
-                  ]?.value?.split(" ")[0] || "",
+                  ]?.value || "",
                 LAST_NAME:
                   oFormData["Supplier Information"]["Primary Contact"][
                     "LAST_NAME"
-                  ]?.value?.split(" ")[1] || "",
+                  ]?.value || "",
                 CITY:
                   oFormData["Supplier Information"]["Primary Contact"]["CITY"]
                     ?.value || "",
@@ -4966,20 +4653,20 @@ sap.ui.define(
               {
                 INTEREST_CONFLICT: (function () {
                   var value = oDisclosureModel["conflictofinterest"];
-                  return value === 0 ? "YES" : value === 1 ? "NO" : "";
+                  return value === 0 ? "YES" : value === 1 ? "NO" : "N/A";
                 })(),
                 ANY_LEGAL_CASES: (function () {
                   var value = oDisclosureModel["legalcasedisclosure"];
-                  return value === 0 ? "YES" : value === 1 ? "NO" : "";
+                  return value === 0 ? "YES" : value === 1 ? "NO" : "N/A";
                 })(),
                 ABAC_REG: (function () {
                   var value =
                     oDisclosureModel["anticorruptionantibriberyregulation"];
-                  return value === 0 ? "YES" : value === 1 ? "NO" : "";
+                  return value === 0 ? "YES" : value === 1 ? "NO" : "N/A";
                 })(),
                 CONTROL_REGULATION: (function () {
                   var value = oDisclosureModel["indianexportcontrol"];
-                  return value === 0 ? "YES" : value === 1 ? "NO" : "";
+                  return value === 0 ? "YES" : value === 1 ? "NO" : "N/A";
                 })(),
               },
             ],
@@ -5038,7 +4725,13 @@ sap.ui.define(
             success: function (oData, oResponse) {
               console.log("Draft saved successfully:", oData);
               this.getView().setBusy(false);
-              sap.m.MessageToast.show("Draft saved successfully!");
+              MessageBox.success("Draft saved successfully!", {
+                onClose: function () {
+                  this.getOwnerComponent()
+                    .getRouter()
+                    .navTo("RouteRequestManagement");
+                }.bind(this),
+              });
             }.bind(this),
             error: function (oError) {
               console.error("Error saving draft:", oError);
@@ -5059,6 +4752,30 @@ sap.ui.define(
           });
         },
 
+        // showMessagePopover: function () {
+        //   if (!this._oMessagePopover) {
+        //     this._oMessagePopover = new sap.m.MessagePopover({
+        //       items: {
+        //         path: "/items",
+        //         template: new sap.m.MessagePopoverItem({
+        //           type: "{type}",
+        //           title: "{title}",
+        //           description: "{description}",
+        //           subtitle: "{subtitle}",
+        //           counter: "{counter}",
+        //         }),
+        //       },
+        //     });
+        //     this.getView().addDependent(this._oMessagePopover);
+        //   }
+
+        //   var oModel = new sap.ui.model.json.JSONModel({
+        //     items: this.aValidationMessages,
+        //   });
+        //   this._oMessagePopover.setModel(oModel);
+        //   this._oMessagePopover.openBy(this.getView().byId("globalErrorIcon")); // Open relative to global error icon
+        // },
+
         submitForm: function () {
           let status = this.responseData?.STATUS;
           let actionType;
@@ -5070,24 +4787,21 @@ sap.ui.define(
           }
           var oPayload = this.buildPayload(actionType);
           this.getView().setBusy(true);
-          debugger;
+
           var oModel = this.getView().getModel("regModel"); // OData model ("admin")
           var bValid = this.validateForm(oPayload);
           if (!bValid) {
-            MessageBox.error(
-              "Please fill all mandatory fields before submitting."
-            );
             this.getView().setBusy(false);
             return;
           } else {
-            console.log("validate sucess");
+            console.log("validate success");
           }
 
           oModel.create("/PostRegData", oPayload, {
             success: function (oData, oResponse) {
               console.log("Form submitted successfully:", oData, oResponse);
               this.getView().setBusy(false);
-              MessageBox.success("Form submitted successfully!", {
+              sap.m.MessageBox.success("Form submitted successfully!", {
                 onClose: function () {
                   this.getOwnerComponent()
                     .getRouter()
@@ -5107,10 +4821,89 @@ sap.ui.define(
                   sMessage = oError.responseText;
                 }
               }
-              MessageBox.error(sMessage);
+              this.showCustomError(sMessage);
             }.bind(this),
           });
         },
+
+        // Method to show custom error
+        // showCustomError: function (errorMessage) {
+        //   if (!this._oCustomErrorPopover) {
+        //     this._oCustomErrorPopover = sap.ui.xmlfragment(
+        //       "com.requestmanagement.requestmanagement.fragments.CustomError",
+        //       this
+        //     );
+        //     this.getView().addDependent(this._oCustomErrorPopover);
+        //   }
+
+        //   var customErrorModel = new sap.ui.model.json.JSONModel({
+        //     title: "Submission Error",
+        //     message: errorMessage,
+        //   });
+        //   this._oCustomErrorPopover.setModel(
+        //     customErrorModel,
+        //     "customErrorModel"
+        //   );
+        //   this._oCustomErrorPopover.openBy(this.getView().byId("submitButton")); // Adjust ID as needed
+        // },
+
+        // Method to close custom error popover
+        onCloseCustomError: function () {
+          this._oCustomErrorPopover.close();
+        },
+
+        // submitForm: function () {
+        //   let status = this.responseData?.STATUS;
+        //   let actionType;
+        //   if (status === 1) {
+        //     actionType = "CREATE";
+        //   } else {
+        //     actionType =
+        //       this.currentType === "sendback" ? "EDIT_RESUBMIT" : "CREATE";
+        //   }
+        //   var oPayload = this.buildPayload(actionType);
+        //   // this.getView().setBusy(true);
+        //   debugger;
+        //   var oModel = this.getView().getModel("regModel"); // OData model ("admin")
+        //   var bValid = this.validateForm(oPayload);
+        //   if (!bValid) {
+        //     MessageBox.error(
+        //       "Please fill all mandatory fields before submitting."
+        //     );
+        //     this.getView().setBusy(false);
+        //     return;
+        //   } else {
+        //     console.log("validate sucess");
+        //   }
+
+        //   // oModel.create("/PostRegData", oPayload, {
+        //   //   success: function (oData, oResponse) {
+        //   //     console.log("Form submitted successfully:", oData, oResponse);
+        //   //     this.getView().setBusy(false);
+        //   //     MessageBox.success("Form submitted successfully!", {
+        //   //       onClose: function () {
+        //   //         this.getOwnerComponent()
+        //   //           .getRouter()
+        //   //           .navTo("RouteRequestManagement");
+        //   //       }.bind(this),
+        //   //     });
+        //   //   }.bind(this),
+        //   //   error: function (oError) {
+        //   //     console.error("Error submitting form:", oError);
+        //   //     this.getView().setBusy(false);
+        //   //     var sMessage = "Failed to submit the form.";
+        //   //     if (oError.responseText) {
+        //   //       try {
+        //   //         var oErrorResponse = JSON.parse(oError.responseText);
+        //   //         sMessage = oErrorResponse.error.message.value || sMessage;
+        //   //       } catch (e) {
+        //   //         sMessage = oError.responseText;
+        //   //       }
+        //   //     }
+        //   //     MessageBox.error(sMessage);
+        //   //   }.bind(this),
+        //   // });
+        // },
 
         onAddOtherOfficeAddress: function () {
           var oFormDataModel = this.getView().getModel("formDataModel");
@@ -5152,7 +4945,7 @@ sap.ui.define(
 
         onCancel: function () {
           MessageBox.confirm(
-            "You haven’t saved your draft yet. Going back now will discard all entered data. Are you sure you want to continue?",
+            "If You haven’t saved your draft yet. Going back now will discard all entered data. Are you sure you want to continue?",
             {
               onClose: function (oAction) {
                 if (oAction === MessageBox.Action.OK) {
@@ -5169,388 +4962,1109 @@ sap.ui.define(
           var oFormData = this.getView().getModel("formDataModel").getData();
           var oModel = this.getView().getModel("formDataModel");
           var bValid = true;
-          var aErrors = [];
+          var aMessages = [];
 
-          // Helper function to validate a field and set error state
           function validateField(
             value,
             fieldName,
-            isMandatory,
-            model,
-            modelPath
+            modelPath,
+            fieldData,
+            sectionName
           ) {
-            if (
-              isMandatory &&
-              (value === undefined || value === null || value === "")
-            ) {
-              aErrors.push(
-                `Mandatory field '${fieldName}' is missing or empty.`
-              );
-              model.setProperty(`${modelPath}/valueState`, "Error");
-              model.setProperty(
-                `${modelPath}/valueStateText`,
-                `${fieldName} is required.`
-              );
-              console.log(
-                `Set ${modelPath}/valueState=Error, valueStateText=${fieldName} is required.`
-              );
-              return false;
-            } else {
-              model.setProperty(`${modelPath}/valueState`, "None");
-              model.setProperty(`${modelPath}/valueStateText`, "");
-              console.log(
-                `Set ${modelPath}/valueState=None, valueStateText=''`
+            if (typeof fieldData !== "object" || fieldData === null) {
+              console.warn(
+                `Skipping validation for ${fieldName} at ${modelPath}: Not an object`
               );
               return true;
             }
+
+            var isValid = true;
+            var messageType = "None";
+            var messageTitle = "";
+            var messageDescription = "";
+            var isMandatory = fieldData?.mandatory || false;
+            var fieldLabel = fieldData?.label || fieldName;
+            var currentValue =
+              oModel.getProperty(`${modelPath}/value`) || value; // Get value from model or payload
+
+            if (
+              isMandatory &&
+              (currentValue === undefined ||
+                currentValue === null ||
+                currentValue === "")
+            ) {
+              isValid = false;
+              messageType = "Error";
+              messageTitle = `Mandatory Field Missing`;
+              messageDescription = `The field '${fieldLabel}' is required.`;
+              console.log(`Setting valueState for ${modelPath}`);
+              oModel.setProperty(`${modelPath}/valueState`, "Error");
+              oModel.setProperty(
+                `${modelPath}/valueStateText`,
+                `${fieldLabel} is required.`
+              );
+            } else {
+              oModel.setProperty(`${modelPath}/valueState`, "None");
+              oModel.setProperty(`${modelPath}/valueStateText`, "");
+            }
+
+            if (
+              isValid &&
+              typeof currentValue === "string" &&
+              !fieldName.toLowerCase().includes("email") &&
+              !fieldName.toLowerCase().includes("contact_no") &&
+              !fieldName.toLowerCase().includes("mobile")
+            ) {
+              var alphanumericRegex = /^[a-zA-Z0-9\s]*$/;
+              if (!alphanumericRegex.test(currentValue)) {
+                isValid = false;
+                messageType = "Validation";
+                messageTitle = `Invalid Input in ${fieldLabel}`;
+                messageDescription = `The field '${fieldLabel}' contains special characters. Only alphanumeric characters and spaces are allowed.`;
+                oModel.setProperty(`${modelPath}/valueState`, "Error");
+                oModel.setProperty(
+                  `${modelPath}/valueStateText`,
+                  `${fieldLabel}: Only alphanumeric characters and spaces allowed.`
+                );
+              }
+            }
+
+            if (!isValid) {
+              aMessages.push({
+                type: messageType,
+                title: messageTitle,
+                description: messageDescription,
+                section: sectionName,
+                fieldLabel: fieldLabel,
+                modelPath: modelPath,
+              });
+              bValid = false;
+            }
+            return isValid;
           }
 
-          // Validate reqHeader
-          if (oPayload.reqHeader && Array.isArray(oPayload.reqHeader)) {
-            oPayload.reqHeader.forEach(function (header, index) {
-              var headerFields = [
-                { key: "REGISTERED_ID", mandatory: true },
-                { key: "VENDOR_NAME1", mandatory: true },
-                { key: "COMPANY_CODE", mandatory: true },
-                { key: "SUPPL_TYPE", mandatory: true },
-                { key: "BP_TYPE_CODE", mandatory: true },
-              ];
-              headerFields.forEach(function (field) {
-                var fieldData =
-                  oFormData["Supplier Information"]["Supplier Information"][
-                    field.key
-                  ];
-                var isMandatory = fieldData?.mandatory || field.mandatory;
-                if (
-                  !validateField(
-                    header[field.key],
-                    field.key,
-                    isMandatory,
-                    oModel,
-                    `/Supplier Information/Supplier Information/${field.key}`
-                  )
-                ) {
-                  bValid = false;
+          console.log("Payload data:", oPayload); // Debug payload
+          var that = this;
+
+          // Validate Supplier Information
+          if (
+            oPayload.reqHeader &&
+            Array.isArray(oPayload.reqHeader) &&
+            oPayload.reqHeader.length > 0
+          ) {
+            oPayload.reqHeader.forEach(function (header) {
+              var sectionData =
+                oFormData["Supplier Information"]["Supplier Information"];
+              console.log("sectionData:", sectionData);
+              Object.keys(header).forEach(function (fieldKey) {
+                var fieldData = sectionData[fieldKey];
+                if (fieldData && typeof fieldData === "object") {
+                  var modelPath = `/Supplier Information/Supplier Information/${fieldKey}`;
+                  if (
+                    !validateField(
+                      header[fieldKey],
+                      fieldKey,
+                      `${modelPath}/value`,
+                      fieldData,
+                      "Supplier Information"
+                    )
+                  ) {
+                    bValid = false;
+                  }
+                } else {
+                  console.warn(
+                    `No valid fieldData for ${fieldKey} in Supplier Information`
+                  );
                 }
               });
             });
           } else {
-            aErrors.push("reqHeader is missing or invalid.");
+            aMessages.push({
+              type: "Error",
+              title: "Data Issue",
+              description: "reqHeader is missing or invalid.",
+              section: "Supplier Information",
+            });
             bValid = false;
           }
 
-          // Validate addressData
           if (
             oPayload.addressData &&
             Array.isArray(oPayload.addressData) &&
             oPayload.addressData.length > 0
           ) {
             oPayload.addressData.forEach(function (address, index) {
-              var addressFields = [
-                { key: "STREET", mandatory: false },
-                { key: "STREET1", mandatory: true },
-                { key: "COUNTRY", mandatory: true },
-                { key: "STATE", mandatory: true },
-                { key: "CITY", mandatory: true },
-                { key: "POSTAL_CODE", mandatory: true },
-                { key: "EMAIL", mandatory: true },
-                { key: "CONTACT_NO", mandatory: true },
-                { key: "AddreDrop", mandatory: true, fieldId: "V1R1D073" },
-              ];
-              addressFields.forEach(function (field) {
-                var fieldData =
-                  oFormData["Supplier Information"]["Address"][index][
-                    field.key
-                  ];
-                var isMandatory = fieldData?.mandatory || field.mandatory;
-                if (field.fieldId && fieldData?.fieldId !== field.fieldId) {
-                  console.warn(
-                    `FieldId mismatch for ${field.key}: expected ${field.fieldId}, found ${fieldData?.fieldId}`
-                  );
-                  return;
-                }
-                var modelPath = `/Supplier Information/Address/${index}/${field.key}`;
-                if (
-                  !validateField(
-                    address[field.key],
-                    fieldData?.label || field.key,
-                    isMandatory,
-                    oModel,
-                    modelPath
-                  )
-                ) {
-                  bValid = false;
-                }
-                // Debug model state after update
-                console.log(
-                  `Post-validation state for ${field.key}:`,
-                  oModel.getProperty(modelPath)
-                );
-              });
+              var addressArray = oFormData["Supplier Information"]["Address"];
+              if (addressArray && addressArray[index]) {
+                Object.keys(address).forEach(function (fieldKey) {
+                  var fieldData = addressArray[index][fieldKey];
+                  if (fieldData && typeof fieldData === "object") {
+                    var modelPath = `/Supplier Information/Address/${index}/${fieldKey}`;
+                    if (
+                      !validateField(
+                        address[fieldKey],
+                        fieldKey,
+                        `${modelPath}/value`,
+                        fieldData,
+                        "Supplier Information"
+                      )
+                    ) {
+                      bValid = false;
+                    }
+                  } else {
+                    console.warn(
+                      `No valid fieldData for ${fieldKey} in Address at index ${index}`
+                    );
+                  }
+                });
+              }
             });
           } else {
-            aErrors.push("At least one address is required.");
+            aMessages.push({
+              type: "Error",
+              title: "Data Issue",
+              description: "At least one address is required.",
+              section: "Supplier Information",
+            });
             bValid = false;
           }
 
-          // Validate contactsData
           if (
             oPayload.contactsData &&
             Array.isArray(oPayload.contactsData) &&
             oPayload.contactsData.length > 0
           ) {
-            oPayload.contactsData.forEach(function (contact, index) {
-              var contactFields = [
-                { key: "FIRST_NAME", mandatory: true },
-                { key: "DESIGNATION", mandatory: true },
-                { key: "EMAIL", mandatory: true },
-                { key: "CONTACT_NO", mandatory: true },
-              ];
-              contactFields.forEach(function (field) {
-                var isMandatory =
-                  oFormData["Supplier Information"]["Primary Contact"][
-                    field.key
-                  ]?.mandatory || field.mandatory;
-                if (
-                  !validateField(
-                    contact[field.key],
-                    field.key,
-                    isMandatory,
-                    oModel,
-                    `/Supplier Information/Primary Contact/${field.key}`
-                  )
-                ) {
-                  bValid = false;
+            oPayload.contactsData.forEach(function (contact) {
+              var contactData =
+                oFormData["Supplier Information"]["Primary Contact"];
+              Object.keys(contact).forEach(function (fieldKey) {
+                var fieldData = contactData[fieldKey];
+                if (fieldData && typeof fieldData === "object") {
+                  var modelPath = `/Supplier Information/Primary Contact/${fieldKey}`;
+                  if (
+                    !validateField(
+                      contact[fieldKey],
+                      fieldKey,
+                      `${modelPath}/value`,
+                      fieldData,
+                      "Supplier Information"
+                    )
+                  ) {
+                    bValid = false;
+                  }
+                } else {
+                  console.warn(
+                    `No valid fieldData for ${fieldKey} in Primary Contact`
+                  );
                 }
               });
             });
           } else {
-            aErrors.push("At least one contact is required.");
+            aMessages.push({
+              type: "Error",
+              title: "Data Issue",
+              description: "At least one contact is required.",
+              section: "Supplier Information",
+            });
             bValid = false;
           }
 
-          // Validate bankData
+          // Validate Finance Information
           if (
             oPayload.bankData &&
             Array.isArray(oPayload.bankData) &&
             oPayload.bankData.length > 0
           ) {
             oPayload.bankData.forEach(function (bank, index) {
-              var bankFields = [
-                { key: "SWIFT_CODE", mandatory: true },
-                { key: "BRANCH_NAME", mandatory: true },
-                { key: "BANK_COUNTRY", mandatory: true },
-                { key: "BANK_NAME", mandatory: true },
-                { key: "BENEFICIARY", mandatory: true },
-                { key: "ACCOUNT_NO", mandatory: true },
-                { key: "BANK_CURRENCY", mandatory: true },
-                { key: "GST", mandatory: true },
-              ];
-              bankFields.forEach(function (field) {
-                var fieldData =
-                  field.key === "GST"
-                    ? oFormData["Finance Information"]["TAX-VAT-GST"]["GST_NO"]
-                    : oFormData["Finance Information"]["Primary Bank details"][
-                        index
-                      ][field.key];
-                var isMandatory = fieldData?.mandatory || field.mandatory;
-                var modelPath =
-                  field.key === "GST"
-                    ? `/Finance Information/TAX-VAT-GST/GST_NO`
-                    : `/Finance Information/Primary Bank details/${index}/${field.key}`;
-                if (
-                  !validateField(
-                    bank[field.key],
-                    field.key,
-                    isMandatory,
-                    oModel,
-                    modelPath
-                  )
-                ) {
-                  bValid = false;
-                }
-              });
+              var bankArray =
+                oFormData["Finance Information"]["Primary Bank details"];
+              if (bankArray && bankArray[index]) {
+                Object.keys(bank).forEach(function (fieldKey) {
+                  var fieldData = bankArray[index][fieldKey];
+                  if (fieldData && typeof fieldData === "object") {
+                    var modelPath = `/Finance Information/Primary Bank details/${index}/${fieldKey}`;
+                    if (
+                      !validateField(
+                        bank[fieldKey],
+                        fieldKey,
+                        `${modelPath}/value`,
+                        fieldData,
+                        "Finance Information"
+                      )
+                    ) {
+                      bValid = false;
+                    }
+                  } else {
+                    console.warn(
+                      `No valid fieldData for ${fieldKey} in Primary Bank details at index ${index}`
+                    );
+                  }
+                });
+              }
             });
           } else {
-            aErrors.push("At least one bank detail is required.");
+            aMessages.push({
+              type: "Error",
+              title: "Data Issue",
+              description: "At least one bank detail is required.",
+              section: "Finance Information",
+            });
             bValid = false;
           }
 
-          // Validate Operational_Prod_Desc
+          // Validate Operational Information
           if (
             oPayload.Operational_Prod_Desc &&
             Array.isArray(oPayload.Operational_Prod_Desc) &&
             oPayload.Operational_Prod_Desc.length > 0
           ) {
-            oPayload.Operational_Prod_Desc.forEach(function (product, index) {
-              var productFields = [
-                { key: "PROD_NAME", mandatory: true },
-                { key: "PROD_DESCRIPTION", mandatory: true },
-                { key: "PROD_TYPE", mandatory: true },
-                { key: "PROD_CATEGORY", mandatory: true },
-              ];
-              productFields.forEach(function (field) {
-                var isMandatory =
-                  oFormData["Operational Information"][
-                    "Product-Service Description"
-                  ][field.key]?.mandatory || field.mandatory;
-                if (
-                  !validateField(
-                    product[field.key],
-                    field.key,
-                    isMandatory,
-                    oModel,
-                    `/Operational Information/Product-Service Description/${field.key}`
-                  )
-                ) {
-                  bValid = false;
+            oPayload.Operational_Prod_Desc.forEach(function (prod) {
+              var prodData =
+                oFormData["Operational Information"][
+                  "Product-Service Description"
+                ];
+              console.log("prodData:", prodData, "prod:", prod);
+              Object.keys(prod).forEach(function (fieldKey) {
+                var fieldData =
+                  prodData && prodData[fieldKey] ? prodData[fieldKey] : null;
+                if (fieldData && typeof fieldData === "object") {
+                  var modelPath = `/Operational Information/Product-Service Description/${fieldKey}`;
+                  var modelValuePath = `${modelPath}/value`;
+                  console.log(
+                    `Attempting to validate ${fieldKey} with modelPath: ${modelValuePath}, value: ${oModel.getProperty(
+                      modelValuePath
+                    )}`
+                  );
+                  if (
+                    !validateField(
+                      prod[fieldKey],
+                      fieldKey,
+                      modelValuePath,
+                      fieldData,
+                      "Operational Information"
+                    )
+                  ) {
+                    bValid = false;
+                  }
+                } else {
+                  console.warn(
+                    `No valid fieldData for ${fieldKey} in Product-Service Description`
+                  );
                 }
               });
             });
           } else {
-            aErrors.push("Product/Service description is required.");
+            console.log("No Operational_Prod_Desc data in payload");
+            aMessages.push({
+              type: "Error",
+              title: "Data Issue",
+              description:
+                "At least one product/service description is required.",
+              section: "Operational Information",
+            });
             bValid = false;
           }
 
-          // Validate Operational_Capacity
           if (
             oPayload.Operational_Capacity &&
             Array.isArray(oPayload.Operational_Capacity) &&
             oPayload.Operational_Capacity.length > 0
           ) {
-            oPayload.Operational_Capacity.forEach(function (capacity, index) {
-              var capacityFields = [
-                { key: "TOTAL_PROD_CAPACITY", mandatory: true },
-                { key: "MINIMUM_ORDER_SIZE", mandatory: true },
-                { key: "MAXMIMUM_ORDER_SIZE", mandatory: true },
-                { key: "CITY", mandatory: true },
-              ];
-              capacityFields.forEach(function (field) {
-                var isMandatory =
-                  oFormData["Operational Information"]["Operational Capacity"][
-                    field.key
-                  ]?.mandatory || field.mandatory;
-                if (
-                  !validateField(
-                    capacity[field.key],
-                    field.key,
-                    isMandatory,
-                    oModel,
-                    `/Operational Information/Operational Capacity/${field.key}`
-                  )
-                ) {
-                  bValid = false;
+            oPayload.Operational_Capacity.forEach(function (capacity) {
+              var capacityData =
+                oFormData["Operational Information"]["Operational Capacity"];
+              console.log("capacityData:", capacityData, "capacity:", capacity);
+              Object.keys(capacity).forEach(function (fieldKey) {
+                var fieldData =
+                  capacityData && capacityData[fieldKey]
+                    ? capacityData[fieldKey]
+                    : null;
+                if (fieldData && typeof fieldData === "object") {
+                  var modelPath = `/Operational Information/Operational Capacity/${fieldKey}`;
+                  var modelValuePath = `${modelPath}/value`;
+                  console.log(
+                    `Attempting to validate ${fieldKey} with modelPath: ${modelValuePath}, value: ${oModel.getProperty(
+                      modelValuePath
+                    )}`
+                  );
+                  if (
+                    !validateField(
+                      capacity[fieldKey],
+                      fieldKey,
+                      modelValuePath,
+                      fieldData,
+                      "Operational Information"
+                    )
+                  ) {
+                    bValid = false;
+                  }
+                } else {
+                  console.warn(
+                    `No valid fieldData for ${fieldKey} in Operational Capacity`
+                  );
                 }
               });
             });
           } else {
-            aErrors.push("Operational capacity is required.");
+            console.log("No Operational_Capacity data in payload");
+            aMessages.push({
+              type: "Error",
+              title: "Data Issue",
+              description:
+                "At least one operational capacity entry is required.",
+              section: "Operational Information",
+            });
             bValid = false;
           }
 
-          // Validate Disclosure_Fields
+          // Validate Disclosures
           if (
             oPayload.Disclosure_Fields &&
             Array.isArray(oPayload.Disclosure_Fields) &&
             oPayload.Disclosure_Fields.length > 0
           ) {
             oPayload.Disclosure_Fields.forEach(function (disclosure) {
-              var disclosureFields = [
-                { key: "INTEREST_CONFLICT", mandatory: true },
-                { key: "ANY_LEGAL_CASES", mandatory: true },
-                { key: "ABAC_REG", mandatory: true },
-                { key: "CONTROL_REGULATION", mandatory: true },
-              ];
-              disclosureFields.forEach(function (field) {
-                var isMandatory =
-                  oFormData["Disclosures"]?.[field.key.replace(/_/g, " ")]
-                    ?.mandatory || field.mandatory;
-                if (
-                  !validateField(
-                    disclosure[field.key],
-                    field.key,
-                    isMandatory,
-                    oModel,
-                    `/Disclosures/${field.key.replace(/_/g, " ")}`
-                  )
-                ) {
-                  bValid = false;
+              Object.keys(disclosure).forEach(function (fieldKey) {
+                var fieldData =
+                  oFormData["Disclosures"] && oFormData["Disclosures"][fieldKey]
+                    ? oFormData["Disclosures"][fieldKey]
+                    : null;
+                if (fieldData && typeof fieldData === "object") {
+                  var modelPath = `/Disclosures/${fieldKey}`;
+                  var modelValuePath = `${modelPath}/value`;
+                  var value = disclosure[fieldKey];
+                  console.log(
+                    `Validating ${fieldKey} at ${modelValuePath}, value: ${oModel.getProperty(
+                      modelValuePath
+                    )}`
+                  );
+                  if (
+                    fieldData.mandatory &&
+                    (value === undefined ||
+                      value === null ||
+                      value === "" ||
+                      value === "N/A")
+                  ) {
+                    aMessages.push({
+                      type: "Error",
+                      title: `Mandatory Field Missing`,
+                      description: `The disclosure field '${
+                        fieldData.label || fieldKey
+                      }' is required and cannot be 'N/A' or empty.`,
+                      section: "Disclosures",
+                      fieldLabel: fieldData.label || fieldKey,
+                      modelPath: modelPath,
+                    });
+                    oModel.setProperty(`${modelPath}/valueState`, "Error");
+                    oModel.setProperty(
+                      `${modelPath}/valueStateText`,
+                      `${fieldData.label || fieldKey} is required.`
+                    );
+                    bValid = false;
+                  } else {
+                    oModel.setProperty(`${modelPath}/valueState`, "None");
+                    oModel.setProperty(`${modelPath}/valueStateText`, "");
+                  }
+                } else {
+                  console.warn(
+                    `No valid fieldData for ${fieldKey} in Disclosures`
+                  );
                 }
               });
             });
           } else {
-            aErrors.push("Disclosure fields are required.");
+            console.log("No Disclosure_Fields data in payload");
+            aMessages.push({
+              type: "Error",
+              title: "Data Issue",
+              description: "At least one disclosure field is required.",
+              section: "Disclosures",
+            });
             bValid = false;
           }
 
-          // Validate Quality_Certificates
+          // Validate Quality Certificates
           if (
             oPayload.Quality_Certificates &&
             Array.isArray(oPayload.Quality_Certificates)
           ) {
-            oPayload.Quality_Certificates.forEach(function (cert, index) {
-              if (cert.AVAILABLE === "YES") {
+            oPayload.Quality_Certificates.forEach(function (cert) {
+              var certData =
+                oFormData["Quality Certificates"]["Standard Certifications"];
+              var fieldKey = cert.CERTI_NAME.replace(/\s/g, "_") + "_DONE_BY";
+              var fieldData =
+                certData && certData[fieldKey] ? certData[fieldKey] : null;
+              console.log(
+                "certData:",
+                certData,
+                "fieldKey:",
+                fieldKey,
+                "fieldData:",
+                fieldData,
+                "cert:",
+                cert
+              );
+              if (
+                fieldData &&
+                typeof fieldData === "object" &&
+                cert.AVAILABLE === "YES"
+              ) {
+                var modelPath = `/Quality Certificates/Standard Certifications/${fieldKey}`;
+                var modelValuePath = `${modelPath}/value`;
+                console.log(
+                  `Validating ${fieldKey} at ${modelValuePath}, value: ${oModel.getProperty(
+                    modelValuePath
+                  )}`
+                );
                 if (
                   !validateField(
                     cert.DONE_BY,
-                    "DONE_BY",
-                    true,
-                    oModel,
-                    `/Quality Certificates/Standard Certifications/${cert.CERTI_NAME.replace(
-                      / /g,
-                      "_"
-                    )}_DONE_BY`
+                    fieldKey,
+                    modelValuePath,
+                    fieldData,
+                    "Quality Certificates"
                   )
                 ) {
                   bValid = false;
                 }
               }
             });
+          } else {
+            console.log("No Quality_Certificates data in payload");
+            aMessages.push({
+              type: "Error",
+              title: "Data Issue",
+              description: "At least one quality certificate is required.",
+              section: "Quality Certificates",
+            });
+            bValid = false;
           }
 
           // Validate Attachments
-          if (oPayload.Attachments && Array.isArray(oPayload.Attachments)) {
+          if (
+            oPayload.Attachments &&
+            Array.isArray(oPayload.Attachments) &&
+            oPayload.Attachments.length > 0
+          ) {
             oPayload.Attachments.forEach(function (attachment, index) {
               var attachmentData = oFormData["Attachments"][index];
-              if (attachmentData?.mandatory && !attachment.fileName) {
-                aErrors.push(
-                  `Mandatory attachment '${
-                    attachment.ATTACH_SHORT_DESC || `Attachment ${index + 1}`
-                  }' is missing.`
-                );
-                oModel.setProperty(`/Attachments/${index}/valueState`, "Error");
-                oModel.setProperty(
-                  `/Attachments/${index}/valueStateText`,
-                  `${
-                    attachment.ATTACH_SHORT_DESC || `Attachment ${index + 1}`
-                  } is required.`
-                );
-                bValid = false;
-              } else {
-                oModel.setProperty(`/Attachments/${index}/valueState`, "None");
-                oModel.setProperty(`/Attachments/${index}/valueStateText`, "");
+              console.log(
+                "attachmentData:",
+                attachmentData,
+                "index:",
+                index,
+                "attachment:",
+                attachment
+              );
+              if (attachmentData && typeof attachmentData === "object") {
+                var modelPath = `/Attachments/${index}`;
+                if (
+                  attachmentData.mandatory &&
+                  (!attachment.imageUrl || !attachment.fileName)
+                ) {
+                  aMessages.push({
+                    type: "Error",
+                    title: `Mandatory Field Missing`,
+                    description: `The attachment '${
+                      attachment.title || "Attachment"
+                    }' is required.`,
+                    section: "Attachments",
+                    fieldLabel: attachment.title || "Attachment",
+                    modelPath: modelPath,
+                  });
+                  oModel.setProperty(`${modelPath}/valueState`, "Error");
+                  oModel.setProperty(
+                    `${modelPath}/valueStateText`,
+                    `${attachment.title || "Attachment"} is required.`
+                  );
+                  bValid = false;
+                } else {
+                  oModel.setProperty(`${modelPath}/valueState`, "None");
+                  oModel.setProperty(`${modelPath}/valueStateText`, "");
+                }
               }
+            });
+          } else {
+            console.log("No Attachments data in payload");
+            aMessages.push({
+              type: "Error",
+              title: "Data Issue",
+              description: "At least one attachment is required.",
+              section: "Attachments",
+            });
+            bValid = false;
+          }
+
+          // Validate DynamicFormFields
+          if (
+            oPayload.DyanamicFormFields &&
+            Array.isArray(oPayload.DyanamicFormFields)
+          ) {
+            oPayload.DyanamicFormFields.forEach(function (dynamicField) {
+              var section = dynamicField.SECTION;
+              var category = dynamicField.CATEGORY;
+              var data = JSON.parse(dynamicField.DATA || "{}");
+              var sectionData =
+                oFormData[section] && oFormData[section][category]
+                  ? oFormData[section][category]
+                  : null;
+              Object.keys(data).forEach(function (fieldKey) {
+                var fieldData =
+                  sectionData && sectionData[fieldKey]
+                    ? sectionData[fieldKey]
+                    : null;
+                if (fieldData && typeof fieldData === "object") {
+                  var modelPath = `/${section.replace(
+                    /\s/g,
+                    ""
+                  )}.${category.replace(/\s/g, "")}/${fieldKey}`;
+                  if (
+                    !validateField(
+                      data[fieldKey],
+                      fieldKey,
+                      `${modelPath}/value`,
+                      fieldData,
+                      section
+                    )
+                  ) {
+                    bValid = false;
+                  }
+                }
+              });
             });
           }
 
-          // Refresh the model to update UI error states
-          console.log(
-            "Before refresh:",
-            oModel.getProperty("/Supplier Information/Address/0/AddreDrop")
-          );
-          oModel.refresh(true);
-          console.log(
-            "After refresh:",
-            oModel.getProperty("/Supplier Information/Address/0/AddreDrop")
-          );
-
-          // Log errors if any
-          if (aErrors.length > 0) {
-            console.error("Validation errors:", aErrors);
+          if (!bValid) {
+            this.getView().byId("globalErrorIcon").setVisible(true);
+            this.getView()
+              .byId("globalErrorIcon")
+              .setTooltip("Please fill mandatory fields");
+          } else {
+            this.getView().byId("globalErrorIcon").setVisible(false);
           }
+
+          oModel.refresh(true);
+          this.aValidationMessages = aMessages;
+          console.log("Validation messages:", aMessages);
 
           return bValid;
         },
+
+        showMessagePopover: function () {
+          if (!this._oMessagePopover) {
+            this._oMessagePopover = new sap.m.MessagePopover({
+              items: {
+                path: "errorMessageModel>/items",
+                template: new sap.m.MessagePopoverItem({
+                  type: "{errorMessageModel>type}",
+                  title: "{errorMessageModel>title}",
+                  description: "{errorMessageModel>description}",
+                  subtitle: "{errorMessageModel>subtitle}",
+                  counter: "{errorMessageModel>counter}",
+                  press: [this.onSectionPress, this], // Bind to controller context
+                }),
+              },
+            });
+            this.getView().addDependent(this._oMessagePopover);
+          }
+
+          // Group messages by section for initial display
+          var sections = {};
+          this.aValidationMessages.forEach(function (msg) {
+            if (!sections[msg.section]) {
+              sections[msg.section] = { count: 0, fields: [] };
+            }
+            sections[msg.section].count++;
+            if (msg.fieldLabel) {
+              sections[msg.section].fields.push({
+                type: msg.type,
+                title: msg.fieldLabel,
+                description: msg.description,
+                subtitle: msg.title,
+                counter: 1,
+                modelPath: msg.modelPath, // Include modelPath for value retrieval
+              });
+            } else {
+              sections[msg.section].fields.push({
+                type: msg.type,
+                title: msg.title,
+                description: msg.description,
+                subtitle: "Section Error",
+                counter: 1,
+              });
+            }
+          });
+
+          var sectionList = Object.keys(sections).map(function (section) {
+            var fieldLabels = sections[section].fields
+              .map(function (field) {
+                return field.title;
+              })
+              .join(", ");
+            return {
+              type: "Error",
+              title: section,
+              description: `${sections[section].count} error(s) found: ${
+                fieldLabels || "No fields"
+              }`,
+              subtitle: "Section Summary",
+              counter: sections[section].count,
+              fields: sections[section].fields,
+            };
+          });
+
+          var errorMessageModel = new sap.ui.model.json.JSONModel({
+            items: sectionList,
+          });
+
+          this._oMessagePopover.setModel(
+            errorMessageModel,
+            "errorMessageModel"
+          );
+          this._oMessagePopover.openBy(this.getView().byId("globalErrorIcon"));
+        },
+
+        onSectionPress: function (oEvent) {
+          console.log("onSectionPress triggered"); // Debug trigger
+          var oContext = oEvent
+            .getSource()
+            .getBindingContext("errorMessageModel");
+          var sectionData = oContext.getProperty();
+          var oModel = this.getView().getModel("formDataModel");
+          var fieldStrings = [];
+
+          if (sectionData && sectionData.fields) {
+            // Debug the fields data
+            console.log("Section fields:", sectionData.fields);
+
+            // Construct string of all field values
+            sectionData.fields.forEach(function (field) {
+              if (field.modelPath) {
+                var value = oModel.getProperty(field.modelPath) || "N/A";
+                fieldStrings.push(`${field.title}: ${value}`);
+              }
+            });
+
+            // Create a single item with all fields as a concatenated string
+            var errorMessageModel = new sap.ui.model.json.JSONModel({
+              items: [
+                {
+                  type: "Information",
+                  title: `${sectionData.title} Field Values`,
+                  description:
+                    fieldStrings.length > 0
+                      ? fieldStrings.join("\n")
+                      : "No field values available",
+                  subtitle: "",
+                  counter: fieldStrings.length,
+                },
+              ],
+            });
+
+            this._oMessagePopover.setModel(
+              errorMessageModel,
+              "errorMessageModel"
+            );
+            this._oMessagePopover.openBy(oEvent.getSource()); // Reopen to refresh content
+          } else {
+            console.log(
+              "No fields data available for section:",
+              sectionData.title
+            );
+          }
+        },
+
+        // Method to close error popover
+        onCloseErrorPopover: function () {
+          this._oErrorPopover.close();
+        },
+
+        // validateForm: function (oPayload) {
+        //   var oFormData = this.getView().getModel("formDataModel").getData();
+        //   var oModel = this.getView().getModel("formDataModel");
+        //   var bValid = true;
+        //   var aErrors = [];
+
+        //   // Helper function to validate a field and set error state
+        //   function validateField(
+        //     value,
+        //     fieldName,
+        //     isMandatory,
+        //     model,
+        //     modelPath
+        //   ) {
+        //     if (
+        //       isMandatory &&
+        //       (value === undefined || value === null || value === "")
+        //     ) {
+        //       aErrors.push(
+        //         `Mandatory field '${fieldName}' is missing or empty.`
+        //       );
+        //       model.setProperty(`${modelPath}/valueState`, "Error");
+        //       model.setProperty(
+        //         `${modelPath}/valueStateText`,
+        //         `${fieldName} is required.`
+        //       );
+        //       console.log(
+        //         `Set ${modelPath}/valueState=Error, valueStateText=${fieldName} is required.`
+        //       );
+        //       return false;
+        //     } else {
+        //       model.setProperty(`${modelPath}/valueState`, "None");
+        //       model.setProperty(`${modelPath}/valueStateText`, "");
+        //       console.log(
+        //         `Set ${modelPath}/valueState=None, valueStateText=''`
+        //       );
+        //       return true;
+        //     }
+        //   }
+
+        //   // Validate reqHeader
+        //   if (oPayload.reqHeader && Array.isArray(oPayload.reqHeader)) {
+        //     oPayload.reqHeader.forEach(function (header, index) {
+        //       var headerFields = [
+        //         { key: "REGISTERED_ID", mandatory: true },
+        //         { key: "VENDOR_NAME1", mandatory: true },
+        //         { key: "COMPANY_CODE", mandatory: true },
+        //         { key: "SUPPL_TYPE", mandatory: true },
+        //         { key: "BP_TYPE_CODE", mandatory: true },
+        //       ];
+        //       headerFields.forEach(function (field) {
+        //         var fieldData =
+        //           oFormData["Supplier Information"]["Supplier Information"][
+        //             field.key
+        //           ];
+        //         var isMandatory = fieldData?.mandatory || field.mandatory;
+        //         if (
+        //           !validateField(
+        //             header[field.key],
+        //             field.key,
+        //             isMandatory,
+        //             oModel,
+        //             `/Supplier Information/Supplier Information/${field.key}`
+        //           )
+        //         ) {
+        //           bValid = false;
+        //         }
+        //       });
+        //     });
+        //   } else {
+        //     aErrors.push("reqHeader is missing or invalid.");
+        //     bValid = false;
+        //   }
+
+        //   // Validate addressData
+        //   if (
+        //     oPayload.addressData &&
+        //     Array.isArray(oPayload.addressData) &&
+        //     oPayload.addressData.length > 0
+        //   ) {
+        //     oPayload.addressData.forEach(function (address, index) {
+        //       var addressFields = [
+        //         { key: "STREET", mandatory: false },
+        //         { key: "STREET1", mandatory: true },
+        //         { key: "COUNTRY", mandatory: true },
+        //         { key: "STATE", mandatory: true },
+        //         { key: "CITY", mandatory: true },
+        //         { key: "POSTAL_CODE", mandatory: true },
+        //         { key: "EMAIL", mandatory: true },
+        //         { key: "CONTACT_NO", mandatory: true },
+        //         { key: "AddreDrop", mandatory: true, fieldId: "V1R1D073" },
+        //       ];
+        //       addressFields.forEach(function (field) {
+        //         var fieldData =
+        //           oFormData["Supplier Information"]["Address"][index][
+        //             field.key
+        //           ];
+        //         var isMandatory = fieldData?.mandatory || field.mandatory;
+        //         if (field.fieldId && fieldData?.fieldId !== field.fieldId) {
+        //           console.warn(
+        //             `FieldId mismatch for ${field.key}: expected ${field.fieldId}, found ${fieldData?.fieldId}`
+        //           );
+        //           return;
+        //         }
+        //         var modelPath = `/Supplier Information/Address/${index}/${field.key}`;
+        //         if (
+        //           !validateField(
+        //             address[field.key],
+        //             fieldData?.label || field.key,
+        //             isMandatory,
+        //             oModel,
+        //             modelPath
+        //           )
+        //         ) {
+        //           bValid = false;
+        //         }
+        //         // Debug model state after update
+        //         console.log(
+        //           `Post-validation state for ${field.key}:`,
+        //           oModel.getProperty(modelPath)
+        //         );
+        //       });
+        //     });
+        //   } else {
+        //     aErrors.push("At least one address is required.");
+        //     bValid = false;
+        //   }
+
+        //   // Validate contactsData
+        //   if (
+        //     oPayload.contactsData &&
+        //     Array.isArray(oPayload.contactsData) &&
+        //     oPayload.contactsData.length > 0
+        //   ) {
+        //     oPayload.contactsData.forEach(function (contact, index) {
+        //       var contactFields = [
+        //         { key: "FIRST_NAME", mandatory: true },
+        //         { key: "DESIGNATION", mandatory: true },
+        //         { key: "EMAIL", mandatory: true },
+        //         { key: "CONTACT_NO", mandatory: true },
+        //       ];
+        //       contactFields.forEach(function (field) {
+        //         var isMandatory =
+        //           oFormData["Supplier Information"]["Primary Contact"][
+        //             field.key
+        //           ]?.mandatory || field.mandatory;
+        //         if (
+        //           !validateField(
+        //             contact[field.key],
+        //             field.key,
+        //             isMandatory,
+        //             oModel,
+        //             `/Supplier Information/Primary Contact/${field.key}`
+        //           )
+        //         ) {
+        //           bValid = false;
+        //         }
+        //       });
+        //     });
+        //   } else {
+        //     aErrors.push("At least one contact is required.");
+        //     bValid = false;
+        //   }
+
+        //   // Validate bankData
+        //   if (
+        //     oPayload.bankData &&
+        //     Array.isArray(oPayload.bankData) &&
+        //     oPayload.bankData.length > 0
+        //   ) {
+        //     oPayload.bankData.forEach(function (bank, index) {
+        //       var bankFields = [
+        //         { key: "SWIFT_CODE", mandatory: true },
+        //         { key: "BRANCH_NAME", mandatory: true },
+        //         { key: "BANK_COUNTRY", mandatory: true },
+        //         { key: "BANK_NAME", mandatory: true },
+        //         { key: "BENEFICIARY", mandatory: true },
+        //         { key: "ACCOUNT_NO", mandatory: true },
+        //         { key: "BANK_CURRENCY", mandatory: true },
+        //         { key: "GST", mandatory: true },
+        //       ];
+        //       bankFields.forEach(function (field) {
+        //         var fieldData =
+        //           field.key === "GST"
+        //             ? oFormData["Finance Information"]["TAX-VAT-GST"]["GST_NO"]
+        //             : oFormData["Finance Information"]["Primary Bank details"][
+        //                 index
+        //               ][field.key];
+        //         var isMandatory = fieldData?.mandatory || field.mandatory;
+        //         var modelPath =
+        //           field.key === "GST"
+        //             ? `/Finance Information/TAX-VAT-GST/GST_NO`
+        //             : `/Finance Information/Primary Bank details/${index}/${field.key}`;
+        //         if (
+        //           !validateField(
+        //             bank[field.key],
+        //             field.key,
+        //             isMandatory,
+        //             oModel,
+        //             modelPath
+        //           )
+        //         ) {
+        //           bValid = false;
+        //         }
+        //       });
+        //     });
+        //   } else {
+        //     aErrors.push("At least one bank detail is required.");
+        //     bValid = false;
+        //   }
+
+        //   // Validate Operational_Prod_Desc
+        //   if (
+        //     oPayload.Operational_Prod_Desc &&
+        //     Array.isArray(oPayload.Operational_Prod_Desc) &&
+        //     oPayload.Operational_Prod_Desc.length > 0
+        //   ) {
+        //     oPayload.Operational_Prod_Desc.forEach(function (product, index) {
+        //       var productFields = [
+        //         { key: "PROD_NAME", mandatory: true },
+        //         { key: "PROD_DESCRIPTION", mandatory: true },
+        //         { key: "PROD_TYPE", mandatory: true },
+        //         { key: "PROD_CATEGORY", mandatory: true },
+        //       ];
+        //       productFields.forEach(function (field) {
+        //         var isMandatory =
+        //           oFormData["Operational Information"][
+        //             "Product-Service Description"
+        //           ][field.key]?.mandatory || field.mandatory;
+        //         if (
+        //           !validateField(
+        //             product[field.key],
+        //             field.key,
+        //             isMandatory,
+        //             oModel,
+        //             `/Operational Information/Product-Service Description/${field.key}`
+        //           )
+        //         ) {
+        //           bValid = false;
+        //         }
+        //       });
+        //     });
+        //   } else {
+        //     aErrors.push("Product/Service description is required.");
+        //     bValid = false;
+        //   }
+
+        //   // Validate Operational_Capacity
+        //   if (
+        //     oPayload.Operational_Capacity &&
+        //     Array.isArray(oPayload.Operational_Capacity) &&
+        //     oPayload.Operational_Capacity.length > 0
+        //   ) {
+        //     oPayload.Operational_Capacity.forEach(function (capacity, index) {
+        //       var capacityFields = [
+        //         { key: "TOTAL_PROD_CAPACITY", mandatory: true },
+        //         { key: "MINIMUM_ORDER_SIZE", mandatory: true },
+        //         { key: "MAXMIMUM_ORDER_SIZE", mandatory: true },
+        //         { key: "CITY", mandatory: true },
+        //       ];
+        //       capacityFields.forEach(function (field) {
+        //         var isMandatory =
+        //           oFormData["Operational Information"]["Operational Capacity"][
+        //             field.key
+        //           ]?.mandatory || field.mandatory;
+        //         if (
+        //           !validateField(
+        //             capacity[field.key],
+        //             field.key,
+        //             isMandatory,
+        //             oModel,
+        //             `/Operational Information/Operational Capacity/${field.key}`
+        //           )
+        //         ) {
+        //           bValid = false;
+        //         }
+        //       });
+        //     });
+        //   } else {
+        //     aErrors.push("Operational capacity is required.");
+        //     bValid = false;
+        //   }
+
+        //   // Validate Disclosure_Fields
+        //   if (
+        //     oPayload.Disclosure_Fields &&
+        //     Array.isArray(oPayload.Disclosure_Fields) &&
+        //     oPayload.Disclosure_Fields.length > 0
+        //   ) {
+        //     oPayload.Disclosure_Fields.forEach(function (disclosure) {
+        //       var disclosureFields = [
+        //         { key: "INTEREST_CONFLICT", mandatory: true },
+        //         { key: "ANY_LEGAL_CASES", mandatory: true },
+        //         { key: "ABAC_REG", mandatory: true },
+        //         { key: "CONTROL_REGULATION", mandatory: true },
+        //       ];
+        //       disclosureFields.forEach(function (field) {
+        //         var isMandatory =
+        //           oFormData["Disclosures"]?.[field.key.replace(/_/g, " ")]
+        //             ?.mandatory || field.mandatory;
+        //         if (
+        //           !validateField(
+        //             disclosure[field.key],
+        //             field.key,
+        //             isMandatory,
+        //             oModel,
+        //             `/Disclosures/${field.key.replace(/_/g, " ")}`
+        //           )
+        //         ) {
+        //           bValid = false;
+        //         }
+        //       });
+        //     });
+        //   } else {
+        //     aErrors.push("Disclosure fields are required.");
+        //     bValid = false;
+        //   }
+
+        //   // Validate Quality_Certificates
+        //   if (
+        //     oPayload.Quality_Certificates &&
+        //     Array.isArray(oPayload.Quality_Certificates)
+        //   ) {
+        //     oPayload.Quality_Certificates.forEach(function (cert, index) {
+        //       if (cert.AVAILABLE === "YES") {
+        //         if (
+        //           !validateField(
+        //             cert.DONE_BY,
+        //             "DONE_BY",
+        //             true,
+        //             oModel,
+        //             `/Quality Certificates/Standard Certifications/${cert.CERTI_NAME.replace(
+        //               / /g,
+        //               "_"
+        //             )}_DONE_BY`
+        //           )
+        //         ) {
+        //           bValid = false;
+        //         }
+        //       }
+        //     });
+        //   }
+
+        //   // Validate Attachments
+        //   if (oPayload.Attachments && Array.isArray(oPayload.Attachments)) {
+        //     oPayload.Attachments.forEach(function (attachment, index) {
+        //       var attachmentData = oFormData["Attachments"][index];
+        //       if (attachmentData?.mandatory && !attachment.fileName) {
+        //         aErrors.push(
+        //           `Mandatory attachment '${
+        //             attachment.ATTACH_SHORT_DESC || `Attachment ${index + 1}`
+        //           }' is missing.`
+        //         );
+        //         oModel.setProperty(`/Attachments/${index}/valueState`, "Error");
+        //         oModel.setProperty(
+        //           `/Attachments/${index}/valueStateText`,
+        //           `${
+        //             attachment.ATTACH_SHORT_DESC || `Attachment ${index + 1}`
+        //           } is required.`
+        //         );
+        //         bValid = false;
+        //       } else {
+        //         oModel.setProperty(`/Attachments/${index}/valueState`, "None");
+        //         oModel.setProperty(`/Attachments/${index}/valueStateText`, "");
+        //       }
+        //     });
+        //   }
+
+        //   // Refresh the model to update UI error states
+        //   console.log(
+        //     "Before refresh:",
+        //     oModel.getProperty("/Supplier Information/Address/0/AddreDrop")
+        //   );
+        //   oModel.refresh(true);
+        //   console.log(
+        //     "After refresh:",
+        //     oModel.getProperty("/Supplier Information/Address/0/AddreDrop")
+        //   );
+
+        //   // Log errors if any
+        //   if (aErrors.length > 0) {
+        //     console.error("Validation errors:", aErrors);
+        //   }
+
+        //   return bValid;
+        // },
 
         rebuildFunction() {
           var oContainer = this.getView().byId(

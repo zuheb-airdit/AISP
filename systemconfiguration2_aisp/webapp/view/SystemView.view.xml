@@ -11,6 +11,7 @@
     xmlns:l="sap.ui.layout"
     xmlns:table="sap.ui.table"
     xmlns:core="sap.ui.core"
+    xmlns:grid="sap.ui.layout.cssgrid"
 >
     <Page
         id="pageId"
@@ -144,17 +145,20 @@
                     <HBox
                         width="100%"
                         class="sapUiMediumMarginBottom"
+                        
                     >
-                        <VBox width="85%">
+                        <VBox width="69%" class="sapUiTinyMarginEnd">
                             <SearchField
-                                placeholder="Search Integrations..."
+                                placeholder="Search Configurations..."
                                 class="searchField"
+                                width="100%"
                             />
                         </VBox>
-                        <VBox>
+                        <VBox width="25%">
                             <ComboBox
                                 selectedKey="All Categories"
                                 class="categoryDropdown"
+                                width="100%"
                             >
                                 <items>
                                     <core:Item
@@ -168,31 +172,56 @@
                     <f:GridList
                         id="gridLisst"
                         items="{integrations>/items}"
+                        modeAnimationOn="true"
+                        
                     >
-                        <f:GridListItem>
+                        <f:customLayout>
+                            <grid:GridResponsiveLayout
+                                layoutChange="onLayoutChange"
+                            >
+                                <grid:layoutS>
+                                    <grid:GridSettings
+                                        gridTemplateColumns="repeat(auto-fit, 8rem)"
+                                        gridGap="0.25rem 0.25rem"
+                                    />
+                                </grid:layoutS>
+                                <grid:layoutM>
+                                    <grid:GridSettings
+                                        gridTemplateColumns="repeat(auto-fit, 12rem)"
+                                        gridGap="0.5rem 0.5rem"
+                                    />
+                                </grid:layoutM>
+                                <grid:layoutL>
+                                    <grid:GridSettings
+                                        gridTemplateColumns="repeat(auto-fit, 16rem)"
+                                        gridGap="0.75rem 0.75rem"
+                                    />
+                                </grid:layoutL>
+                                <grid:layoutXL>
+                                    <grid:GridSettings
+                                        gridTemplateColumns="repeat(auto-fit, 20rem)"
+                                        gridGap="1rem 1rem"
+                                    />
+                                </grid:layoutXL>
+                            </grid:GridResponsiveLayout>
+                        </f:customLayout>
+                        <f:GridListItem ariaLabelledBy="">
                             <VBox class="sapUiSmallMargin">
                                 <layoutData>
                                     <FlexItemData
-                                        growFactor="1"
+                                        growFactor="2"
                                         shrinkFactor="0"
+                                        minWidth="100%"
                                     />
                                 </layoutData>
 
-                                <!-- Icon for the integration -->
-                                <!-- <core:Icon
-                                    src="./Images/test.png"
-                                    size="2.625rem"
-                                    color="Default"
-                                    class="sapUiTinyMarginBottom"
-                                /> -->
                                 <Image
                                     src="{integrations>icon}"
-                                    width="2.625rem"
-                                    height="2.625rem"
+                                    width="3.625rem"
+                                    height="3.625rem"
                                     class="sapUiMediumMarginBottom"
                                 />
 
-                                <!-- Title for the integration -->
                                 <Title
                                     text="{integrations>title}"
                                     wrapping="true"
@@ -200,13 +229,11 @@
                                     class="sapUiMediumMarginBottom"
                                 />
 
-                                <!-- Subtitle for the integration -->
                                 <Label
                                     text="{integrations>subtitle}"
                                     wrapping="true"
                                 />
 
-                                <!-- Manage button -->
                                 <Button
                                     text="Manage"
                                     press="onManagePress"

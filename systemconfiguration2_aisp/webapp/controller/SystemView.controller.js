@@ -29,37 +29,83 @@ sap.ui.define(
       "com.sconfig.systemconfiguration2aisp.controller.SystemView",
       {
         onInit() {
-            var oData = {
-                "items": [
-                    {
-                        "icon": "Images/Outlook.png",
-                        "title": "Microsoft Outlook",
-                        "subtitle": "Integrates your AISP platform with Microsoft Outlook for enhanced email management and automation."
-                    },
-                    {
-                        "icon": "Images/teams.png",
-                        "title": "Microsoft Teams",
-                        "subtitle": "Enables seamless collaboration and communication within AISP through Microsoft Teams interation for team coordinations."
-                    },
-                    {
-                        "icon": "Images/appolo.png",
-                        "title": "Apollo.io",
-                        "subtitle": "Connects your AISP system with Apollo.io for advanced sales automation, lead management, and CRM."
-                    },
-                    {
-                        "icon": "Images/maps.png",
-                        "title": "Google Maps",
-                        "subtitle": "Leverages Google Maps to integrate real-time geolocation services within AISP for route planning and delivery logistics."
-                    },
-                    {
-                        "icon": "Images/gmail.png",
-                        "title": "Gmail",
-                        "subtitle": "Seamlessly integrates Gmail for email-based workflow automation, syncing contacts and communications within AISP."
-                    }
-                ]
-            };
-            var oModel = new JSONModel(oData);
-            this.getView().setModel(oModel, "integrations");
+          var oData = {
+            items: [
+              {
+                icon: "Images/Email.png",
+                title: "Email Configuration",
+                press: "onEmailConfiguration",
+                subtitle:
+                  "Configure SMTP settings to enable email communication. Store email credentials and configurations to send emails through the system.".padEnd(
+                    140,
+                    " "
+                  ),
+              },
+              {
+                icon: "Images/Master.png",
+                title: "Master Data Configuration",
+                press: "onNavToMasterScreen",
+                subtitle:
+                  "Create and manage essential master data like approval types, user roles, country codes, and currencies used in the application.".padEnd(
+                    140,
+                    " "
+                  ),
+              },
+              {
+                icon: "Images/SuppInv.png",
+                title: "Supplier Invitation Form",
+                press: "onNavToSuppForm",
+                subtitle:
+                  "Manage supplier invitation forms, configure field visibility, set mandatory fields, and add new fields as needed.".padEnd(
+                    140,
+                    " "
+                  ),
+              },
+              {
+                icon: "Images/rfq.png",
+                title: "RFQ Configurations",
+                press: "onNavToRFQConfiguration",
+                subtitle:
+                  "Configure the supplier RFQ process, including questionnaires and awarding points based on supplier responses.".padEnd(
+                    140,
+                    " "
+                  ),
+              },
+              {
+                icon: "Images/procurement.png",
+                title: "Procurement Fields",
+                press: "onNavToProcurementFields",
+                subtitle:
+                  "Manage the Vendor Invoice Management form, including options to hide or make specific fields mandatory.".padEnd(
+                    140,
+                    " "
+                  ),
+              },
+              {
+                icon: "Images/outlook_mail.png",
+                title: "Global Mail Configuration",
+                press: "onNavToBuyerMail",
+                subtitle:
+                  "Enable the system to read emails from an Outlook account, process unread-messages,retrieve attachments, and submit the relevant information.".padEnd(
+                    140,
+                    " "
+                  ),
+              },
+              {
+                icon: "Images/supplier_mail.png",
+                title: "Supplier Communication",
+                press: "onNavToSupplierComm",
+                subtitle:
+                  "Manage communication settings between suppliers and buyers, configuring email and portal-based communication preferences.".padEnd(
+                    140,
+                    " "
+                  ),
+              },
+            ],
+          };
+
+          var oModel = new JSONModel(oData);
+          this.getView().setModel(oModel, "integrations");
           // let oModel = this.getOwnerComponent().getModel();
           // let gModel = this.getOwnerComponent().getModel("global-mail");
           // // this.getView().setModel(this.getOwnerComponent().getModel("global-mail"), "GSer");
@@ -169,34 +215,71 @@ sap.ui.define(
           // this._fetchGlobalMailConfig();
         },
 
-        onEmailConfiguration: function(){
-          this.getOwnerComponent().getRouter().navTo("EmailConfiguration")
+        onEmailConfiguration: function () {
+          this.getOwnerComponent().getRouter().navTo("EmailConfiguration");
         },
 
-        onNavToMasterScreen: function(){
-          this.getOwnerComponent().getRouter().navTo("MasterTable")
+        onNavToMasterScreen: function () {
+          this.getOwnerComponent().getRouter().navTo("MasterTable");
         },
 
-        onNavToSuppForm: function(){
-          this.getOwnerComponent().getRouter().navTo("SupplierForm")       
+        onNavToSuppForm: function () {
+          this.getOwnerComponent().getRouter().navTo("SupplierForm");
         },
 
-        onNavToRFQConfiguration: function(){
-          this.getOwnerComponent().getRouter().navTo("RFQConfiguration")       
+        onNavToRFQConfiguration: function () {
+          this.getOwnerComponent().getRouter().navTo("RFQConfiguration");
         },
 
-        onNavToProcurementFields: function(){
-          this.getOwnerComponent().getRouter().navTo("ProcurementFields")       
+        onNavToProcurementFields: function () {
+          this.getOwnerComponent().getRouter().navTo("ProcurementFields");
         },
 
-        onNavToBuyerMail: function(){
-          this.getOwnerComponent().getRouter().navTo("BuyerMail")       
+        onNavToBuyerMail: function () {
+          this.getOwnerComponent().getRouter().navTo("BuyerMail");
         },
 
-        onNavToSupplierComm: function(){
-          this.getOwnerComponent().getRouter().navTo("SupplierComm")       
-        }
+        onNavToSupplierComm: function () {
+          this.getOwnerComponent().getRouter().navTo("SupplierComm");
+        },
 
+        onManagePress: function (oEvent) {
+          // Get the button that triggered the event
+          var oButton = oEvent.getSource();
+          // Get the parent VBox containing the button and other controls
+          var oVBox = oButton.getParent();
+          // Get the Title control (second item in the VBox, after the Image)
+          var oTitle = oVBox.getItems()[1]; // Index 1 is the Title
+          // Get the text of the Title
+          var sTitle = oTitle.getText();
+
+          // Call the appropriate function based on the title
+          switch (sTitle) {
+            case "Email Configuration":
+              this.onEmailConfiguration();
+              break;
+            case "Master Data Configuration":
+              this.onNavToMasterScreen();
+              break;
+            case "Supplier Invitation Form":
+              this.onNavToSuppForm();
+              break;
+            case "RFQ Configurations":
+              this.onNavToRFQConfiguration();
+              break;
+            case "Procurement Fields":
+              this.onNavToProcurementFields();
+              break;
+            case "Global Mail Configuration":
+              this.onNavToBuyerMail();
+              break;
+            case "Supplier Communication":
+              this.onNavToSupplierComm();
+              break;
+            default:
+              MessageToast.show("Unknown item pressed");
+          }
+        },
 
         // onEditPress: function () {
         //   var oViewModel = this.getView().getModel("viewModel");
