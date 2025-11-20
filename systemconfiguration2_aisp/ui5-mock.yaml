@@ -48,4 +48,8 @@ server:
             metadataPath: ./webapp/localService/supplier-configuration/metadata.xml
             mockdataPath: ./webapp/localService/supplier-configuration/data
             generateMockData: true
+          - urlPath: /v2/odata/v4/supplier-communication-srv
+            metadataPath: ./webapp/localService/supplier-communication-srv/metadata.xml
+            mockdataPath: ./webapp/localService/supplier-communication-srv/data
+            generateMockData: true
         annotations: []

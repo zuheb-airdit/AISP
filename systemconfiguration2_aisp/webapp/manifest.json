@@ -1,243 +1,289 @@
 {
-  "_version": "1.65.0",
-  "sap.app": {
-    "id": "com.sconfig.systemconfiguration2aisp",
-    "type": "application",
-    "i18n": "i18n/i18n.properties",
-    "applicationVersion": {
-      "version": "0.0.1"
+    "_version": "1.65.0",
+    "sap.app": {
+        "id": "com.sconfig.systemconfiguration2aisp",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.17.5",
+            "toolsId": "d93ff71a-9567-44bf-aa14-be3dd3d390f9"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/v2/odata/v4/admin/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "annotation0",
+                        "annotation1"
+                    ],
+                    "localUri": "localService/mainService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "global-mail": {
+                "uri": "/v2/odata/v4/global-mail/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "localUri": "localService/global-mail/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "supplier-configuration": {
+                "uri": "v2/odata/v4/supplier-configuration/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "annotation0"
+                    ],
+                    "localUri": "localService/supplier-configuration/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "annotation0": {
+                "type": "ODataAnnotation",
+                "uri": "annotations/annotation0.xml",
+                "settings": {
+                    "localUri": "annotations/annotation0.xml"
+                }
+            },
+            "annotation1": {
+                "type": "ODataAnnotation",
+                "uri": "annotations/annotation1.xml",
+                "settings": {
+                    "localUri": "annotations/annotation1.xml"
+                }
+            },
+            "supplier-communication-srv": {
+                "uri": "/v2/odata/v4/supplier-communication-srv/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "annotationComm"
+                    ],
+                    "localUri": "localService/supplier-communication-srv/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "annotationComm": {
+                "type": "ODataAnnotation",
+                "uri": "annotations/annotationComm.xml",
+                "settings": {
+                    "localUri": "annotations/annotationComm.xml"
+                }
+            }
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "vendorEmpanelment-Configuration": {
+                    "semanticObject": "vendorEmpanelment",
+                    "action": "Configuration",
+                    "title": "{{vendorEmpanelment-Configuration.flpTitle}}",
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    }
+                }
+            }
+        }
     },
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
-    "resources": "resources.json",
-    "sourceTemplate": {
-      "id": "@sap/generator-fiori:basic",
-      "version": "1.17.5",
-      "toolsId": "d93ff71a-9567-44bf-aa14-be3dd3d390f9"
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
     },
-    "dataSources": {
-      "mainService": {
-        "uri": "/v2/odata/v4/admin/",
-        "type": "OData",
-        "settings": {
-          "annotations": ["annotation0", "annotation1"],
-          "localUri": "localService/mainService/metadata.xml",
-          "odataVersion": "2.0"
+    "sap.ui5": {
+        "flexEnabled": false,
+        "dependencies": {
+            "minUI5Version": "1.136.1",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "com.sconfig.systemconfiguration2aisp.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {}
+            },
+            "global-mail": {
+                "dataSource": "global-mail",
+                "preload": true,
+                "settings": {}
+            },
+            "supplier-configuration": {
+                "dataSource": "supplier-configuration",
+                "preload": true,
+                "settings": {}
+            },
+            "supplier-communication-srv": {
+                "dataSource": "supplier-communication-srv",
+                "preload": true,
+                "settings": {}
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "transition": "slide",
+                "type": "View",
+                "viewType": "XML",
+                "path": "com.sconfig.systemconfiguration2aisp.view",
+                "async": true,
+                "viewPath": "com.sconfig.systemconfiguration2aisp.view"
+            },
+            "routes": [
+                {
+                    "name": "RouteSystemView",
+                    "pattern": ":?query:",
+                    "target": [
+                        "TargetSystemView"
+                    ]
+                },
+                {
+                    "name": "RouteNew",
+                    "pattern": "new/{companyCode}/{requestType}",
+                    "target": [
+                        "TargetNewField"
+                    ]
+                },
+                {
+                    "name": "EmailConfiguration",
+                    "pattern": "EmailConfiguration",
+                    "target": [
+                        "TargetEmailConfiguration"
+                    ]
+                },
+                {
+                    "name": "MasterTable",
+                    "pattern": "MasterTable",
+                    "target": [
+                        "TargetMasterTable"
+                    ]
+                },
+                {
+                    "name": "SupplierForm",
+                    "pattern": "SupplierForm",
+                    "target": [
+                        "TargetSupplierForm"
+                    ]
+                },
+                {
+                    "name": "RFQConfiguration",
+                    "pattern": "RFQConfiguration",
+                    "target": [
+                        "TargetRFQConfiguration"
+                    ]
+                },
+                {
+                    "name": "ProcurementFields",
+                    "pattern": "ProcurementFields",
+                    "target": [
+                        "TargetProcurementFields"
+                    ]
+                },
+                {
+                    "name": "BuyerMail",
+                    "pattern": "BuyerMail",
+                    "target": [
+                        "TargetBuyerMail"
+                    ]
+                },
+                {
+                    "name": "SupplierComm",
+                    "pattern": "SupplierComm",
+                    "target": [
+                        "TargetSupplierComm"
+                    ]
+                }
+            ],
+            "targets": {
+                "TargetSystemView": {
+                    "id": "SystemView",
+                    "name": "SystemView"
+                },
+                "TargetNewField": {
+                    "id": "Config",
+                    "name": "Config"
+                },
+                "TargetEmailConfiguration": {
+                    "id": "EmailConfiguration",
+                    "name": "EmailConfiguration"
+                },
+                "TargetMasterTable": {
+                    "id": "MasterTable",
+                    "name": "MasterTable"
+                },
+                "TargetSupplierForm": {
+                    "id": "SupplierForm",
+                    "name": "SupplierForm"
+                },
+                "TargetRFQConfiguration": {
+                    "id": "RFQConfiguration",
+                    "name": "RFQConfiguration"
+                },
+                "TargetProcurementFields": {
+                    "id": "ProcurementFields",
+                    "name": "ProcurementFields"
+                },
+                "TargetBuyerMail": {
+                    "id": "BuyerMail",
+                    "name": "BuyerMail"
+                },
+                "TargetSupplierComm": {
+                    "id": "SupplierComm",
+                    "name": "SupplierComm"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "com.sconfig.systemconfiguration2aisp.view.App",
+            "type": "XML",
+            "id": "App",
+            "async": true
         }
-      },
-      "global-mail": {
-        "uri": "/v2/odata/v4/global-mail/",
-        "type": "OData",
-        "settings": {
-          "annotations": [],
-          "localUri": "localService/global-mail/metadata.xml",
-          "odataVersion": "2.0"
-        }
-      },
-      "supplier-configuration": {
-        "uri": "v2/odata/v4/supplier-configuration/",
-        "type": "OData",
-        "settings": {
-          "annotations": ["annotation0"],
-          "localUri": "localService/supplier-configuration/metadata.xml",
-          "odataVersion": "2.0"
-        }
-      },
-      "annotation0": {
-        "type": "ODataAnnotation",
-        "uri": "annotations/annotation0.xml",
-        "settings": {
-          "localUri": "annotations/annotation0.xml"
-        }
-      },
-      "annotation1": {
-        "type": "ODataAnnotation",
-        "uri": "annotations/annotation1.xml",
-        "settings": {
-          "localUri": "annotations/annotation1.xml"
-        }
-      }
     },
-    "crossNavigation": {
-      "inbounds": {
-        "vendorEmpanelment-Configuration": {
-          "semanticObject": "vendorEmpanelment",
-          "action": "Configuration",
-          "title": "{{vendorEmpanelment-Configuration.flpTitle}}",
-          "signature": {
-            "parameters": {},
-            "additionalParameters": "allowed"
-          }
-        }
-      }
+    "sap.cloud": {
+        "public": true,
+        "service": "aisp_vp_airdit"
     }
-  },
-  "sap.ui": {
-    "technology": "UI5",
-    "icons": {
-      "icon": "",
-      "favIcon": "",
-      "phone": "",
-      "phone@2": "",
-      "tablet": "",
-      "tablet@2": ""
-    },
-    "deviceTypes": {
-      "desktop": true,
-      "tablet": true,
-      "phone": true
-    }
-  },
-  "sap.ui5": {
-    "flexEnabled": false,
-    "dependencies": {
-      "minUI5Version": "1.136.1",
-      "libs": {
-        "sap.m": {},
-        "sap.ui.core": {}
-      }
-    },
-    "contentDensities": {
-      "compact": true,
-      "cozy": true
-    },
-    "models": {
-      "i18n": {
-        "type": "sap.ui.model.resource.ResourceModel",
-        "settings": {
-          "bundleName": "com.sconfig.systemconfiguration2aisp.i18n.i18n"
-        }
-      },
-      "": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {}
-      },
-      "global-mail": {
-        "dataSource": "global-mail",
-        "preload": true,
-        "settings": {}
-      },
-      "supplier-configuration": {
-        "dataSource": "supplier-configuration",
-        "preload": true,
-        "settings": {}
-      }
-    },
-    "resources": {
-      "css": [
-        {
-          "uri": "css/style.css"
-        }
-      ]
-    },
-    "routing": {
-      "config": {
-        "routerClass": "sap.m.routing.Router",
-        "controlAggregation": "pages",
-        "controlId": "app",
-        "transition": "slide",
-        "type": "View",
-        "viewType": "XML",
-        "path": "com.sconfig.systemconfiguration2aisp.view",
-        "async": true,
-        "viewPath": "com.sconfig.systemconfiguration2aisp.view"
-      },
-      "routes": [
-        {
-          "name": "RouteSystemView",
-          "pattern": ":?query:",
-          "target": ["TargetSystemView"]
-        },
-        {
-          "name": "RouteNew",
-          "pattern": "new/{companyCode}/{requestType}",
-          "target": ["TargetNewField"]
-        },
-        {
-          "name": "EmailConfiguration",
-          "pattern": "EmailConfiguration",
-          "target": ["TargetEmailConfiguration"]
-        },
-        {
-          "name": "MasterTable",
-          "pattern": "MasterTable",
-          "target": ["TargetMasterTable"]
-        },
-        {
-          "name": "SupplierForm",
-          "pattern": "SupplierForm",
-          "target": ["TargetSupplierForm"]
-        },
-        {
-          "name": "RFQConfiguration",
-          "pattern": "RFQConfiguration",
-          "target": ["TargetRFQConfiguration"]
-        },
-        {
-          "name": "ProcurementFields",
-          "pattern": "ProcurementFields",
-          "target": ["TargetProcurementFields"]
-        },
-        {
-          "name": "BuyerMail",
-          "pattern": "BuyerMail",
-          "target": ["TargetBuyerMail"]
-        },
-         {
-          "name": "SupplierComm",
-          "pattern": "SupplierComm",
-          "target": ["TargetSupplierComm"]
-        }
-      ],
-      "targets": {
-        "TargetSystemView": {
-          "id": "SystemView",
-          "name": "SystemView"
-        },
-        "TargetNewField": {
-          "id": "Config",
-          "name": "Config"
-        },
-        "TargetEmailConfiguration": {
-          "id": "EmailConfiguration",
-          "name": "EmailConfiguration"
-        },
-        "TargetMasterTable": {
-          "id": "MasterTable",
-          "name": "MasterTable"
-        },
-        "TargetSupplierForm": {
-          "id": "SupplierForm",
-          "name": "SupplierForm"
-        },
-        "TargetRFQConfiguration": {
-          "id": "RFQConfiguration",
-          "name": "RFQConfiguration"
-        },
-        "TargetProcurementFields": {
-          "id": "ProcurementFields",
-          "name": "ProcurementFields"
-        },
-        "TargetBuyerMail": {
-          "id": "BuyerMail",
-          "name": "BuyerMail"
-        },
-         "TargetSupplierComm": {
-          "id": "SupplierComm",
-          "name": "SupplierComm"
-        }
-      }
-    },
-    "rootView": {
-      "viewName": "com.sconfig.systemconfiguration2aisp.view.App",
-      "type": "XML",
-      "id": "App",
-      "async": true
-    }
-  },
-  "sap.cloud": {
-    "public": true,
-    "service": "aisp_vp_airdit"
-  }
 }
